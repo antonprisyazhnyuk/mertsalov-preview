@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ru" data-pl="2">   <!-- 19.10 11:52 Антон: свет на портрете — вариант 2 (relight.js, ?pl=0|1|2|3) -->
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Николай Мерцалов · тату-артист и художник</title>
+<link rel="preload" href="fonts/jost-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jost-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:Jost;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jost-400-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}@font-face{font-family:Jost;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jost-400-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}</style>
+<!-- 21.10 скорость главной: первым — портрет (самое крупное на первом экране) и шрифт имени; всё ниже первого экрана ждёт (LATE) -->
+<link rel="preload" href="portrait.webp" as="image" fetchpriority="high">
+<link rel="preload" href="FoglihtenNo06.woff2" as="font" type="font/woff2" crossorigin>
+<script>/* LATE(el, fn) — fn один раз, когда страница загрузилась, первый экран нарисован (два кадра после load) и до el не больше полэкрана. Картинки и заставки роликов карусели и «Моего пути» лежат в data-lsrc / data-lposter / data-lpre,
+   LATE.wake(m) переносит их в src / poster / preload. Без LATE (другие страницы) скрипты ставят их сразу */
+window.LATE = (el, fn) => { const go = () => requestAnimationFrame(() => requestAnimationFrame(() => { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); fn(); } }, { rootMargin: "50% 0px" }); io.observe(el); }));
+  document.readyState === "complete" ? go() : addEventListener("load", go, { once: true }); };
+LATE.wake = m => { const d = m.dataset; if (d.lsrc) m.src = d.lsrc; if (d.lposter) m.poster = d.lposter; if (d.lpre) m.preload = d.lpre; delete d.lsrc; delete d.lposter; delete d.lpre; };</script>
+<style>
+/* 19.10 · главная = принятый второй экран gal-3d-1810.html (18.10) + общий каркас shell.css / shell.js.
+   Здесь — только своё главной: первый экран, заглушки ниже. Токены, обои, хедер, кнопка, полоса и шторка телефона — shell.css (подключён после).
+   Прежняя главная (лента-галерея) — index-pre3d-1910.html. */
+/* Хедер Мерцалова · 14.10 · живой прототип по кадрам Figma `49:13192` («Хедер и меню · итог 14.10»).
+   1rem = 16 px на 1920 (десктоп) и на 360 (телефон) — пропорции как в Figma на любой ширине. */
+
+/* ── первый экран ─────────────────────────── */
+/* первый экран — по высоте окна (слово Антона 13:28: «экран не помещается»); раскладка Figma 1920×1080 пересчитана от низа и центра */
+.hero { position: relative; height: 100svh; min-height: 40rem; overflow: hidden; }
+.hero .shade-top, .hero .shade-bot { pointer-events: none; }
+@media (min-width: 768px) { .hero .shade-top, .hero .shade-bot { display: none !important; } }   /* 16.10 14:19 Антон: затемнения над фото — «выглядит дёшево», убрать (десктоп) */
+/* правка Антона 13:51 (Figma 51:22608): портрет справа на нижнем крае, имя в две строки 150, тени почти убраны */
+.hero .portrait { position: absolute; right: 0; bottom: 0; height: 91.02%; aspect-ratio: 1080 / 983;
+  background: url("portrait.webp") center / cover no-repeat; }
+.hero .shade-top { position: absolute; left: 0; right: 0; top: 0; height: 10.75rem;
+  background: linear-gradient(to bottom, rgba(var(--bg-rgb),.92), rgba(var(--bg-rgb),0)); }
+.hero .shade-bot { position: absolute; left: 0; right: 0; bottom: 0; height: 4.375rem;
+  background: linear-gradient(to bottom, rgba(var(--bg-rgb),0), rgba(var(--bg-rgb),.95)); }
+.hero .formula { position: absolute; left: 7.5rem; bottom: 30.9375rem; margin: 0; font-size: 1.25rem; line-height: 1.875rem; color: var(--ink); white-space: pre-line; }
+.hero .name { position: absolute; left: 7.5rem; bottom: 2.25rem; margin: 0;   /* 16.10 15:56 по кадру Антона 74:131178: низ букв (обрезанная рамка) на 1024, было на 59 выше */ font: 400 9.375rem/8.75rem Foglihten, serif; color: var(--warm); white-space: pre-line; }
+
+
+/* 19.10 11:26 Антон: обои просвечивали сквозь портрет — мягкий низ портрета (маска 80–100 %, gal-3d-1810.css) прозрачнеет, под ним были видны арки и свет руки.
+   Силуэт портрета вырезан из слоёв обоев: обои только на пустом фоне. Мягкий низ, свет на пустом поле и зерно — как были.
+   Место силуэта (--pc-*) и видимую часть первого экрана над линией перехода (--pc-v) ставит скрипт внизу страницы. */
+/* 19.10 12:04 Антон, второй экран: 1) зазор от низа букв фразы до рамки кнопки «чуть меньше» — 60 → 40 px на 1920 (отступ под фразой 3rem → 1.75rem; ещё 12 px — воздух строки под буквами);
+   2) фраза + кнопка — на равном расстоянии от низа плашки хедера (5.25rem + 1px при прокрутке) до верха букв и от низа рамки кнопки до низа окна.
+   Группа центруется в окне ниже плашки; верх букв ниже верха строки на ~.0625 кегля — на столько поднята. Перекрывает gal-3d-1810.css (html — выше по весу) */
+html .s3d .txt { padding-top: calc(5.25rem + 1px - var(--qpx, 108) * 1rem / 16 * .0625); }
+html .s3d .q { margin-bottom: 1.75rem; }
+
+html.pcut { --pc-cut: url("portrait.webp") var(--pc-x, 0) var(--pc-y, 0) / var(--pc-w, 0) var(--pc-h, 0) no-repeat, linear-gradient(#000, #000) 0 0 / 100% var(--pc-v, 100%) no-repeat; }
+html.pcut .wall, html.pcut .wall-shade { -webkit-mask: linear-gradient(#000, #000), var(--pc-cut); mask: linear-gradient(#000, #000), var(--pc-cut); mask-composite: subtract, intersect; }
+html.pcut .wall-lit { -webkit-mask: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%), var(--pc-cut); mask: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%), var(--pc-cut); mask-composite: subtract, intersect; }
+
+/* ── телефон 360 ──────────────────────────── */
+@media (max-width: 767px) {
+  /* экран 1 по кадру `49:13418`: портрет над полосой, имя на 1.5rem выше полосы, текст по центру */
+  .hero { height: 100svh; min-height: 40rem; }
+  .hero .portrait { left: 50%; right: auto; top: auto; bottom: 4rem; height: min(34.4375rem, calc(100% - 14.3rem)); width: auto; aspect-ratio: 1080 / 983; transform: translateX(calc(-50% + 1.97rem)); }
+  .hero .shade-top { display: none; }
+  .hero .shade-bot { top: auto; bottom: 0; height: 13.25rem; background: linear-gradient(to bottom, rgba(var(--bg-rgb),0), rgba(var(--bg-rgb),.72)); }   /* 16.10 14:27 Антон: на телефоне лёгкое затемнение снизу, чтобы текст читался (было .96) */
+  .hero .formula { left: 1rem; right: 1rem; top: auto; bottom: 5.5rem; text-align: center; font-size: 1.0625rem; line-height: 1.625rem; text-box: trim-both cap alphabetic; }   /* 16.10 15:59 Антон «мобилку пофиксить»: поля 16 (сетка 360), рамка по буквам, низ на 24 над полосой меню 64 */
+  .hero .name { left: 1rem; right: 1rem; top: 2rem; bottom: auto; text-align: center; font-size: 3.5rem; line-height: 3.375rem; white-space: normal; text-box: trim-both cap alphabetic; }   /* 16.10 15:59: поля 16, рамка по буквам, верх заглавных на 32 */
+
+}
+
+/* 16.10 19:56 Антон: «на мультиплае вообще круто смотрится» (галерея телефона) → и на первом экране телефона: затемнение снизу умножением,
+   только по силуэту портрета (маска — сам портрет), фон #1a1a1a не темнеет. ?sh=normal — прежнее затемнение (72 % цвета фона). */
+@media (max-width: 767px) {
+  html:not(.sh-normal) .hero .shade-bot { display: none; }
+  html:not(.sh-normal) .hero .portrait::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: multiply;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 38%, rgba(120,108,94,.85) 66%, rgba(42,37,32,1) 92%);   /* 19:58 Антон: «на первом лучше старая — наверное за счёт прозрачности мультиплая» → начинается выше и плотнее под формулой */
+    -webkit-mask: url("portrait.webp") center / 100% 100% no-repeat; mask: url("portrait.webp") center / 100% 100% no-repeat; }
+}
+</style>
+<link rel="stylesheet" href="gal-3d-1810.css?v=2010">
+<link rel="stylesheet" href="shell.css">   <!-- каркас: после стилей страницы -->
+<!-- 21.10 скорость: стили «Моего пути» — после загрузки страницы, на своём месте в каскаде (data-late, загрузчик внизу); анкета и вопросы — сразу (поле анкеты без стиля дёргается, а правка лигатуры «ОС» из shell.js в «Частых вопросах» видит шрифт только при готовом стиле) -->
+<link data-late="path-2010.css?v=2010">   <!-- 20.10: экран 3 «Мой путь» -->
+<link data-late="path-v3.css?v=2010">   <!-- 20.10 09:19: «Мой путь» v3 по кадру Антона — вариант по умолчанию -->
+<link rel="stylesheet" href="form-2010.css?v=2110b">   <!-- 20.10: экран 4 — анкета 74:152467 -->
+<link rel="stylesheet" href="footer-2010.css?v=2110e">   <!-- 20.10: футер и плашка Метрики — Figma 187:2 -->
+<link rel="stylesheet" href="faq-2010.css?v=2110">   <!-- 20.10: «Частые вопросы» после шагов — Figma 189:72462 · 189:72498 -->
+<script>/* v6 · 18.10 09:10 Антон: появление первого экрана после загрузки (gal-3d-1810.js). Пока скрипт не запустил появление — портрет едва виден, имя/формула/хедер скрыты;
+   «уменьшить движение» и ?intro=0 — сразу всё; страховка — через 3 с всё видно в любом случае */
+/* v7: режим перехода и длины отрезков — до первой отрисовки (иначе высоты меняются после загрузки — сдвиг вёрстки, CLS 0.42). Умолчания — как в gal-3d-1810.js (KD) */
+{ const q = new URLSearchParams(location.search), n = (k, d) => q.has(k) ? +q.get(k) : d, r = document.documentElement.style;
+  const tr = ["curtain", "dissolve"].includes(q.get("tr")) ? q.get("tr") : "line"; document.documentElement.classList.add("tr-" + tr);
+  const off = tr === "curtain" ? n("gco", .5) : tr === "line" ? n("gll", .7) : 0, pin = tr === "curtain" ? n("gcl", .5) : tr === "line" ? n("gll", .7) : n("gdis", .6);
+  r.setProperty("--len", Math.max(1, Math.min(8, n("len", 2.03))));   /* 20.10: 2.03 = LEN0 в gal-3d-1810.js при 22 работах (одна плитка на работу) */ r.setProperty("--dis", pin); r.setProperty("--intro", n("gtf", .6) + .1 + n("gtw", .4) + off); }
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches && new URLSearchParams(location.search).get("intro") !== "0") {
+  document.documentElement.classList.add("intro"); setTimeout(() => document.documentElement.classList.remove("intro"), 3000); }</script>
+<script>/* 18.10: сцена второго экрана — только десктоп ≥1024 с WebGL; иначе карусель Б */
+if (matchMedia("(min-width: 1024px)").matches) { try { const c = document.createElement("canvas"), g = c.getContext("webgl2") || c.getContext("webgl");
+  if (!g) document.documentElement.classList.add("no3d"); else { const x = g.getExtension("WEBGL_lose_context"); if (x) x.loseContext(); } } catch (e) { document.documentElement.classList.add("no3d"); } }</script>
+<!-- 21.10 скорость: стили, которые path-v3.js и path-phone-2010.js подключают сами в конец head, — заранее и там же: иначе лента на телефоне на миг без стиля растягивает страницу вширь, браузер отъезжает, меню и плашка cookie прыгают (CLS 0.59) -->
+<link data-late="path-motion-2010.css?v=2010">
+<link data-late="path-phone-2010.css?v=2010">
+</head>
+<body>
+<script src="shell.js"></script>   <!-- каркас: обои, хедер, полоса и шторка телефона, шторка между страницами, зерно (fx.js) -->
+<script>/* 21.10 скорость: открыли сразу работу (#work-…) — данные работ нужны к DOMContentLoaded (shell.js), грузим сразу; иначе — после портрета (data-soon внизу) */
+if (/^#work-/.test(location.hash)) document.write('<script src="works-data.js"><\/script>');</script>
+<script data-soon="works-data.js"></script>   <!-- 19.10: работы сайта (window.WORKS) — для открытой работы WO.open(id); плитка 3D и слайд карусели знают id работы (S3D[].wo) -->
+
+<main id="top">
+  <div class="hero-pin">  <section class="hero">
+    <div class="portrait"></div>
+    <div class="shade-top"></div>
+    <div class="shade-bot"></div>
+    <p class="formula">Тату-артист и художник
+26 лет в ремесле
+реализм, портреты, ар-деко, dark art</p>
+    <h1 class="name">НИКОЛАЙ
+МЕРЦАЛОВ</h1>
+  </section></div>
+  <div id="works">
+  <section class="s3d" aria-label="Работы">
+    <div class="stage">
+      <canvas aria-hidden="true"></canvas>
+      <div class="txt">
+        <p class="q"><span class="ql">Татуировка —</span> <span class="ql">ювелирная работа,</span> <span class="ql">которая пройдёт</span> <span class="ql">с тобой всю жизнь</span></p>
+        <a class="b bw" href="works-r-1710.html"><svg viewBox="0 0 280 52" aria-hidden="true"><path class="o" d="M10 1H270V10H279V42H270V51H10V42H1V10H10Z"/><path class="i" d="M16 7H264V16H273V36H264V45H16V36H7V16H16Z"/></svg><span class="caps">Смотреть все работы</span></a>
+      </div>
+    </div>
+    <ul class="vh" aria-label="Работы Николая Мерцалова">
+      <li><a href="#work-thompson"><img src="w/thompson/01-800.webp" alt="Татуировка — Хантер Томпсон" width="640" height="640" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-devil"><img src="w/devil/05-800.webp" alt="Татуировка — Уничтожение культа солнца" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-viking"><img src="w/viking/02-800.webp" alt="Татуировка — Викинг" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-chicano"><img src="w/chicano/03-800.webp" alt="Татуировка — Чикано-портрет" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-bog-edin"><img src="w/bog-edin/01-800.webp" alt="Татуировка — БОГ ЕДИН" width="800" height="1001" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-moto"><img src="w/moto/01-800.webp" alt="Татуировка — Мотогонщики" width="800" height="800" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-kurdt"><img src="w/kurdt/04-800.webp" alt="Татуировка — Kurdt Kobain" width="716" height="1272" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-ruby"><img src="w/ruby/02-800.webp" alt="Татуировка — Рубиновый орнамент" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-samurai"><img src="w/samurai/01-800.webp" alt="Татуировка — Самурай и пагода" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-skull"><img src="w/skull/03-800.webp" alt="Татуировка — Череп" width="720" height="900" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-kolyas"><img src="w/kolyas/02-800.webp" alt="Татуировка — Kolyas" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-beavis"><img src="w/beavis/06-800.webp" alt="Татуировка — Бивис и Батт-Хед" width="640" height="640" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-tiger"><img src="w/tiger/08-800.webp" alt="Татуировка — Тигр" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-vampire"><img src="w/vampire/01-800.webp" alt="Татуировка — Вампир" width="800" height="800" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-reznor"><img src="w/reznor/01-800.webp" alt="Татуировка — Портрет Трента Резнора" width="800" height="977" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-rambo"><img src="w/rambo/04-800.webp" alt="Татуировка — John James Rambo" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-tattooweek"><img src="w/tattooweek/01-800.webp" alt="Татуировка — Портрет" width="800" height="1422" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-leopard"><img src="w/leopard/01-800.webp" alt="Татуировка — Леопард" width="800" height="1000" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-stil"><img src="w/stil/01-800.webp" alt="Татуировка — Стиль" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-pzzl"><img src="w/pzzl/01-800.webp" alt="Татуировка — PZZL" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-mask"><img src="w/mask/01-800.webp" alt="Татуировка — Маска самурая" width="720" height="1282" loading="lazy" decoding="async"></a></li>
+      <li><a href="#work-cat"><img src="w/cat/01-800.webp" alt="Татуировка — Кот в доспехе" width="720" height="1280" loading="lazy" decoding="async"></a></li>
+    </ul>
+  </section>
+  <section class="s2" aria-label="Работы · карусель">
+    <div class="rib"></div>
+    <div class="sh-top"></div>
+    <div class="prog" aria-hidden="true"></div>
+    <div class="ui"><div class="tabs caps"><a class="all" href="works-r-1710.html">Все работы →</a></div></div>
+  </section>
+  </div>
+  <!-- 20.10 · data-ct / data-body — заголовок подписи и мелкий текст кадра в ленте buro: слова Коли из тех же историй «Пути джедая» (J3, J5, J10, J15, J37, J38), капс историй → обычный регистр, слова и знаки — как в историях -->
+  <!-- 20.10 06:09 Антон: экран 3 «Мой путь» — вехи словами Коли из хайлайта «Путь джедая» (design/path-media-2010.md); варианты ?path=a24 | freshman | buro — path-2010.css/js -->
+  <section class="path" id="path" aria-label="Мой путь">
+    <div class="ph"><span class="pcnt">(07)</span><h2>Мой путь</h2></div>
+    <div class="pys" aria-hidden="true"><span>2002</span><span>Сегодня</span></div>
+    <div class="cols" aria-hidden="true"><span>Год ↓</span><span>Веха</span><span></span></div>
+    <div class="slot" aria-hidden="true"><div class="pic"></div><span class="cap"></span></div>
+    <ol class="pl">
+      <li data-src="p/2002.webp" data-cap="2002 · из хайлайта «Путь джедая»" data-ct="2002 · Саратов" data-body="Татули покалывал в это время, но в приоритете была музыка, так как не думал что свою жизнь свяжу с татуировкой"><span class="n">01</span><span class="y">2002</span><q>В приоритете была музыка</q><span class="k">Фото</span><figure class="mf"></figure></li>
+      <li data-src="p/2007.webp" data-cap="2007 · из хайлайта «Путь джедая»" data-ct="2007" data-body="Начал записывать клиентов, снял студию, качал насмотренность и набивал руку"><span class="n">02</span><span class="y">2007</span><q>…по одному пути и выбрал татуировки</q><span class="k">Фото</span><figure class="mf"></figure></li>
+      <li data-src="p/2012.webp" data-cap="2012 · из хайлайта «Путь джедая»" data-ct="2012 · первая студия" data-body="В первой студии мы пробыли не долго, это был вонючий подвал где в соседней комнате сидели рэперы, в другой художник писал картины"><span class="n">03</span><span class="y">2012</span><q>Мы вместе с Яриком Волковым открываем студию</q><span class="k">Фото</span><figure class="mf"></figure></li>
+      <li data-src="p/2015.webp" data-cap="2015 · Старый Оскол · из хайлайта «Путь джедая»" data-ct="2015 · Старый Оскол" data-body="В 2015 году я еду на свою первую конвенцию в Старый Оскол"><span class="n">04</span><span class="y">2015</span><q>Занимаю 1 место</q><span class="k">Фото</span><figure class="mf"></figure></li>
+      <li data-video="p/2018.mp4" data-poster="p/2018.webp" data-cap="Германия · из хайлайта «Путь джедая»" data-ct="Случился серьезный переломный момент в 2018-2019-ом году" data-body="В плане техники, потому что я познакомился с кучей интересных мастеров, которые в свою очередь тоже общались с другими супер и топовыми артистами и мы делились опытом"><span class="n">05</span><span class="y">2018<span class="wait" title="год ждёт слова Антона">⚠</span></span><q>Я прогрессировал просто огромными шагами</q><span class="k">Видео</span><figure class="mf"></figure></li>
+      <li data-src="p/2019.webp" data-cap="2019 · из хайлайта «Путь джедая»" data-ct="2019" data-body="И как раз в этот момент я начал уже структурировать свои знания в плане, как доносить информацию"><span class="n">06</span><span class="y">2019<span class="wait" title="год ждёт слова Антона">⚠</span></span><q>Хочешь учиться, начни учить</q><span class="k">Фото</span><figure class="mf"></figure></li>
+      <li class="tbd" data-video="p/now.mp4" data-poster="p/now.webp" data-cap="Москва · работа 2026"><span class="n">07</span><span class="y">Сегодня</span><q>Москва · [фраза — вопрос Коле]</q><span class="k">Видео</span><figure class="mf"></figure></li>
+    </ol>
+    <a class="more" href="#about">История →</a>
+  </section>
+  <script data-late="path-2010.js?v=2010"></script>
+  <script data-late="path-v3.js?v=2010"></script>   <!-- 20.10 09:19: v3 — лента по кадру Антона Figma 176:66319 (по умолчанию); прежние варианты — ?path=a24 | freshman | loco | buro -->
+  <script data-late="path-phone-2010.js?v=2010"></script>   <!-- 20.10 15:10: телефон < 768 — «Мой путь» по секции Бекки с правками Антона, Figma 189:72537 (М1–М11; свои стили path-phone-2010.css подключает сам); десктоп не трогает -->
+  <!-- 20.10: после ленты — шаги и анкета (кадр 176:67966 «конец ленты → вниз»; «Дальше — твоя история» Антон перенёс в конец ленты). Анкета 74:152467 — в коде с 20.10 (form-2010.css/js) -->
+  <!-- 20.10 13:15 кадр Антона 189:72128: лента кончается экраном «Сейчас / Дальше — твоя история» (path-v3, окно merts-path-motion), от него линия вниз к ромбу рамы (#form-top);
+       под лентой — анкета (#zapis; #kak-popast — рама) · «Как проходит работа?» и шаги 2×2 · футер -->
+  <section class="zap" id="seans" aria-label="Как попасть на сеанс">
+    <!-- 20.10 · анкета — Figma 74:152467 (1920) и 74:151210 (360), состояния ①–④ 74:153753 · 74:155011 · 74:156268 · 74:157526; form-2010.css/js. Отправка — заглушка без сети -->
+    <div class="form" id="zapis">
+      <div class="zl"><h2>Расскажи идею</h2><p>Чем более подробно ты расскажешь о&nbsp;своей задумке — тем лучше</p></div>
+      <div class="zr" id="kak-popast">
+        <span class="dm t" id="form-top"></span><span class="dm r"></span><span class="dm b"></span><span class="dm l"></span>
+        <form class="zf" novalidate>
+          <div class="z3">
+            <label class="zi" data-req="имя"><span class="zk">Имя <i>*</i></span><input name="name" autocomplete="name"></label>
+            <label class="zi" data-req="связь"><span class="zk">Telegram или телефон <i>*</i></span><input name="contact" placeholder="@ник или +7…" autocomplete="tel"></label>
+          </div>
+          <div class="zi zt" data-req="идея">
+            <div class="zh"><label class="zk" for="z-idea">Идея <i>*</i></label><span class="za" data-files="примеры"><label class="add">+ Прикрепить примеры работ<input type="file" name="refs" accept="image/*,video/*" multiple hidden></label><button class="got" type="button" hidden></button></span></div>
+            <textarea id="z-idea" name="idea" placeholder="Что хочется и что это для тебя значит. Детали обсудим на эскизе"></textarea>
+          </div>
+          <div class="zc">
+            <label class="cb"><input type="checkbox" name="cover-tattoo"><span class="sq"></span>Перекрытие старой татуировки</label>
+            <label class="cb"><input type="checkbox" name="cover-scar"><span class="sq"></span>Перекрытие шрама</label>
+            <p class="hint" hidden>Сфотографируй старую татуировку или шрам целиком, при дневном свете</p>
+          </div>
+          <div class="zi zp" role="group" aria-label="Место на теле" data-req="место">
+            <div class="zh"><span class="zk">Место на теле <i>*</i></span><span class="za" data-files="фото"><label class="add">+ Фото места<i class="ph-req" hidden> *</i><input type="file" name="place-photo" accept="image/*" multiple hidden></label><button class="got" type="button" hidden></button></span></div>
+            <div class="chips multi"><button type="button">Шея</button><button type="button">Плечо</button><button type="button">Рука</button><button type="button">Грудь</button><button type="button">Живот</button><button type="button">Бок</button><button type="button">Спина</button><button type="button">Нога</button><button type="button" data-other>Другое</button></div>
+            <input class="other" name="place-other" placeholder="где именно" hidden>
+          </div>
+          <div class="z2">
+            <label class="zi"><span class="zk">Примерный размер</span><input name="size" placeholder="например: с ладонь или на всё предплечье"></label>
+            <div class="zi" role="group" aria-label="Цветовая гамма"><span class="zk">Цветовая гамма</span><div class="chips one"><button type="button">Чёрно-белая</button><button type="button">Цветная</button><button type="button">Не знаю</button></div></div>
+          </div>
+          <label class="zi"><span class="zk">Комментарий</span><input name="comment" placeholder="сроки, вопросы — всё, что ещё важно"></label>
+          <label class="cb zok" data-req="согласие"><input type="checkbox" name="consent"><span class="sq"></span><span>Согласен на обработку персональных данных и принимаю <a href="#policy">политику обработки</a></span></label>
+          <p class="err" role="alert" hidden></p>
+          <button class="b send" type="submit"><svg class="dk" viewBox="0 0 360 72" aria-hidden="true"><path class="o"/><path class="i"/></svg><svg class="ph" viewBox="0 0 316 60" aria-hidden="true"><path class="o"/><path class="i"/></svg><span>Отправить заявку</span></button>
+        </form>
+        <div class="zdone" hidden tabindex="-1"><h3>Спасибо!</h3><p>Уже интересно — скоро обсудим твой проект.</p></div>
+      </div>
+    </div>
+    <!-- 20.10 13:15 Антон, кадр 189:72128: под анкетой — «Как проходит работа?» слева, шаги 2×2 справа (оси 960 / 1380) -->
+    <div class="work">
+      <h2 class="wt">Как<br>проходит<br>работа?</h2>
+      <div class="steps">
+        <div><div class="n">01</div><h3>Заявка</h3><p>Расскажи идею, место на теле, размер, пришли примеры работ</p></div>
+        <div><div class="n">02</div><h3>Эскиз</h3><p>Разрабатываем эскиз, исходя из твоих пожеланий</p></div>
+        <div><div class="n">03</div><h3>Сеансы</h3><p>Работаем над твоим проектом столько, сколько потребуется</p></div>
+        <div><div class="n">04</div><h3>Заживление</h3><p>Памятка по уходу, на связи до полного заживления</p></div>
+      </div>
+    </div>
+  </section>
+  <script data-late="form-2010.js?v=2010"></script>
+  <!-- 20.10 13:52 Антон «что с факом?» · «Частые вопросы» — Figma 189:72462 (1920) · 189:72498 (360), тексты с источниками — design/faq-2010.md.
+       Раскрытие — details/summary, открыт один: name="faq" сам закрывает соседа (JS не нужен); плавность — ::details-content (где браузер умеет). Появление по прокрутке и карта в «Где ты работаешь?» (14:37 Антон: десктоп — живая Яндекс Карта при раскрытии, телефон — снимок + «Как добраться →») — faq-2010.js.
+       Ответ «Больно ли это?» — черновик главного окна 14:14, к Коле на подтверждение (kolya-questions п. 15); в FAQPage он есть — при выкладке сверить с ответом Коли -->
+  <section class="faq" id="voprosy" aria-label="Частые вопросы">
+    <h2 class="fqt">Частые<br>вопросы</h2>
+    <div class="fql">
+      <details name="faq" open><summary><h3>Сколько стоит татуировка?</h3><span class="fd" aria-hidden="true"></span></summary><p>Фиксированных цен нет — каждая работа своя: стоимость зависит от стиля, места на теле и размера. Опиши идею в анкете, и я сориентирую по цене.</p></details>
+      <details name="faq"><summary><h3>Больно ли это?</h3><span class="fd" aria-hidden="true"></span></summary><p>Немного — да. Многое зависит от места: на рёбрах, стопе и кисти ощущения острее, на плече, бедре и предплечье — вполне терпимо. На долгих сеансах делаем перерывы, так что выдержать можно.</p></details>
+      <details name="faq"><summary><h3>Сколько ждать записи?</h3><span class="fd" aria-hidden="true"></span></summary><p>Запись обычно открываю на месяц-два вперёд — свободные даты объявляю в Instagram. Оставь заявку: отвечу и предложу дату.</p></details>
+      <details name="faq"><summary><h3>Сколько нужно сеансов?</h3><span class="fd" aria-hidden="true"></span></summary><p>Зависит от размера и детализации: небольшую работу делаю за один сеанс, сложное перекрытие — примерно за два, рукав или спину — за несколько. Сколько потребуется именно тебе, обсудим на эскизе.</p></details>
+      <details name="faq"><summary><h3>Можно прийти со своим эскизом?</h3><span class="fd" aria-hidden="true"></span></summary><p>Пришли примеры, которые нравятся, — от них и оттолкнёмся. Эскиз готовлю сам, под тебя и под место на теле. Если тебе нравится мой стиль, я с радостью создам что-то уникальное именно для тебя.</p></details>
+      <details name="faq"><summary><h3>Можно перекрыть старую татуировку?</h3><span class="fd" aria-hidden="true"></span></summary><p>Перекрыть можно любой партак, вопрос только в том, сколько на это нужно потратить времени. Не спеши записываться на лазер — напиши сперва мне, мы обязательно найдём решение. И это не обязательно тёмное пятно: светлым можно перекрывать практически всё.</p></details>
+      <details name="faq"><summary><h3>Сколько заживает татуировка?</h3><span class="fd" aria-hidden="true"></span></summary><p>Обычно 7–10 дней, на спине, шее и щиколотке — до двух недель. После сеанса дам памятку по уходу и буду на связи до полного заживления. Дальше главный враг татуировки — солнце: защищай её солнцезащитным кремом, и с годами она почти не изменится.</p></details>
+      <details name="faq"><summary><h3>Где ты работаешь?</h3><span class="fd" aria-hidden="true"></span></summary><p>Записываю на сеансы в Москве, в студии «Локация» — Олимпийский проспект, 10 к1–2.</p><div class="fqm" data-ll="37.622417,55.777148"><a class="mi" href="https://yandex.ru/maps/?rtext=~55.777148%2C37.622417&amp;rtt=auto" target="_blank" rel="noopener" aria-label="Маршрут до студии «Локация» в Яндекс Картах"><img src="map-loc-m-2010.webp" alt="Карта: студия «Локация», Москва, Олимпийский проспект, 10 к1–2" width="650" height="400" loading="lazy" decoding="async"></a></div><a class="route" href="https://yandex.ru/maps/?rtext=~55.777148%2C37.622417&amp;rtt=auto" target="_blank" rel="noopener">Как добраться →</a></details>
+    </div>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Сколько стоит татуировка?", "acceptedAnswer": {"@type": "Answer", "text": "Фиксированных цен нет — каждая работа своя: стоимость зависит от стиля, места на теле и размера. Опиши идею в анкете, и я сориентирую по цене."}}, {"@type": "Question", "name": "Больно ли это?", "acceptedAnswer": {"@type": "Answer", "text": "Немного — да. Многое зависит от места: на рёбрах, стопе и кисти ощущения острее, на плече, бедре и предплечье — вполне терпимо. На долгих сеансах делаем перерывы, так что выдержать можно."}}, {"@type": "Question", "name": "Сколько ждать записи?", "acceptedAnswer": {"@type": "Answer", "text": "Запись обычно открываю на месяц-два вперёд — свободные даты объявляю в Instagram. Оставь заявку: отвечу и предложу дату."}}, {"@type": "Question", "name": "Сколько нужно сеансов?", "acceptedAnswer": {"@type": "Answer", "text": "Зависит от размера и детализации: небольшую работу делаю за один сеанс, сложное перекрытие — примерно за два, рукав или спину — за несколько. Сколько потребуется именно тебе, обсудим на эскизе."}}, {"@type": "Question", "name": "Можно прийти со своим эскизом?", "acceptedAnswer": {"@type": "Answer", "text": "Пришли примеры, которые нравятся, — от них и оттолкнёмся. Эскиз готовлю сам, под тебя и под место на теле. Если тебе нравится мой стиль, я с радостью создам что-то уникальное именно для тебя."}}, {"@type": "Question", "name": "Можно перекрыть старую татуировку?", "acceptedAnswer": {"@type": "Answer", "text": "Перекрыть можно любой партак, вопрос только в том, сколько на это нужно потратить времени. Не спеши записываться на лазер — напиши сперва мне, мы обязательно найдём решение. И это не обязательно тёмное пятно: светлым можно перекрывать практически всё."}}, {"@type": "Question", "name": "Сколько заживает татуировка?", "acceptedAnswer": {"@type": "Answer", "text": "Обычно 7–10 дней, на спине, шее и щиколотке — до двух недель. После сеанса дам памятку по уходу и буду на связи до полного заживления. Дальше главный враг татуировки — солнце: защищай её солнцезащитным кремом, и с годами она почти не изменится."}}, {"@type": "Question", "name": "Где ты работаешь?", "acceptedAnswer": {"@type": "Answer", "text": "Записываю на сеансы в Москве, в студии «Локация» — Олимпийский проспект, 10 к1–2."}}]}</script>
+  </section>
+  <script data-late="faq-2010.js?v=2010"></script>
+  <!-- 21.10 15:15 Антон «пора избавляться от заглушек ниже»: серые секции «Обо мне / Блог / Магазин / Контакты» сняты — после FAQ сразу футер (решение 20.10) -->
+</main>
+
+<!-- 21.10 20:26 · футер — кадр Антона 215:114758 (1920 × 376) один в один; телефон 360 — от него столбиком. Карта — в FAQ «Где ты работаешь?».
+     Меню и языки — те же адреса, что в shell.js; «Написать» открывает окно «Сотрудничество» (coop-2110.js). Ссылки соцсетей и политики — заглушки (ждут Колю). -->
+<footer class="ft" id="footer" aria-label="Контакты">
+  <i class="ftg" aria-hidden="true"></i>
+  <svg class="mk" viewBox="0 0 923 846" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path fill-rule="evenodd" clip-rule="evenodd" d="M465.667 550.723H466.42L547.721 49.7734L556.479 51.1943L475.754 548.595L615.021 99.6523L623.495 102.281L486.827 542.843L661.413 155.746L669.502 159.395L493.008 550.723H498.525L773.865 41.3047H922.462V52.7773H881.479L855.763 100.356V676.168C855.763 722.061 882.687 748.832 922.462 748.832V760.305H729.709V748.832H737.358C777.132 748.832 804.056 722.059 804.056 676.166V196.022L488.248 780.313L461.23 738.887L434.214 780.313L118.406 196.022V676.166C118.406 722.059 145.33 748.831 185.104 748.831L192.753 748.832V760.305H0V748.832C39.7749 748.832 66.699 722.061 66.6992 676.168V100.356L40.9824 52.7773H0V41.3047H148.597L423.937 550.723H429.454L252.96 159.395L261.049 155.746L435.632 542.837L298.967 102.281L307.44 99.6523L446.707 548.595L365.983 51.1943L374.741 49.7734L456.043 550.723H456.795V0H465.667V550.723ZM81.0791 683.816C81.0791 720.531 65.7812 737.358 50.4834 748.832H134.621C119.324 737.358 104.027 720.53 104.026 683.815V171.336H105.063L81.0791 126.962V683.816ZM817.398 171.336H818.436V683.815C818.435 720.53 803.138 737.357 787.841 748.831L871.979 748.832C856.681 737.358 841.383 720.531 841.383 683.816V126.962L817.398 171.336ZM461.231 695.291L808.51 52.7773H782.044L461.231 646.327L140.418 52.7773H113.952L461.231 695.291Z" fill="currentColor"/> <path fill-rule="evenodd" clip-rule="evenodd" d="M461.174 769.305L486.118 807.55L461.174 845.795L436.23 807.55L461.174 769.305ZM461.174 786.653L474.804 807.55L461.174 828.447L447.544 807.55L461.174 786.653Z" fill="currentColor"/> </svg>
+  <nav class="nav" aria-label="Разделы"><a href="index.html">Главная</a><a href="works-r-1710.html">Работы</a><a href="#about">Обо мне</a><a href="#blog">Блог</a><a href="shop.html">Магазин</a></nav>
+  <div class="lng"><a class="on" href="#ru" aria-current="true">RU</a><a href="#en">EN</a><a href="#de">DE</a></div>
+  <ul class="soc" aria-label="Связь"><li><a href="#tg">Telegram</a></li><li><a href="#vk">VK</a></li><li><a href="#ig">Instagram<span aria-hidden="true">*</span></a></li></ul>
+  <div class="adr"><address>Москва, Олимпийский проспект, 10&nbsp;к1–2</address><a class="go" href="https://locationtattoo.ru/mercalov" target="_blank" rel="noopener">Студия «Локация»</a></div>
+  <div class="gst"><p class="gs">Открыт к гест-спотам и&nbsp;сотрудничеству</p><a class="go" href="#sotrudnichestvo" data-coop>Написать</a></div>
+  <a class="pol" href="#policy">Политика обработки персональных данных</a>
+  <p class="cr">© 2008–<span class="yr">2026</span> Николай Мерцалов</p>
+  <p class="meta">*Meta запрещена в РФ</p>
+</footer>
+<!-- 20.10 · плашка согласия на cookie и Яндекс Метрику — кадры 187:17 (1920) · 187:52 (360, над полосой меню). Метрика стартует только после «Принять» (подключить, когда будет счётчик) -->
+<div class="ck" role="dialog" aria-label="Cookie и Яндекс Метрика" hidden><p>Сайт использует <a href="#policy">cookie</a></p><button class="ok caps" type="button">ОК</button></div>
+
+<script>/* 20:01 Антон: умножение на первом экране — «точно хрень»; по умолчанию прежнее затемнение, ?sh=mul — умножение */ if (new URLSearchParams(location.search).get("sh") !== "mul") document.documentElement.classList.add("sh-normal");</script>
+<script src="footer-2010.js?v=2110g" defer></script>
+<script data-late="zap-motion-2010.js?v=2010"></script>   <!-- 20.10 13:26: анкета, «Как проходит работа?» и футер проявляются по прокрутке -->
+<script data-late="relight.js?v=1910"></script>
+<script data-late="intro.js?v=1627"></script>   <!-- 16.10 16:12 Антон: появление текста ?ta=a|b|c и переход прокруткой ?tr=1|2 — варианты на выбор -->   <!-- 16.10 15:00 Антон: «давай попробуем перенести» — свет на портрете (окно merts-relight); ?relight=0 — выключить, ?rlui — ручки -->
+<script>window.S3D = [{"wo": "thompson", "id": "thompson", "c": ["port", "real"], "y": "2015", "src": "w/thompson/01-800.webp", "award": {"c": "Best of Second Day", "p": "1 место", "e": "Татумо, Старый Оскол", "y": "2015"}, "w": 640, "h": 640, "alt": "Татуировка — Хантер Томпсон"}, {"wo": "devil", "id": "devil", "c": ["deco", "real"], "y": "2025", "src": "w/devil/05-800.webp", "w": 720, "h": 1280, "video": "w/devil/05.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Уничтожение культа солнца"}, {"wo": "viking", "id": "viking", "c": ["port", "real"], "y": "2026", "src": "w/viking/02-800.webp", "w": 720, "h": 1280, "video": "w/viking/02.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Викинг"}, {"wo": "chicano", "id": "chicano", "c": ["port", "real"], "y": "2025", "src": "w/chicano/03-800.webp", "w": 720, "h": 1280, "video": "w/chicano/03.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Чикано-портрет"}, {"wo": "bog-edin", "id": "bog-edin", "c": ["port", "real"], "y": "2024", "src": "w/bog-edin/01-800.webp", "w": 800, "h": 1001, "alt": "Татуировка — БОГ ЕДИН"}, {"wo": "moto", "id": "moto", "c": ["real"], "y": "2016", "src": "w/moto/01-800.webp", "award": {"c": "Реализм", "p": "2 место", "e": "Moscow Tattoo Convention", "y": "2016"}, "w": 800, "h": 800, "alt": "Татуировка — Мотогонщики"}, {"wo": "kurdt", "id": "kurdt", "c": ["port", "real"], "y": "2025", "src": "w/kurdt/04-800.webp", "w": 716, "h": 1272, "video": "w/kurdt/04.mp4", "vw": 716, "vh": 1272, "alt": "Татуировка — Kurdt Kobain"}, {"wo": "ruby", "id": "ruby", "c": ["deco", "real"], "y": "2025", "src": "w/ruby/02-800.webp", "w": 720, "h": 1280, "video": "w/ruby/02.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Рубиновый орнамент"}, {"wo": "samurai", "id": "samurai", "c": ["real"], "y": "2025", "src": "w/samurai/01-800.webp", "w": 720, "h": 1280, "video": "w/samurai/01.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Самурай и пагода"}, {"wo": "skull", "id": "skull", "c": ["real"], "y": "2024", "src": "w/skull/03-800.webp", "w": 720, "h": 900, "video": "w/skull/03.mp4", "vw": 720, "vh": 900, "alt": "Татуировка — Череп"}, {"wo": "kolyas", "id": "kolyas", "c": ["real"], "y": "2026", "src": "w/kolyas/02-800.webp", "w": 720, "h": 1280, "video": "w/kolyas/02.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Kolyas"}, {"wo": "beavis", "id": "beavis", "c": ["port", "real"], "y": "2019", "src": "w/beavis/06-800.webp", "award": {"c": "Individual Tattoo", "p": "2 место", "e": "Moscow Tattoo Convention", "y": "2019"}, "w": 640, "h": 640, "video": "w/beavis/06.mp4", "vw": 640, "vh": 640, "alt": "Татуировка — Бивис и Батт-Хед"}, {"wo": "tiger", "id": "tiger", "c": ["deco", "real"], "y": "2025", "src": "w/tiger/08-800.webp", "w": 720, "h": 1280, "video": "w/tiger/08.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Тигр"}, {"wo": "vampire", "id": "vampire", "c": ["real"], "y": "2024", "src": "w/vampire/01-800.webp", "w": 800, "h": 800, "alt": "Татуировка — Вампир"}, {"wo": "reznor", "id": "reznor", "c": ["port", "real"], "y": "2025", "src": "w/reznor/01-800.webp", "w": 800, "h": 977, "alt": "Татуировка — Портрет Трента Резнора"}, {"wo": "rambo", "id": "rambo", "c": ["port", "real"], "y": "2025", "src": "w/rambo/04-800.webp", "w": 720, "h": 1280, "video": "w/rambo/04.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — John James Rambo"}, {"wo": "tattooweek", "id": "tattooweek", "c": ["port", "real"], "y": "2015", "src": "w/tattooweek/01-800.webp", "award": {"c": "Лучшая портретная татуировка", "p": "3 место", "e": "Tattoo Week", "y": "2015"}, "w": 800, "h": 1422, "alt": "Татуировка — Портрет"}, {"wo": "leopard", "id": "leopard", "c": ["real"], "y": "2025", "src": "w/leopard/01-800.webp", "w": 800, "h": 1000, "alt": "Татуировка — Леопард"}, {"wo": "stil", "id": "stil", "c": ["deco"], "y": "2026", "src": "w/stil/01-800.webp", "w": 720, "h": 1280, "video": "w/stil/01.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Стиль"}, {"wo": "pzzl", "id": "pzzl", "c": ["real"], "y": "2024", "src": "w/pzzl/01-800.webp", "w": 720, "h": 1280, "video": "w/pzzl/01.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — PZZL"}, {"wo": "mask", "id": "mask", "c": ["real"], "y": "2025", "src": "w/mask/01-800.webp", "w": 720, "h": 1282, "video": "w/mask/01.mp4", "vw": 720, "vh": 1282, "alt": "Татуировка — Маска самурая"}, {"wo": "cat", "id": "cat", "c": ["real"], "y": "2026", "src": "w/cat/01-800.webp", "w": 720, "h": 1280, "video": "w/cat/01.mp4", "vw": 720, "vh": 1280, "alt": "Татуировка — Кот в доспехе"}];</script>
+<script data-soon="gal-3d-1810.js?v=2010"></script>
+<script>/* 21.10 скорость: данные работ и скрипт второго экрана (data-soon) — сразу, как портрет нарисован (его запись LCP + два кадра; без LCP в браузере — после DOMContentLoaded), не делят с ним канал.
+   Появление первого экрана (gal-3d-1810.js) ждёт шрифт имени — скрипт успевает, пока шрифт догружается. Порядок — как был */
+{ const soon = () => document.querySelectorAll("script[data-soon]").forEach(s => { if (/^works-data/.test(s.dataset.soon) && window.WORKS) return s.remove();
+    const n = document.createElement("script"); n.src = s.dataset.soon; n.async = false; s.replaceWith(n); });
+  let on = false; const go = () => { if (!on) { on = true; requestAnimationFrame(() => requestAnimationFrame(soon)); } };
+  if ((PerformanceObserver.supportedEntryTypes || []).includes("largest-contentful-paint")) {   // портрет нарисован — его запись LCP; страховка — load
+    new PerformanceObserver(l => { if (l.getEntries().some(e => e.element && e.element.matches(".hero .portrait"))) go(); }).observe({ type: "largest-contentful-paint", buffered: true });
+    addEventListener("load", go, { once: true }); }
+  else addEventListener("DOMContentLoaded", go, { once: true }); }</script>
+<script>/* 21.10 скорость: стили и скрипты экранов ниже первого (data-late: «Мой путь», анкета, вопросы, проявление анкеты, свет портрета, intro.js) — после загрузки страницы и первого кадра:
+   сначала стили на своих местах в каскаде, когда они пришли — скрипты в том же порядке, что были; первый экран их не ждёт */
+addEventListener("load", () => requestAnimationFrame(() => requestAnimationFrame(() => Promise.all([...document.querySelectorAll("link[data-late]")].map(l => new Promise(ok => { l.onload = l.onerror = ok; l.rel = "stylesheet"; l.href = l.dataset.late; })))
+  .then(() => document.querySelectorAll("script[data-late]").forEach(s => { const n = document.createElement("script"); n.src = s.dataset.late; n.async = false; s.replaceWith(n); })))), { once: true });</script>
+<script>/* 19.10 11:26: силуэт портрета — вырез в обоях (стили html.pcut выше). Ставится после gal-3d-1810.js (линия перехода срезает первый экран снизу — вырез срезается так же) */
+addEventListener("DOMContentLoaded", () => {
+  const hero = document.querySelector(".hero"), p = hero && hero.querySelector(".portrait"), r = document.documentElement;
+  if (!p) return;
+  r.classList.add("pcut");
+  let q = 0;
+  const put = () => { q = 0;
+    const b = p.getBoundingClientRect(), h = hero.getBoundingClientRect(), clip = /inset\(\S+ \S+ ([\d.]+)px/.exec(hero.style.clipPath || "");
+    const v = getComputedStyle(hero).visibility === "hidden" ? "0px" : clip ? Math.max(0, h.bottom - +clip[1]) + "px" : "100%";
+    [["--pc-x", b.left + "px"], ["--pc-y", b.top + "px"], ["--pc-w", b.width + "px"], ["--pc-h", b.height + "px"], ["--pc-v", v]].forEach(([k, x]) => r.style.setProperty(k, x)); };
+  const ask = () => { if (!q) q = requestAnimationFrame(put); };
+  addEventListener("scroll", ask, { passive: true }); addEventListener("resize", ask); put();
+});</script>
+<script>/* 20.10 04:05 Антон: на телефоне переход с первого экрана на второй — в один смах, без промежуточных состояний.
+   04:19: «и со второго на третий тоже — по одному смахиванию вниз и наверх» → точки остановки: экран 1 (0) · экран 2 (верх .s2) · экран 3 (верх .path).
+   Выше верха третьего экрана палец не прокручивает: вертикальный жест — доезд к следующей / предыдущей точке. Ниже — обычная прокрутка;
+   пришёл снизу (пальцем или инерцией) к верху третьего экрана — дальше вверх снова шагами. Свайп вбок по карусели не трогаем. ?snap=0 — как было */
+(() => {
+  if (new URLSearchParams(location.search).get("snap") === "0") return;
+  const PHONE = matchMedia("(max-width: 767px)"), root = document.documentElement, s2 = document.querySelector(".s2"), s3 = document.querySelector(".path");
+  if (!s2 || !s3) return;
+  const DUR = 600, ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;   // ~ кривая «перелёт» motion-map (.83,0,.17,1)
+  const top = el => Math.round(el.getBoundingClientRect().top + scrollY);
+  const pts = () => [0, top(s2), top(s3)], last = () => top(s3);
+  const next = y => pts().find(p => p > y + 1), prev = y => pts().reverse().find(p => p < y - 1);
+  const busy = () => root.classList.contains("wo-on") || root.classList.contains("menu-open") || root.classList.contains("jump");   // jump — «Главная» из меню телефона (shell.js), 21.10
+  let anim = 0, x0 = 0, y0 = 0, sy = 0, axis = "", fired = false, touching = false, lastY = scrollY;
+  const go = to => {
+    if (to == null) return;
+    const from = scrollY, t0 = performance.now(); cancelAnimationFrame(anim);
+    if (Math.abs(to - from) < 2) return;
+    const step = now => { const k = Math.min(1, (now - t0) / DUR); scrollTo(0, from + (to - from) * ease(k)); anim = k < 1 ? requestAnimationFrame(step) : 0; };
+    anim = requestAnimationFrame(step);
+  };
+  addEventListener("touchstart", e => { touching = true; fired = false; axis = ""; sy = scrollY; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  addEventListener("touchmove", e => {
+    if (!PHONE.matches || busy() || e.touches.length > 1) return;
+    if (anim) { e.preventDefault(); return; }   // доезд идёт — палец не мешает
+    const dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+    if (!axis && Math.hypot(dx, dy) > 6) axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+    if (axis !== "y") return;
+    if (fired) { e.preventDefault(); return; }   // 20.10: доезд в этом жесте уже был — остаток пальца не прокручивает (медленный длинный смах уносил на ~480 px ниже верха экрана 3)
+    const L = last(), y = scrollY, down = dy < 0;   // палец вверх = страница вниз
+    if (!(y < L - 1 || (y <= L + 1 && !down))) return;   // ниже верха третьего экрана — обычная прокрутка
+    e.preventDefault();
+    if (sy > L + 1) { if (!fired) { fired = true; go(L); } return; }   // жест начался ниже и дотянул до верха третьего экрана — встать на нём
+    if (!fired && Math.abs(dy) > 10) { fired = true; go(down ? next(y) : prev(y)); }
+  }, { passive: false });
+  addEventListener("touchend", () => { touching = false; }, { passive: true });
+  // страховка: прокрутка остановилась между точками (инерция снизу, клавиатура, поворот) — доезд по направлению движения
+  let idle = 0;
+  addEventListener("scroll", () => {
+    const y = scrollY, dir = y - lastY; lastY = y;
+    if (!PHONE.matches || anim || busy()) return;
+    const L = last();
+    if (!touching && dir < 0 && y + 2 - dir >= L && y < L - 1) { clearTimeout(idle); go(L); return; }   // инерция снизу пролетела верх третьего экрана — встать на нём, не «пелёнкой»
+    clearTimeout(idle);
+    idle = setTimeout(() => { const y = scrollY; if (touching || anim || y >= last() - 1 || pts().some(p => Math.abs(p - y) <= 1)) return; go(dir < 0 ? prev(y) : next(y)); }, 140);
+  }, { passive: true });
+})();</script>
+</body>
+</html>

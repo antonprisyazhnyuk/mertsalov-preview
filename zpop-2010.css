@@ -1,0 +1,32 @@
+/* 20.10 13:33 · попап анкеты «Записаться» (zpop-2010.js). Поля и состояния — form-2010.css (.zap …), здесь только окно. */
+html.zp-on { overflow: hidden; }
+.zpov { position: fixed; inset: 0; z-index: 1100; display: grid; overflow-y: auto; overscroll-behavior: contain; padding: 4rem 0;
+  opacity: 0; transition: opacity .25s var(--ease); }
+.zpov[hidden] { display: none; }
+.zpov.in { opacity: 1; }
+.zpbg { position: fixed; inset: 0; background: rgba(var(--bg-rgb), .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.zpbg::after { content: ""; position: absolute; inset: 0; opacity: .09; pointer-events: none;   /* зерно, как на сайте */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.zap.zpop { position: relative; z-index: 0; width: 52.5rem; margin: auto; padding: 0; border: 0; }   /* свой слой — подложка рамы (::before, z −1) над затемнением */
+.zpop .zr { margin: 0; }   /* подложка 90 % с зерном — из form-2010.css (14:14) */
+/* 21.10 17:39 Антон: крестик — «внутри» рамы, в углу (было над рамой, top −3rem); z-index — иначе рама .zr перехватывает нажатие */
+.zpx { position: absolute; z-index: 3; right: 1.5rem; top: 1.5rem; width: 2rem; height: 2rem; padding: .375rem; border: 0; background: none; cursor: pointer; color: var(--gold); transition: color .2s; }
+.zpx svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.zpx:hover { color: var(--warm); }
+.zpx:focus-visible { outline: 1px solid var(--warm); outline-offset: 2px; }
+/* рама прорисовывается от ромба ~0.5 с: верх расходится, бока вниз, низ сходится; поля — сразу */
+.zpop .zframe path { transition: stroke-dashoffset .5s cubic-bezier(.4,0,.2,1); }
+.zpov.in .zpop .zframe path { stroke-dashoffset: 0; }
+.zpop .dm { opacity: 0; transition: opacity .15s; }
+.zpov.in .zpop .dm.t { opacity: 1; }
+.zpov.in .zpop .dm.l, .zpov.in .zpop .dm.r { opacity: 1; transition-delay: .24s; }
+.zpov.in .zpop .dm.b { opacity: 1; transition-delay: .46s; }
+@media (prefers-reduced-motion: reduce) { .zpov, .zpop .zframe path, .zpop .dm { transition: none !important; } }
+
+/* телефон: на весь экран над нижней полосой (полоса — поверх, z 1001) */
+@media (max-width: 767px) {
+  .zpov { z-index: 990; padding: 0; }
+  .zpbg { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .zap.zpop { width: auto; min-height: 100%; margin: 0; padding: 4rem 1rem calc(var(--bar-h) + 2rem); box-sizing: border-box; }   /* рама по полям 16–344, как на главной (14:59) */
+  .zpx { top: 1rem; right: 1rem; }
+}

@@ -1,0 +1,85 @@
+/* «Работы» · круг вариаций 17.10 · общее для всех вариантов: токены, база, хедер, полоса телефона, шильдик призовых, просмотр, оси.
+   Пишет только окно «Работы». Вариант своё кладёт в works-r-<школа>.css (селекторы под html[data-v="<школа>"] или свои классы).
+   Единица: 1rem = 16 px на 1920 (десктоп) и на 360 (телефон). 5 осей: 120 · 540 · 960 · 1380 · 1800 = 7.5 · 33.75 · 60 · 86.25 · 112.5rem;
+   телефон 16 · 180 · 344 = 1 · 11.25 · 21.5rem. Пролёт 420 = 26.25rem. Вертикаль — шаг 8 (.5rem). */
+@font-face { font-family: Foglihten; src: url("FoglihtenNo06.woff2") format("woff2"); font-display: swap; }
+:root {
+  --bg: #1a1a1a; --bg-rgb: 26,26,26; --deep: #1f1f1f; --deep-rgb: 31,31,31; --plate: #242424; --plate-in: #1f1f1f;
+  --gold: #cbb88f; --gold-rgb: 203,184,143; --warm: #d8b77a; --muted: #a7a294; --ink: #e6e5e1; --ink-rgb: 230,229,225;
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --p4: cubic-bezier(.77,0,.175,1);       /* power4.inOut рефа */
+  --p2: cubic-bezier(.455,.03,.515,.955); /* power2.inOut рефа */
+  --m: 7.5rem; --gut: 1.5rem;
+  --a1: 7.5rem; --a2: 33.75rem; --a3: 60rem; --a4: 86.25rem; --a5: 112.5rem; --span: 26.25rem;   /* оси и пролёт */
+}
+html { font-size: calc(100vw / 1920 * 16); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+@media (max-width: 767px) { html { font-size: calc(100vw / 360 * 16); } :root { --m: 1rem; --gut: 1rem; --a1: 1rem; --a2: 11.25rem; --a3: 21.5rem; } }
+* { box-sizing: border-box; }
+body { margin: 0; overflow-x: clip; background: var(--bg); color: var(--ink); font-family: Jost, sans-serif; font-weight: 400; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+.caps { font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.pg { position: relative; z-index: 1; min-height: 100vh; }
+
+/* ── хедер сайта (статичный, как в gal-v2b) ── */
+.hd { position: absolute; z-index: 10; left: 0; right: 0; top: 0; height: 8rem; }
+.hd nav { position: absolute; left: var(--m); top: 4.125rem; display: flex; gap: 2.5rem; }
+.hd nav a, .hd .langs a { color: var(--muted); transition: color .2s; }
+.hd nav a:hover, .hd .langs a:hover, .hd nav a.on, .hd .langs a.on { color: var(--warm); }
+.hd .mark { position: absolute; left: 50%; top: 2rem; width: 6rem; transform: translateX(-50%); color: var(--gold); }
+.hd .mark svg, .bar .mark svg { display: block; width: 100%; height: auto; }
+.hd .langs { position: absolute; left: calc(75% - 8.5rem); transform: translateX(-50%); top: 4.125rem; display: flex; gap: 1.5rem; }
+.hd .cta { position: absolute; right: var(--m); top: 3.125rem; }
+.b { position: relative; display: block; width: 12.5rem; height: 3.25rem; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .12s;
+  --o-fill: var(--plate); --o-line: var(--gold); --i-fill: transparent; --i-line: var(--gold); --txt: var(--gold); --t: .5s; }
+.b svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.b .o { fill: var(--o-fill); stroke: var(--o-line); stroke-width: 2; transition: fill var(--t), stroke var(--t); }
+.b .i { fill: var(--i-fill); stroke: var(--i-line); stroke-width: .8; transition: fill var(--t), stroke var(--t); }
+.b span { position: absolute; left: 0; right: 0; top: 1rem; text-align: center; color: var(--txt); transition: color var(--t); padding-left: .1em; }
+.b:hover { --i-line: var(--warm); --i-fill: var(--plate-in); --txt: var(--warm); }
+
+
+/* ── картинка работы: целиком, своя пропорция (aspect-ratio ставит R.img), без обрезки — и при наведении тоже ── */
+.r-ph { display: block; position: relative; width: 100%; background: var(--deep); }
+.r-ph img, .r-ph video { display: block; width: 100%; height: 100%; }
+
+/* ── шильдик призовой: золотая ветвь с главной + «1 место · номинация», ниже конвенция, год ── */
+.r-aw { display: inline-flex; align-items: center; gap: .5rem; color: var(--gold); }
+.r-aw .lv { flex: none; height: 2rem; width: auto; }
+.r-awt { font-size: .75rem; line-height: 1rem; letter-spacing: .04em; color: var(--gold); }
+.r-awt b { font-weight: 400; text-transform: uppercase; letter-spacing: .1em; }
+.r-awt small { display: block; font-size: .75rem; line-height: 1rem; color: var(--muted); }
+
+/* ── просмотр одной работы (R.open) ── */
+.r-lb { position: fixed; inset: 0; z-index: 60; display: none; background: var(--bg); }
+.r-lb.on { display: block; }
+body.r-open { overflow: hidden; }
+.r-lb .r-x { position: absolute; right: var(--a1); top: 3rem; padding: 0; border: 0; background: none; color: var(--gold); cursor: pointer; }
+.r-lb .r-st { position: absolute; top: 7.5rem; bottom: 9rem; left: var(--a2); right: calc(100% - var(--a4)); display: flex; align-items: center; justify-content: center; }
+.r-lb .r-st img, .r-lb .r-st video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; }
+.r-lb .r-cap { position: absolute; left: var(--a2); right: calc(100% - var(--a4)); bottom: 3.5rem; margin: 0; display: flex; flex-direction: column; align-items: center; gap: .5rem; font-size: .875rem; line-height: 1.25rem; color: var(--muted); }
+
+/* ── оси (?ax=1) ── */
+.axes { position: fixed; inset: 0; z-index: 99; pointer-events: none; }
+.axes i { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -.5px; background: rgba(255,72,72,.75); }
+.axes i:nth-child(1) { left: var(--a1); } .axes i:nth-child(2) { left: var(--a2); } .axes i:nth-child(3) { left: var(--a3); }
+.axes i:nth-child(4) { left: var(--a4); } .axes i:nth-child(5) { left: var(--a5); }
+
+/* ── телефон: хедера нет, полоса «МЕНЮ · знак · ЗАПИСЬ» внизу (как на главной) ── */
+.bar { display: none; }
+@media (max-width: 767px) {
+  .hd { display: none; }
+  .axes i:nth-child(n+4) { display: none; }
+  .r-lb .r-x { right: var(--m); top: 1.5rem; font-size: .75rem; }
+  .r-lb .r-st { top: 4rem; bottom: 10rem; left: var(--m); right: var(--m); }
+  .r-lb .r-cap { left: var(--m); right: var(--m); bottom: 5rem; font-size: .75rem; line-height: 1rem; }
+  .bar { display: block; position: fixed; z-index: 35; left: 0; right: 0; bottom: 0; height: 4rem; background: rgba(var(--deep-rgb),.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: height .45s var(--ease), background .45s; }
+  body.scrolled .bar, body.r-open .bar { height: 3.25rem; background: rgba(var(--deep-rgb),.92); }
+  .bar .caps { font-size: .75rem; line-height: 1.0625rem; }
+  .bar button.menu, .bar a.rec { position: absolute; top: 0; height: 100%; display: flex; align-items: center; padding: 0 1.375rem;
+    background: none; border: 0; color: var(--gold); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .bar button.menu { left: 0; } .bar a.rec { right: 0; }
+  .bar .mark { position: absolute; left: 50%; top: .9375rem; width: 2.375rem; transform: translateX(-50%); color: var(--gold); transition: width .45s var(--ease), top .45s var(--ease); }
+  body.scrolled .bar .mark, body.r-open .bar .mark { width: 2rem; top: .6875rem; }
+}

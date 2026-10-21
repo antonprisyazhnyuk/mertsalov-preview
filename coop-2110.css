@@ -1,0 +1,25 @@
+/* 21.10 20:56 · окно «Сотрудничество» — из прототипа _form-proto-2110.html (решения Антона 17:25–17:43) в сайт: «Написать» в футере открывает его поверх страницы,
+   как «Записаться» (zpop-2010.js). Поля и рама — стили анкеты (form-2010.css, zpop-2010.css); здесь — только своё окна. */
+/* ── окно «Сотрудничество» — Р-Б: шапка над полями ── */
+.zap .zhd { margin: 0 0 2.5rem; }
+.zap .zhd .kk { display: block; font: 400 .75rem/1.0625rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+.zap .zhd h2 { margin: 1rem 0 0; font: 400 3.5rem/3.25rem Foglihten, serif; text-transform: uppercase; color: var(--gold); }
+.zap .zhd p { margin: 1.25rem 0 0; font: 400 1.125rem/1.625rem Jost, sans-serif; color: var(--muted); }
+.zap .zr.sent .zhd { display: none; }
+.zap .zi[hidden], .zap [data-for][hidden] { display: none !important; }
+.zco .z3 { grid-template-columns: repeat(3, 1fr); }   /* в анкете записи ряд теперь из двух (20:43, без «Города»); здесь — три, как в прототипе */
+.zap .zs2 { grid-column: span 2; }   /* не .s2 — так на главной зовётся второй экран, на десктопе он скрыт */
+.zap .chips.offer { flex-wrap: nowrap; }
+.zap .chips.offer button { flex: 1 1 auto; padding: 0 .75rem; white-space: nowrap; }
+.zap .zdone p { max-width: 30rem; margin: 0 auto !important; }
+
+
+@media (max-width: 767px) {
+  .zco .z3 { grid-template-columns: 1fr; }
+  .zap .zhd { margin-bottom: 2rem; }
+  .zap .zhd h2 { font-size: 2rem; line-height: 2rem; hyphens: manual; }
+  .zap .zhd p { font-size: .9375rem; line-height: 1.375rem; }
+  .zap .zs2 { grid-column: auto; }
+  .zap .chips.offer { display: grid; grid-template-columns: 1fr 1fr; }
+  .zap .chips.offer button { padding: 0; }
+}

@@ -1,0 +1,141 @@
+/* 20.10 · экран 3 «Мой путь» — три варианта по рефам, слово Антона 06:09: ?path=a24 (по умолчанию) | freshman | buro; 06:24 + loco (Locomotive).
+   Механика и раскладка — реф один в один, на наших осях (120 · 540 · 960 · 1380 · 1800), шрифтах и палитре.
+   Телефон — один на все три: строка вехи, тап — кадр под строкой (как ANORAK). Вехи и кадры — design/path-media-2010.md.
+   1rem = 16 px на 1920 и на 360 (shell.css). Старые стили .path из gal-3d-1810.css перекрыты весом html .path. */
+
+html .path { position: relative; min-height: 100vh; margin: 0; padding: 0; border-top: 1px solid rgba(var(--gold-rgb), .15); color: var(--ink); }
+html .path h2 { margin: 0; }
+html .path p { margin: 0; max-width: none; }
+.path .pl { list-style: none; margin: 0; padding: 0; }
+.path .pl li { cursor: default; }
+.path .pl q { quotes: none; }
+.path .wait { font-size: .6em; vertical-align: super; color: var(--warm); margin-left: .15em; }   /* ⚠ ждёт Антона — год */
+.path .pl li.tbd q { color: var(--muted); }   /* фраза Коли ещё не получена */
+.path figure { margin: 0; }
+.path .mf { display: none; }
+.path .ins { display: none; }               /* кадр внутри строки — только loco на десктопе */                  /* кадр вехи внутри строки — только телефон */
+.path .pw { display: none; }                  /* окна наведения — только десктоп */
+.path .pw img, .path .pw video, .path .mf img, .path .mf video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.path .vh-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ── десктоп ─────────────────────────────── */
+@media (min-width: 768px) {
+  .path .pw { display: block; position: fixed; z-index: 3; pointer-events: none; opacity: 0; transition: opacity .18s linear; background: var(--tile); overflow: hidden; }
+  .path .pw.on { opacity: 1; }
+  .path .pw video { position: absolute; inset: 0; }
+
+  /* ── A24 «All films» (a24films.com/films, замер 1920): линейка над заголовком на всю ширину, заголовок ≈130,
+     подписи колонок моно 11 капсом, год крупно слева (88 → наша ось 120), строка от второй колонки (383 → 540),
+     строка 106 с линейкой сверху от второй колонки до правого поля, справа — метка мелко капсом.
+     Наведение: кадр в квадрате у правого края от середины экрана (974…1860, низом в низ окна), строка сереет. */
+  .path[data-v="a24"] { padding: 10rem 7.5rem 7.5rem; }
+  .path[data-v="a24"] .ph { border-top: 1px solid rgba(var(--ink-rgb, 230,229,225), .9); padding-top: .75rem; }
+  .path[data-v="a24"] h2 { font: 400 8.125rem/1 Foglihten, serif; color: var(--warm); letter-spacing: -.01em; }
+  .path[data-v="a24"] .pcnt, .path[data-v="a24"] .pys { display: none; }
+  .path[data-v="a24"] .cols { display: grid; grid-template-columns: 26.25rem 1fr auto; margin-top: 4rem; font: 400 .6875rem/1 Jost, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .path[data-v="a24"] .pl { margin-top: 1.25rem; }
+  .path[data-v="a24"] .pl li { display: grid; grid-template-columns: 26.25rem 1fr auto; align-items: start; min-height: 6.625rem; position: relative; }
+  .path[data-v="a24"] .pl li::before { content: ""; position: absolute; left: 26.25rem; right: 0; top: 0; border-top: 1px solid rgba(var(--ink-rgb, 230,229,225), .14); }
+  .path[data-v="a24"] .pl li:first-child::before { display: none; }
+  .path[data-v="a24"] .y { font: 400 3rem/3rem Jost, sans-serif; font-variant-numeric: tabular-nums; letter-spacing: -.01em; padding-top: .375rem; }
+  .path[data-v="a24"] q { font: 400 3rem/3rem Jost, sans-serif; letter-spacing: -.0125em; padding-top: .375rem; white-space: nowrap; transition: color .15s; }
+  .path[data-v="a24"] .k { font: 400 .72rem/1 Jost, sans-serif; letter-spacing: .08em; text-transform: uppercase; padding-top: 1.125rem; color: var(--ink); }
+  .path[data-v="a24"] .n, .path[data-v="a24"] .cap { display: none; }
+  .path[data-v="a24"] .pl li.hov q { color: #8a877f; }
+  .path[data-v="a24"] .more { display: none; }
+  .path[data-v="a24"] .pw.r { left: 50%; bottom: 0; width: min(55.375rem, calc(100vh - 12.125rem)); aspect-ratio: 1; }
+  .path[data-v="a24"] .pw.l, .path[data-v="a24"] .slot { display: none; }
+  .path[data-v="a24"].hov-on .pl li .y, .path[data-v="a24"].hov-on .pl li q, .path[data-v="a24"].hov-on .pl li .k { position: relative; z-index: 4; }   /* текст строк поверх кадра, как у A24 */
+
+  /* ── Freshman «Directors» (freshman.tv/directors, замер 1920): счётчик «(12)» и подпись по центру сверху (164 / 185),
+     имена крупно по центру — 106.7 капсом, строка 90.7, шаг 128; слева от имени мелко капсом 16 (имя), справа мелко 18.7 (город),
+     верх мелких на 28 ниже верха строки. Наведение: два кадра 16:9 455×256 у краёв (27 и 1439), центр по вертикали окна. */
+  .path[data-v="freshman"] { padding: 10.25rem 0 8rem; text-align: center; }
+  .path[data-v="freshman"] .ph { display: flex; flex-direction: column; align-items: center; }
+  .path[data-v="freshman"] .pcnt { order: -1; font: 400 1.1667rem/1 Jost, sans-serif; color: var(--warm); }
+  .path[data-v="freshman"] h2 { font: 400 1.3333rem/1.6667rem Foglihten, serif; color: var(--ink); margin-top: .3125rem; }
+  .path[data-v="freshman"] .cols, .path[data-v="freshman"] .pys, .path[data-v="freshman"] .k, .path[data-v="freshman"] .cap, .path[data-v="freshman"] .slot, .path[data-v="freshman"] .more { display: none; }
+  .path[data-v="freshman"] .pl { margin-top: 2.25rem; }
+  .path[data-v="freshman"] .pl li { display: flex; justify-content: center; align-items: flex-start; gap: .75rem; height: 8rem; width: max-content; margin: 0 auto; }   /* наведение — только по самой строке, как у Freshman */
+  .path[data-v="freshman"] .y { order: 2; font: 400 6.6667rem/5.6667rem Foglihten, serif; text-transform: uppercase; color: var(--warm); padding-top: 1.0625rem; }
+  .path[data-v="freshman"] .n { order: 1; width: 12.5rem; text-align: right; font: 400 1rem/1 Jost, sans-serif; letter-spacing: .02em; text-transform: uppercase; padding-top: 1.75rem; }
+  .path[data-v="freshman"] q { order: 3; width: 12.5rem; text-align: left; font: 400 1.1667rem/1.25 Jost, sans-serif; color: var(--muted); padding-top: 1.75rem; }
+  .path[data-v="freshman"] .y .wait { font-size: .25em; }
+  .path[data-v="freshman"] .pw { top: calc(50vh - 8rem); width: 28.4375rem; aspect-ratio: 455 / 256; }
+  .path[data-v="freshman"] .pw.l { left: 1.6875rem; }
+  .path[data-v="freshman"] .pw.r { right: 1.6875rem; }
+
+  /* ── Locomotive «Featured work» (locomotive.ca/en, замер 1920): подпись раздела 29.5 слева, строки 194 с линейкой 2 px сверху
+     от поля до поля, название 146.7 по центру. Наведение: между словами раскрывается кадр 3:2 высотой в кегль (220×147), слова расходятся.
+     Строки Коли длиннее названий Locomotive — кегль 84 и до двух строк в той же высоте строки 194; год — мелко у левого поля строки. */
+  .path[data-v="loco"] { padding: 10rem 7.5rem 7.5rem; }
+  .path[data-v="loco"] .pcnt, .path[data-v="loco"] .cols, .path[data-v="loco"] .pys, .path[data-v="loco"] .slot, .path[data-v="loco"] .n, .path[data-v="loco"] .k, .path[data-v="loco"] .pw, .path[data-v="loco"] .more { display: none; }
+  .path[data-v="loco"] h2 { font: 400 1.8417rem/2.21rem Jost, sans-serif; color: var(--ink); padding-bottom: .5rem; }
+  .path[data-v="loco"] .pl li { position: relative; display: flex; align-items: center; justify-content: center; min-height: 12.125rem; border-top: 2px solid rgba(var(--gold-rgb), .55); }
+  .path[data-v="loco"] .pl li:last-child { border-bottom: 2px solid rgba(var(--gold-rgb), .55); }
+  .path[data-v="loco"] .y { position: absolute; left: 0; top: 1rem; font: 400 1.0625rem/1 Jost, sans-serif; color: var(--muted); }
+  .path[data-v="loco"] q { max-width: 90rem; text-align: center; font: 400 5.25rem/5.75rem Foglihten, serif; color: var(--warm); }
+  .path[data-v="loco"] .pl li.tbd q { color: var(--muted); }
+  .path[data-v="loco"] .ins { display: inline-block; vertical-align: middle; width: 0; height: 5.25rem; margin: -.5rem .13em 0; overflow: hidden; transition: width .45s var(--ease), margin .45s var(--ease); background: var(--tile); }
+  .path[data-v="loco"] .ins img, .path[data-v="loco"] .ins video { display: block; width: 7.875rem; height: 100%; object-fit: cover; }
+  .path[data-v="loco"] .pl li.hov .ins { width: 7.875rem; margin: -.5rem .375em 0; }
+  /* ── Büro18 — ПРИНЦИПЫ, не копия (Антон 06:19: «отсюда можно взять принципы… у нас не такой контент»):
+     (1) горизонтальная лента от вертикальной прокрутки — секция прибита, колесо вниз → лента едет; после ленты прокрутка идёт дальше;
+     (2) анимации по ходу ленты — появление, разные скорости слоёв, ролик вехи играет у центра;
+     (3) типографика — гигантские годы, строки Коли крупным капсом, мелкие подписи, тонкая линия через всю ленту с метками годов.
+     Только ≥1024; уже — список как на телефоне. Ленту строит path-2010.js из того же списка вех. */
+  .path[data-v="buro"] .slot, .path[data-v="buro"] .pys, .path[data-v="buro"] .cols, .path[data-v="buro"] .pw { display: none; }
+}
+@media (min-width: 1024px) {   /* buro · версия 2 (20.10 06:58): прямая линия с годами, цитата, рассказ Коли, работа — без лишнего */
+  .path[data-v="buro"] { padding: 0; height: var(--buro-h, 600vh); }
+  .path[data-v="buro"] > .ph, .path[data-v="buro"] > .pl, .path[data-v="buro"] > .more { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }   /* текст вех остаётся в странице (Яндекс), видна лента */
+  .path .bst { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .path .btr { position: absolute; left: 0; top: 0; height: 100%; will-change: transform; }
+  .path .bln2 { position: absolute; left: 0; height: 0; border-top: 1px solid rgba(var(--gold-rgb), .55); }
+  .path .b2-dot { position: absolute; width: .625rem; height: .625rem; margin: -.3125rem 0 0 -.3125rem; border-radius: 50%; background: var(--warm); }
+  .path .bx { position: absolute; will-change: opacity; }
+  .path .b2-ttl { font: 400 12rem/1 Foglihten, serif; color: var(--warm); white-space: nowrap; }
+  .path .b2-snd button { font: 400 1.125rem/1 Jost, sans-serif; letter-spacing: .04em; color: var(--gold); background: transparent; border: 1px solid rgba(var(--gold-rgb), .6); padding: 1rem 1.75rem; cursor: pointer; }
+  .path .b2-snd button:hover { background: rgba(var(--gold-rgb), .1); }
+  .path .b2-snd button[aria-pressed="true"] { color: var(--bg); background: var(--gold); }
+  .path .b2-y { display: grid; place-items: center; }
+  .path .b2-y svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .path .b2-y polygon { fill: var(--bg); stroke: var(--gold); vector-effect: non-scaling-stroke; }
+  .path .b2-y .o1 { stroke-width: 1.4; } .path .b2-y .o2 { fill: none; stroke-width: .7; stroke-opacity: .7; }
+  .path .b2-y b { position: relative; font: 400 2.75rem/1 Foglihten, serif; color: var(--warm); white-space: nowrap; }
+  .path .b2-y b.w { font-size: 1.875rem; }   /* «Сегодня» — внутри медальона */
+  .path .b2-y::before, .path .b2-y::after { content: ""; position: absolute; left: 50%; height: 2.25rem; border-left: 1px solid rgba(var(--gold-rgb), .6); }   /* засечки по оси, как стрелки у Р6 */
+  .path .b2-y::before { bottom: calc(100% + .5rem); } .path .b2-y::after { top: calc(100% + .5rem); }
+  .path .b2-q { width: 30rem; font: 400 3.25rem/3.625rem Foglihten, serif; color: var(--ink); }
+  .path .b2-q.tbd { color: var(--muted); }
+  .path .b2-m { overflow: hidden; background: var(--tile); }
+  .path .b2-m img, .path .b2-m video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .path .b2-m.cut-top video { transform: scale(1.12); transform-origin: 50% 100%; }   /* у J07 сверху шуточная надпись истории — срезана */
+  .path .b2-c { font: 400 1rem/1.35 Jost, sans-serif; color: var(--muted); }
+}
+@media (min-width: 768px) and (max-width: 1023px) {   /* buro уже 1024 — простой список */
+  .path[data-v="buro"] { padding: 6rem 3rem; }
+  .path[data-v="buro"] h2 { font: 400 4rem/1 Foglihten, serif; color: var(--warm); margin-bottom: 2rem; }
+  .path[data-v="buro"] .pl li { display: grid; grid-template-columns: 8rem 1fr; padding: 1rem 0; border-top: 1px solid rgba(230,229,225,.14); }
+  .path[data-v="buro"] .n, .path[data-v="buro"] .k, .path[data-v="buro"] .pcnt { display: none; }
+  .path[data-v="buro"] .y, .path[data-v="buro"] q { font: 400 1.5rem/1.3 Jost, sans-serif; }
+}
+
+/* ── телефон 360: один на все три — строка вехи, тап — кадр под строкой (ANORAK: видео встаёт в текст блоком) ── */
+@media (max-width: 767px) {
+  html .path { padding: 2rem 1rem calc(var(--bar-h) + 2rem); }
+  .path .ph { display: flex; align-items: baseline; justify-content: space-between; }
+  .path h2 { font: 400 2.5rem/1 Foglihten, serif; color: var(--warm); }
+  .path .pcnt { font: 400 1rem/1 Jost, sans-serif; color: var(--muted); }
+  .path .cols, .path .pys, .path .n, .path .slot, .path .cap { display: none; }
+  .path .pl { margin-top: 1.5rem; border-bottom: 1px solid rgba(230,229,225,.14); }
+  .path .pl li { display: grid; grid-template-columns: 4.75rem 1fr auto; align-items: baseline; column-gap: .5rem; padding: .875rem 0; border-top: 1px solid rgba(230,229,225,.14); -webkit-tap-highlight-color: transparent; cursor: pointer; }
+  .path .y { font: 400 1rem/1.375rem Jost, sans-serif; font-variant-numeric: tabular-nums; color: var(--warm); }
+  .path q { font: 400 1.0625rem/1.375rem Jost, sans-serif; }
+  .path .k { font: 400 .625rem/1 Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .path .pl li .k::after { content: " +"; }
+  .path .pl li.open .k::after { content: " −"; }
+  .path .pl li.open .mf { display: block; grid-column: 1 / -1; margin-top: .875rem; background: var(--tile); }
+  .path .mf img, .path .mf video { height: auto; max-height: 60svh; }
+  .path .more { display: inline-block; margin-top: 1.5rem; font: 400 1rem/1 Jost, sans-serif; color: var(--gold); text-decoration: none; }
+}

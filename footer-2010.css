@@ -1,0 +1,61 @@
+/* 21.10 20:26 · футер — кадр Антона 215:114758 («вот футер»), 1920 × 376, один в один. Размеры — px кадра / 16 = rem.
+   Три строки на трёх осях: слева 120 · центр 960 · справа 1800. 1) меню (с 121, как в кадре) · языки · соцсети (верх строк 55);
+   2) адрес + «Студия „Локация“» · гест-споты + «Написать» (178 / 202); 3) политика · © · оговорка Meta (320). Тёмный знак 382 на оси, верх 16.
+   20:28 Антон: «на нём тоже должен быть нойз»; 20:35 «футер всё равно должен быть темнее» → фон плотный #1a1a1a, как в кадре (обои не видны), поверх — своё зерно,
+   как у сайта (плитка шума 0.5 px, 8 %, экраном; footer-2010.js). 20:36 «с нойзом он сливается» — замер: страница над футером 35, футер на #1a1a1a с зерном 34 →
+   фон #111 (с зерном ≈ 26 — как чистый #1a1a1a кадра рядом со страницей), знак на +5 от фона, как в кадре (#1f1f1f на #1a1a1a). Линии и ромба сверху в кадре нет. */
+.ft { --ftb: #111111; --ftm: #161616; position: relative; z-index: 1; background: var(--ftb); display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; padding: 3.4375rem 7.5rem 2.4375rem; }
+.ft .mk { position: absolute; z-index: -2; left: calc(50% - 12rem); top: 1rem; width: 23.875rem; height: auto; color: var(--ftm); pointer-events: none; }   /* 382 × 350, x 768; на 5 светлее фона, как в кадре */
+.ft .ftg { position: absolute; z-index: -1; inset: 0; opacity: .08; mix-blend-mode: screen; image-rendering: pixelated; background-repeat: repeat; background-size: 128px 128px; pointer-events: none; }   /* зерно поверх фона и знака, под текстом */
+.ft .nav { grid-column: 1; grid-row: 1; }
+.ft .lng { grid-column: 2; grid-row: 1; justify-self: center; }
+.ft .soc { grid-column: 3; grid-row: 1; justify-self: end; }
+.ft .adr { grid-column: 1; grid-row: 2; margin-top: 6.4375rem; }   /* 75 → 178 */
+.ft .gst { grid-column: 3; grid-row: 2; justify-self: end; margin-top: 6.4375rem; text-align: right; }
+.ft .pol { grid-column: 1; grid-row: 3; justify-self: start; } .ft .cr { grid-column: 2; grid-row: 3; justify-self: center; } .ft .meta { grid-column: 3; grid-row: 3; justify-self: end; }
+.ft .pol, .ft .cr, .ft .meta { margin-top: 6.125rem; }   /* 222 → 320; снизу 39 */
+.ft .nav, .ft .lng, .ft .soc { display: flex; align-items: flex-start; gap: 2.5rem; margin: 0; padding: 0; list-style: none; white-space: nowrap; }
+.ft .nav { margin-left: .0625rem; }   /* в кадре меню с 121 */
+.ft .nav a, .ft .lng a, .ft .soc a, .ft .go { font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color .2s; }
+.ft .nav a, .ft .lng a, .ft .soc a, .ft .go { margin-right: -.1em; }   /* разрядка после последней буквы — в Figma её нет; без этого ряд уезжает на 1–4 px */
+.ft .soc a { display: block; }
+.ft .lng a.on { color: var(--warm); }   /* текущий — только цветом, как в хедере */
+.ft address, .ft .gs { margin: 0; font: 400 1rem/1.5rem Jost, sans-serif; font-style: normal; color: var(--ink); }
+.ft .go { display: block; width: fit-content; color: var(--gold); }
+.ft .gst .go { margin-left: auto; }
+.ft .pol, .ft .cr, .ft .meta { margin-bottom: 0; font: 400 .75rem/1.0625rem Jost, sans-serif; color: var(--muted); }
+.ft .pol { width: fit-content; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; transition: color .2s; }
+.ft a:hover { color: var(--warm); }
+.ft a:focus-visible { outline: 1px solid var(--warm); outline-offset: .25rem; }
+
+/* плашка cookie и Метрики — внизу окна слева по оси 120, поверх страницы до ответа */
+/* 21.10 19:09 Антон: плашка без обводки; «Принять» — ссылкой (кадр 214:113315: 960 × 84, между «Принять» и «Отказаться» 24) */
+.ck { position: fixed; z-index: 12; right: 7.5rem; bottom: 2rem;   /* 19:12 Антон: на десктопе — по правой оси (1800), не перекрывать заголовок */
+   display: flex; align-items: center; gap: 1.5rem; width: 18.6875rem; justify-content: space-between; box-sizing: border-box; padding: 1.25rem 2rem;   /* 19:42 кадр Антона 215:114747: 299 × 62, поля 32 / 20, от текста до «ОК» 60 */
+  background: rgb(var(--deep-rgb)); }   /* 19:45: фон непрозрачный, без размытия — на 95 % сквозь плашку просвечивала формула первого экрана (светлая черта у края) */
+.ck[hidden] { display: none; }
+.ck p { flex: 1; margin: 0 .5rem 0 0; font: 400 .9375rem/1.375rem Jost, sans-serif; color: var(--ink); }
+.ck p a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.ck .ok { flex: none; padding: 0; border: 0; background: none; cursor: pointer; transition: color .2s; color: var(--gold); }
+.ck .ok:hover { color: var(--warm); }
+
+/* ── телефон 360 — кадр 187:25: столбиком, поля 16; полоса меню остаётся видна ── */
+@media (max-width: 767px) {
+  /* футер телефона 360 — от кадра Антона 215:114758: те же пункты столбиком по оси 180, знак за текстом; низ — над полосой меню 52 */
+  .ft { display: flex; flex-direction: column; align-items: center; padding: 2.5rem 1rem calc(3.25rem + 2.5rem); text-align: center; }
+  .ft .mk { left: calc(50% - 10.25rem); top: 7.875rem; width: 20.5rem; }   /* 328 × 300, по центру столбика */
+  .ft .lng { order: 1; }
+  .ft .gst { order: 2; margin-top: 2.5rem; text-align: center; } .ft .gst .go { margin: 0 auto; }
+  .ft .nav { order: 3; margin: 3rem 0 0; flex-wrap: wrap; justify-content: center; gap: .75rem 2rem; max-width: 17rem; white-space: normal; }
+  .ft .soc { order: 4; margin-top: 2.5rem; gap: 2rem; }
+  .ft .adr { order: 5; margin-top: 3rem; } .ft .adr .go { margin: 0 auto; }
+  .ft .pol { order: 6; margin-top: 3rem; } .ft .cr { order: 7; margin-top: .5rem; } .ft .meta { order: 8; margin-top: .5rem; }
+  /* плашка — над полосой меню, на 8 выше её верха */
+  /* 19:44 Антон: полоса на телефоне — «тоже хрень» → та же карточка, что на десктопе (кадр 215:114747, 299 × 62), справа 16, на 8 выше полосы меню */
+  /* 19:52 Антон: «норм» — его кадр 215:114750 (Frame 46): 211 × 43, поля 20 / 12, текст 13/19, «ОК» 12 капс, между ними 20; справа 16, на 8 выше полосы меню */
+  .ck { left: 50%; right: auto; translate: -50% 0; bottom: calc(3.25rem + .5rem); width: 16.25rem;   /* 19:58 «по центру»; 20:14 Антон «давай вот так» — Frame 46: 260 × 43, поля 20/12, по центру, на 8 выше меню */
+    flex-wrap: nowrap; gap: 1.25rem; padding: .75rem 1.25rem; }
+  body.scrolled .ck { bottom: calc(3.25rem + .5rem); }
+  .ck p { margin: 0; font-size: .8125rem; line-height: 1.1875rem; white-space: nowrap; }
+  .ck .ok { font-size: .75rem; line-height: 1.0625rem; }
+}

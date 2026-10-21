@@ -1,0 +1,236 @@
+/* Каркас сайта Мерцалова · 18.10 — общий для всех страниц: токены, шрифты, обои со светом руки, хедер десктопа,
+   кнопка «Записаться», полоса и шторка телефона. Значения — дословно из index.html (строки 12–44, 194–234, 289–322).
+   Разметку и поведение вставляет shell.js. Подключён в index.html (с 19.10) и works-r-1710.html.
+   Страница подключает shell.css ПОСЛЕ своих стилей: старые копии хедера в стилях страницы перекрываются этим файлом.
+   1rem = 16 px на 1920 (десктоп) и на 360 (телефон). */
+/* Jost — свой woff2 (fonts/), @font-face стоит в <head> каждой страницы вместе с preload; внешних запросов нет. */
+@font-face { font-family: Foglihten; src: url("FoglihtenNo06.woff2") format("woff2"); font-display: swap; }
+:root {
+  /* палитра «Шампань» — утверждена Антоном 14.10 12:45 */
+  --bg: #1a1a1a; --bg-rgb: 26,26,26;   /* 16.10 14:17 Антон: фон = самый тёмный тон, что давал дым */ --deep: #1f1f1f; --deep-rgb: 31,31,31; --deep2: #1c1c1c;
+  --plate: #242424; --plate-in: #1f1f1f; --plate-on: #202020; --tile: #232323;
+  --gold: #cbb88f; --gold-rgb: 203,184,143; --warm: #d8b77a; --warm-rgb: 216,183,122; --dim: #9a8b69;
+  --muted: #a7a294; --ink: #e6e5e1; --sheen: #ffffff; --wall: url("wall-cham.svg");
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --hd-h: 8rem;    /* высота хедера десктопа — контент страницы начинается не выше */
+  --bar-h: 4rem;   /* полоса телефона — запас снизу под неё */
+}
+html { font-size: calc(100vw / 1920 * 16); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }  /* 16:31 Антон: сглаживание как в Figma */
+@media (max-width: 767px) { html { font-size: calc(100vw / 360 * 16); } }
+* { box-sizing: border-box; }
+body { overflow-x: clip; margin: 0; background: var(--bg); color: var(--ink); font-family: Jost, sans-serif; font-weight: 400;  /* 15:03 Антон: Jost везде Regular */ }
+a { color: inherit; text-decoration: none; }
+.caps { font: 400 0.875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+
+/* ── обои — на всю страницу; свет руки: база бледно, под мышью проявляются ── */
+:root { --mx: 50%; --my: 40%; }
+.wall, .wall-lit { position: fixed; inset: 0; z-index: -1;  /* под всем содержимым */ pointer-events: none; background: var(--wall) 0 0 / 8rem 24.375rem repeat; }
+.wall { opacity: .015; }   /* ✅ 16.10 14:58 Антон: основа 1.5 % · размер 125 % · параллакс 0.05 · свет 25 %, радиус 150, край мягкий · тёплое 2 %, радиус 400 */
+@media (min-width: 768px) { .wall, .wall-lit { background-size: 10rem 30.46875rem; } }
+@media (max-width: 767px) { .wall, .wall-lit { background-size: calc(8rem * var(--wp, .7)) calc(24.375rem * var(--wp, .7)); } }   /* ✅ 16.10 14:34 Антон: обои на телефоне 70 % */
+.wall-lit { opacity: .25;
+  -webkit-mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%);
+          mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%); }
+.wall-shade { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(circle 400px at var(--mx) var(--my), rgba(var(--warm-rgb),.02), transparent 70%); }
+main { position: relative; z-index: 1; }
+
+/* ── хедер 1920 ── */
+/* при прокрутке: плашка темнеет 0 → .88 с размытием, хедер 128 → 92, знак 96 → 56, всё за .45 с */
+.hd { position: fixed; z-index: 10; left: 0; right: 0; top: 0; height: 8rem; transition: height .45s var(--ease); }
+/* низ плашки — ровно по золотой линии (слово Антона 12:20) */
+.hd .plate { position: absolute; left: 0; right: 0; top: 0; height: calc(7.5rem + 1px); background: rgba(var(--deep-rgb),.88); opacity: 0; transition: opacity .45s, height .45s var(--ease); }
+.hd.scrolled .plate { height: calc(5.25rem + 1px); }
+.hd.scrolled { height: 5.75rem; }
+.hd.scrolled .plate { opacity: 1; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.hd nav, .hd .langs, .hd .mark, .hd .cta { transition: top .45s var(--ease), width .45s var(--ease); }
+.hd.scrolled nav, .hd.scrolled .langs { top: 1.875rem; }
+.hd.scrolled .mark { top: 1rem; width: 3.5rem; }
+.hd.scrolled .cta { top: .9375rem; }
+.hd nav { position: absolute; left: 7.5rem; top: 4.125rem; display: flex; gap: 2.5rem; }   /* 16.10 15:54 Антон (Figma 74:131178): ось хедера 76, промежуток 40 */
+.hd nav a, .hd .langs a { color: var(--muted); transition: color .2s; }
+.hd nav a:hover, .hd .langs a:hover { color: var(--warm); }
+.hd nav a.on, .hd .langs a.on { color: var(--warm); }   /* активный — только цветом (кит, 14.10 11:09–11:10) */
+.hd .mark { position: absolute; left: 50%; top: 2rem; width: 6rem;  /* 16.10 15:44 Антон: знак 96 × 88, сверху 32 */ transform: translateX(-50%); color: var(--gold); display: block; }
+.hd .mark svg { display: block; width: 100%; height: auto; }
+.hd .langs { position: absolute; left: calc(75% - 8.5rem); transform: translateX(-50%); top: 4.125rem; display: flex; gap: 1.5rem; }   /* 16.10 15:55: посередине между знаком и кнопкой, промежуток 24 */
+.hd .cta { position: absolute; right: 7.5rem; top: 3.125rem; }   /* 16.10 15:54: кнопка 50–102, центр 76 */
+
+/* ── кнопка записи · вариант 9 + нажатие 7 (утверждено 14.10 12:06) ── */
+.b { position: relative; display: block; width: 12.5rem; height: 3.25rem; padding: 0; border: 0; background: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; transition: transform .12s;
+  --o-fill: var(--plate); --o-line: var(--gold); --i-fill: transparent; --i-line: var(--gold); --txt: var(--gold); --t: .5s; }
+.b svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.b .o { fill: var(--o-fill); stroke: var(--o-line); stroke-width: 2; transition: fill var(--t), stroke var(--t); }
+.b .i, .b .gi { transition: fill var(--t), stroke var(--t), d var(--t); }
+.b .i { fill: var(--i-fill); stroke: var(--i-line); stroke-width: .8; }
+.b .g { fill: none; stroke-width: 2.4; pointer-events: none; }
+.b .gi { stroke-width: 1.2; }
+.b span { position: absolute; left: 0; right: 0; top: 1rem; text-align: center; color: var(--txt); transition: color var(--t); padding-left: .1em; }
+.b:hover { --i-line: var(--warm); --i-fill: var(--plate-in); --txt: var(--warm); }
+.b:active { --o-line: var(--gold); --i-line: var(--gold); --i-fill: var(--gold); --txt: var(--plate-in); --t: .05s; transform: scale(.96); }
+.b:focus { outline: none; }
+.b:focus-visible { outline: 1px solid var(--warm); outline-offset: 4px; }
+
+/* ── телефон 360 ── */
+.bar, .drawer { display: none; }
+@media (max-width: 767px) {
+  .hd { display: none; }
+  /* полоса: вверху страницы полупрозрачная, при прокрутке темнеет и уменьшается 64 → 52, знак 38 → 32 */
+  .bar { display: block; position: fixed; z-index: 20; left: 0; right: 0; bottom: 0; height: 4rem; background: rgba(var(--deep-rgb),.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: height .45s var(--ease), background .45s; }
+  body.scrolled .bar, body.menu-open .bar { height: 3.25rem; background: rgba(var(--deep-rgb),.92); }
+  .bar { z-index: 1001; }   /* 20.10 Антон: «моб меню всегда» — над шторкой переходов (1000) */
+  html.bar-now .bar, html.bar-now .bar .mark { transition: none !important; }   /* 20.10: при открытии страницы — без ужатия на глазах */
+  .bar .mark { transition: width .45s var(--ease), top .45s var(--ease); }
+  body.scrolled .bar .mark, body.menu-open .bar .mark { width: 2rem; top: .6875rem; }
+  .bar button.menu, .bar a.rec { height: 100% !important; }
+  .wall-lit { opacity: .25; -webkit-mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%); mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%); }   /* 14:58: свет как на десктопе */
+  .bar .caps { font-size: .75rem; line-height: 1.0625rem; }
+  .bar button.menu, .bar a.rec { position: absolute; top: 0; height: 4rem; display: flex; align-items: center; padding: 0 1.375rem;
+    background: none; border: 0; color: var(--gold); cursor: pointer; transition: color .15s, transform .12s; -webkit-tap-highlight-color: transparent; }   /* 16.10 16:02 Антон: #cbb88f, как в Figma 74:131982 */
+  .bar button.menu { left: 0; }
+  .bar a.rec { right: 0; }
+  .bar button.menu:active, .bar a.rec:active { color: var(--warm); transform: scale(.96); }
+  .bar .mark { position: absolute; left: 50%; top: .9375rem; width: 2.375rem; transform: translateX(-50%); color: var(--gold); }
+  .bar .mark svg { display: block; width: 100%; height: auto; }
+
+  /* 21.10 17:55: в шторке 6 пунктов (+ «Главная» 16:21, + «Магазин» 17:55) — шторка и всё под пунктами ниже на строку 3.75rem */
+  .drawer { display: block; position: fixed; z-index: 15; left: 0; right: 0; bottom: 3.25rem; height: 34rem; background: var(--deep2);
+    transform: translateY(calc(100% + 4rem)); transition: transform .45s cubic-bezier(.2,.7,.2,1), visibility 0s .45s; visibility: hidden; }
+  .drawer.open { transform: none; visibility: visible; transition: transform .45s cubic-bezier(.2,.7,.2,1); }   /* 20.10 Антон: закрытое меню выглядывало кромкой с ромбом и «РАБОТЫ» над панелью Safari при загрузке — закрытое не рисуется */
+  .drawer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--gold); }
+  .drawer .dia { position: absolute; left: 50%; top: -.3125rem; width: .4075rem; height: .625rem; transform: translateX(-50%); }
+  .drawer nav { position: absolute; left: 0; right: 0; top: 3rem; display: flex; flex-direction: column; align-items: center; gap: .5625rem; }
+  .drawer nav a { font: 400 2.5rem/3.1875rem Foglihten, serif; color: var(--ink); transition: color .2s; }
+  .drawer nav a.on, .drawer nav a:active { color: var(--warm); }
+  .drawer .langs { position: absolute; left: 0; right: 0; top: 26.125rem; display: flex; justify-content: center; gap: 1.6875rem; }
+  .drawer .langs a { color: var(--muted); }
+  .drawer .langs a.on { color: var(--warm); }
+  /* 21.10 20:50 Антон: «выровнять отступы снизу — языки и соцсети не сбалансированы»; 20:52 «чтобы отступ до „Контактов“ тоже учитывался» → по видимым буквам
+     «КОНТАКТЫ» → языки → черта → соцсети → полоса меню — все по 34 (было 59.5 / 24 / 28 / 27.5) */
+  .drawer .sep { position: absolute; left: 7.5rem; width: 7.5rem; top: 29.1875rem; height: 1px; background: var(--gold); }
+  .drawer .sep svg { position: absolute; left: 50%; top: -.25rem; width: .3263rem; height: .5rem; transform: translateX(-50%); }
+  .drawer .soc { position: absolute; left: 0; right: 0; top: 31.125rem; display: flex; justify-content: center; gap: 2rem; }
+  .drawer .soc a { font-size: .6875rem; line-height: 1rem; color: var(--ink); }
+
+  /* страницы на каркасе: низ контента не уходит под полосу (полем снаружи — свои отступы страницы не перебиваются) */
+  body[data-page] > main { margin-bottom: var(--bar-h); }
+}
+
+/* ── шторка между страницами · 18.10 — по рефу Codrops Isle Thorne Collective (loading-curtain): чёрная панель рефа →
+   наш фон с зерном, строка рефа (имя · род занятий · Since 1991, по сетке сайта) → Jost капсом, разрядка как в меню.
+   Движение — shell.js; здесь вид, слои View Transitions и «уменьшить движение» (без шторки). ── */
+.curtain { position: fixed; inset: 0; z-index: 1000; visibility: hidden; pointer-events: none; overflow: hidden;
+  background: var(--bg); clip-path: inset(100% 0 0 0); }
+.curtain.on { visibility: visible; pointer-events: auto; }   /* пока едет — клики по странице под ней не проходят */
+.curtain-grain { position: absolute; inset: 0; opacity: .08; mix-blend-mode: screen; image-rendering: pixelated;
+  background-repeat: repeat; background-size: 128px 128px; }   /* как зерно главной (fx.js): плитка шума, зерно 0.5 px, 8 % */
+.curtain-line { position: absolute; left: 0; right: 0; top: 50%; height: 1.25rem; margin: -.625rem 0 0; white-space: nowrap; color: var(--muted); }
+.curtain-line span { position: absolute; top: 0; }
+.curtain-line span:nth-child(1) { left: 7.5rem; }                       /* ось 1 — как меню хедера */
+.curtain-line span:nth-child(2) { left: 33.75rem; }                     /* ось 2 */
+.curtain-line span:nth-child(3) { right: 7.5rem; color: var(--gold); }  /* правый край — как кнопка «Записаться» */
+@media (max-width: 767px) {   /* как в рефе на телефоне: имя и год, род занятий скрыт */
+  .curtain-line span:nth-child(1) { left: 1rem; }
+  .curtain-line span:nth-child(2) { display: none; }
+  .curtain-line span:nth-child(3) { right: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) { .curtain { display: none; } }
+
+/* View Transitions между документами: новая страница раскрывается из-под шторки. Слои — только на время перехода
+   (имя слоя отключает размытие плашки хедера), анимации — shell.js; браузерный «наплыв» выключен. */
+@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }
+html.vt-on .curtain { view-transition-name: curtain; }
+html.vt-on body > main { view-transition-name: page; }
+html.vt-on .hd { view-transition-name: hd; }
+html.vt-on .bar { view-transition-name: bar; }
+::view-transition-group(*), ::view-transition-image-pair(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
+::view-transition-old(*), ::view-transition-new(*) { mix-blend-mode: normal; }
+::view-transition-old(*) { opacity: 0; }   /* старая страница уже закрыта шторкой */
+
+/* ── открытая работа · 19.10 — ОДНА на весь сайт (главная, «Работы»): разметку и поведение ставит shell.js (window.WO), данные — works-data.js.
+   Эталон — финальная секция Figma 137:20237 «Фото работы · окончательный вид» и спека design/photo-final-spec-1910.md.
+   1920: фото по центру оси 960 в поле 160–1040 (низ поля — 40 до низа окна), ширина ≤ 840, своя пропорция; горизонтальная ось текстов — 19 выше
+   центра фото (581 при окне 1080, «вариант 6»): год стоит на оси −114 (467), название центром на оси, награда на оси +100 (681), миниатюры колонкой
+   центром на оси, правый край 1800. Телефон: экран как карусель Б (Figma 171:37613, 137:20135) — фото на весь экран над полосой, кадры свайпом. ── */
+:root { --wo-gold-on: #d8b77a; --wo-ink: #d9d4c7; --wo-white: #ffffff; --wo-ahead: #6b675e; --wo-seg: #e6e5e1;
+  --wo-top: 10rem; --wo-bot: 2.5rem; --wo-maxw: 52.5rem;
+  --wo-c: calc((var(--wo-top) + 100vh - var(--wo-bot)) / 2);   /* центр поля фото по высоте */
+  --wo-ax: calc(var(--wo-c) - 1.1875rem); }                     /* ось текстов: 581 при 1080 */
+.wo { position: fixed; inset: 0; z-index: 9; display: none; opacity: 0; transition: opacity .2s var(--ease); }
+.wo.on { display: block; }
+.wo.in { opacity: 1; }
+html.wo-on { overflow: hidden; }
+html.wo-on body > main { visibility: hidden; }   /* под открытой работой — только обои и зерно, как в кадрах */
+.wo-st { position: absolute; left: 50%; top: var(--wo-c); width: 0; height: 0; }
+.wo-tr { position: absolute; left: 0; top: 0; }
+.wo-f { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); opacity: 0; transition: opacity .2s var(--ease); pointer-events: none;
+  height: min(calc(100vh - var(--wo-top) - var(--wo-bot)), calc(var(--wo-maxw) / var(--r))); aspect-ratio: var(--r); background: var(--deep); }
+.wo-f.on { opacity: 1; pointer-events: auto; }
+.wo-f img, .wo-f video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.wo-back { position: absolute; left: 7.5rem; top: 9.5rem; padding: 0; border: 0; background: none; cursor: pointer;
+  font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--wo-ink); transition: color .15s; }
+.wo-back:hover { color: var(--warm); }
+.wo-back:focus { outline: none; } .wo-back:focus-visible { outline: 1px solid var(--warm); outline-offset: .25rem; }
+.wo-y { position: absolute; left: 7.5rem; top: calc(var(--wo-ax) - 7.125rem); margin: 0; font: 400 1.25rem/1.1875rem Foglihten, serif; color: var(--gold); text-box: trim-both cap alphabetic; }
+.wo-t { position: absolute; left: 7.5rem; top: var(--wo-ax); width: 26.25rem; margin: 0; transform: translateY(-50%); font: 400 var(--wo-ts, 2.75rem)/var(--wo-ts, 2.75rem) Foglihten, serif;
+  color: var(--warm); white-space: pre-line; text-box: trim-both cap alphabetic; }
+.wo-aw { position: absolute; left: 7.5rem; top: calc(var(--wo-ax) + 6.25rem); display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; color: var(--wo-white); }
+.wo-aw .p { display: flex; align-items: center; gap: .5rem; }
+.wo-aw .p span, .wo-aw .l { font: 400 1rem/1.25rem Jost, sans-serif; letter-spacing: .125em; text-transform: uppercase; white-space: nowrap; text-box: trim-both cap alphabetic; }
+.wo-aw .l { font-size: .875rem; letter-spacing: .1428em; }
+.wo-aw .ls { display: flex; flex-direction: column; gap: .5rem; }
+.lv2 { display: block; flex: none; height: 1.25rem; width: auto; color: var(--gold); }
+.lv2.r { transform: scaleX(-1); }
+/* 20.10 Антон: описание работы — только десктоп, словами Коли (works-data.js, поле d) */
+.wo-d { position: absolute; right: 7.5rem; top: calc(var(--wo-ax) - .1875rem); transform: translateY(-50%); width: 19.875rem; margin: 0; font: 400 1rem/1.625rem Jost, sans-serif; color: var(--wo-ink); }
+/* 20.10 12:57 кадр Антона 189:70884: описание справа — правым краем на оси 1800 (левый 1482), 318, центром на 578 (ось − 3), длинное растёт вверх и вниз поровну; Jost 16/26 #d9d4c7 */
+.wo-th { position: absolute; top: var(--wo-ax); transform: translateY(-50%); display: flex; flex-direction: column; gap: 1rem;
+  left: calc(50% + min((100vh - var(--wo-top) - var(--wo-bot)) * var(--wo-rm, .75), var(--wo-maxw)) / 2 + 1.25rem);
+  --th-h: min(6rem, calc((100vh - var(--wo-top) - var(--wo-bot) - 2.375rem - (var(--wo-n, 1) - 1) * 1rem) / var(--wo-n, 1))); }
+/* 20.10 12:57 кадр Антона 189:70884: миниатюры 72×96 с шагом 112 — колонкой вплотную справа от фото через 20, центром на оси текстов (581 при 1080).
+   Колонка стоит у самого широкого кадра работы (--wo-rm, ставит shell.js) — при смене кадра не прыгает. При 7–8 кадрах превью ужимаются,
+   чтобы столбик влез в поле фото 160–1040 (центр на оси, 19 выше центра поля → по 19 с краёв); не крупнее 6rem */
+.wo-th button { position: relative; display: block; width: calc(var(--th-h) * .75); height: var(--th-h); padding: 0; border: 0; background: var(--deep); cursor: pointer; opacity: .6; transition: opacity .15s; }
+.wo-th button:hover { opacity: .85; }
+.wo-th button.on { opacity: 1; }
+.wo-th button.on::after { content: ""; position: absolute; inset: 0; border: .125rem solid var(--gold); }
+.wo-th button:focus { outline: none; } .wo-th button:focus-visible { outline: 1px solid var(--warm); outline-offset: .25rem; }
+.wo-th img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.wo-th svg { position: absolute; left: 50%; top: 50%; width: .875rem; height: 1rem; transform: translate(-50%, -50%); }
+.wo-bars, .wo-sh { display: none; }
+@media (max-width: 767px) {
+  /* телефон: фото на весь экран над полосой (0–716 из 780), затемнения умножением как у карусели Б, полоски-кадры, награда сверху слева,
+     «← НАЗАД» внизу слева на 16, год по центру; названия и миниатюр нет. Кадры листаются свайпом вбок. */
+  :root { --wo-ph: calc(100svh - var(--bar-h)); }
+  .wo { z-index: 14; }
+  .wo-st { left: 0; top: 0; width: 100%; height: var(--wo-ph); overflow: hidden; touch-action: pan-y; }
+  .wo-tr { display: flex; width: 100%; height: 100%; transition: transform .35s var(--ease); }
+  .wo-f { position: relative; flex: none; width: 100%; height: 100%; aspect-ratio: auto; transform: none; opacity: 1; pointer-events: auto; }
+  .wo-sh { display: block; position: absolute; left: 0; right: 0; pointer-events: none; mix-blend-mode: multiply;
+    --sh: rgba(120,108,94,0) 0%, rgba(120,108,94,.6) 45%, rgba(92,83,72,.7) 58.75%, rgba(71,64,55,.8) 72.5%, rgba(55,49,42,.9) 86.25%, rgb(42,37,32) 100%; }   /* Figma 171:40660 */
+  .wo-sh-t { top: 0; height: 4rem; background: linear-gradient(0deg, var(--sh)); }
+  .wo-sh-b { top: calc(var(--wo-ph) - 6.5625rem); height: 6.5625rem; background: linear-gradient(180deg, var(--sh)); }
+  .wo-bars { display: flex; gap: .25rem; position: absolute; left: 1rem; right: 1rem; top: 1rem; height: .125rem; }
+  .wo-bars i { flex: 1; background: var(--wo-ahead); opacity: .6; transition: background .2s, opacity .2s; }
+  .wo-bars i.done { background: var(--wo-seg); opacity: 1; }
+  .wo-bars i.on { background: var(--wo-gold-on); opacity: 1; }
+  .wo-back { left: 1rem; top: calc(var(--wo-ph) - 2.3125rem); font-size: .75rem; line-height: 1.0625rem; }
+  .wo-back { padding: .875rem 1rem; margin: -.875rem -1rem; }   /* 20.10: зона тапа ~100×46 вместо 68×18, надпись на месте */
+  .wo-y { left: 0; right: 0; top: calc(var(--wo-ph) - 3rem); text-align: center; font-size: 1.5rem; line-height: 2.375rem; color: var(--wo-gold-on); text-box: none; pointer-events: none; }   /* 20.10 Антон: «тап по „назад“ не работает» — год во всю ширину лежал поверх кнопки */
+  .wo-t, .wo-th, .wo-d { display: none; }
+  .wo-aw { left: 1rem; top: 2.625rem; }
+  .wo-aw .p { gap: .25rem; }
+  .wo-aw .ls { gap: .25rem; }
+  .wo-aw .l { font-size: .75rem; letter-spacing: .1667em; }
+  /* полоса под открытой работой — в сжатом виде 52 (728–780), как в кадрах 171:37613 */
+  html.wo-on .bar { height: 3.25rem; background: rgba(var(--deep-rgb),.92); }
+  html.wo-on .bar .mark { width: 2rem; top: .6875rem; }
+}
+@media (prefers-reduced-motion: reduce) { .wo, .wo-f, .wo-tr { transition: none; } }
+/* короткая метка награды на карточке (Figma 171:34914): «N МЕСТО» между веточками, Jost 16 капсом, разрядка 2, белым; веточки золотом.
+   Телефон (карточка 158): только веточки — ⚠ предложение, ждёт слова Антона (текст на 158 — 6.4 px, не читается) */
+.aw-tag { display: inline-flex; align-items: center; gap: .5rem; color: var(--wo-white); pointer-events: none; }
+.aw-tag span { font: 400 1rem/1.25rem Jost, sans-serif; letter-spacing: .125em; text-transform: uppercase; white-space: nowrap; text-box: trim-both cap alphabetic; }
+@media (max-width: 767px) { .aw-tag { gap: .25rem; } .aw-tag span { display: none; } }

@@ -1,0 +1,40 @@
+/* 20.10 11:30 · движение ленты «Мой путь» v3 (path-motion-2010.js; разбор рефов — design/path-motion-2010.md). Подключается из path-v3.js, кроме ?motion=0. */
+
+/* ── ≥1024: состояние ставит скрипт по прокрутке; прежнее проявление по таймеру выключено ── */
+.path.mo-on .v3-b > :not(.v3-y), .path.mo-on .v3-head > * { opacity: 1; transform: none; transition: none; }
+.path.mo-on .v3-b > .v3-y { transition: color .4s var(--ease); }
+.path.v3-wide.mo-on { height: calc(100vh + 960rem - 100vw + 80vh); }   /* 12:11: хвост 0.8 экрана — заголовок и стрелка проявляются, когда лента уже стоит */
+.path.mo-on .v3-go a:not(.done) { animation: none; }   /* качание — когда стрелка дорисована */
+.path.mo-on .v3-img img, .path.mo-on .v3-vid video { will-change: transform; }
+.path .mw { display: inline-block; vertical-align: top; }   /* 12:46: слово — единица входа из размытия (маски нет) */
+.path .mi { display: inline-block; }
+@property --ga { syntax: '<number>'; inherits: true; initial-value: 0; }
+/* 21.10 08:22 Антон: блик был «топорный, сильно концентрированный» (черта 60 px толще линии) → свет идёт по самой линии мягкой полосой --gw (280 px кадра)
+   с плавным краем с обеих сторон, как перелив по рамке кнопки; --gx / --gy ставит path-motion-2010.js, --ga — проявление и угасание */
+.path .v3-line, .path .v3-down { --ga: 0; transition: --ga .45s; }
+.path .v3-line.gl, .path .v3-down.gl { --ga: 1; }
+.path .v3-line > i { height: 1px; border-top: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,calc(.85 * var(--ga))) 50%, rgba(255,255,255,0)) calc(var(--gx, -999px) - var(--sl, 0px)) 0 / var(--gw, 17.5rem) 1px no-repeat, rgba(var(--gold-rgb), .55); }
+.path .v3-down { width: 1px; border-left: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,calc(.85 * var(--ga))) 50%, rgba(255,255,255,0)) 0 var(--gy, -999px) / 1px var(--gw, 17.5rem) no-repeat, rgba(var(--gold-rgb), .55); }
+.path .v3-end.v3-shine::after { content: attr(data-t); position: absolute; inset: 0; pointer-events: none; white-space: nowrap; color: transparent;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 100%) no-repeat; background-size: var(--gwt, 17.5rem) 100%;
+  -webkit-background-clip: text; background-clip: text; animation: v3-shine 1.5s linear forwards; }
+@keyframes v3-shine { from { background-position: calc(-1 * var(--gwt, 17.5rem)) 0; } to { background-position: calc(100% + var(--gwt, 17.5rem)) 0; } }
+.path.v3-wide.mo-on .v3-y::before { content: attr(data-t); position: absolute; inset: 0; pointer-events: none; color: transparent; white-space: nowrap;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 100%) no-repeat; background-size: var(--gwt, 17.5rem) 100%;
+  background-position: var(--gx, -999px) 0; -webkit-background-clip: text; background-clip: text; }   /* блик линии проходит по цифрам года */
+@media (prefers-reduced-motion: reduce) { .path .v3-end.v3-shine::after, .path .v3-y::before { display: none; } .path .v3-line, .path .v3-down { --ga: 0 !important; } }
+/* «Сейчас» — тепло градиентом слева направо (12:31) */
+.path .v3-warm { position: absolute; inset: 0; pointer-events: none; --wa: 200vw; --wb: 300vw;   /* 12:31: тёплый прозрачный оттенок поверх зерна, слева направо на ширину экрана */
+  background: linear-gradient(to right, rgba(170,125,70,0) var(--wa), rgba(170,125,70,.1) var(--wb));
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 35vh), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 35vh), transparent); }
+
+/* ── уже 1024: вертикальная лента — лёгкое проявление по одному разу (класс .in ставит path-v3.js) ── */
+.path.mo:not(.v3-wide) .v3-b > :not(.v3-y), .path.mo:not(.v3-wide) .v3-head > * { transform: translateY(1.5rem); transition: opacity .9s var(--ease), transform .9s var(--ease), clip-path 1.1s var(--ease); }
+.path.mo:not(.v3-wide) .v3-b > .v3-img, .path.mo:not(.v3-wide) .v3-b > .v3-vid { clip-path: inset(0 0 18% 0); }
+.path.mo:not(.v3-wide) .v3-b > .in, .path.mo:not(.v3-wide) .v3-head > .in { transform: none; clip-path: inset(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .path .v3-b > :not(.v3-y), .path .v3-head > * { opacity: 1 !important; transform: none !important; transition: none !important; clip-path: none !important; }
+}

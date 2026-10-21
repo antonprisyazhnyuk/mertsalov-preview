@@ -1,0 +1,52 @@
+/* 20.10 13:52 Антон «что с факом?» · «Частые вопросы» — после «Как проходит работа?», перед футером.
+   Десктоп — Figma 189:72462 (1920), телефон — 189:72498 (360); язык кадра 189:72128: заголовок капсом Foglihten слева на оси 120,
+   список справа 960…1800; между парами — то же --gap 240 (телефон 64). Разделители — тонкая линия золотом на 50 %.
+   Вопрос — Foglihten 32/40, раскрытый — золотом; ответ — Jost 18/28; ромб справа: свёрнут — контур, раскрыт — залит.
+   Размеры — px кадра / 16 = rem. Тексты и источники — design/faq-2010.md. */
+.faq { --gap: 7.5rem; display: grid; grid-template-columns: 52.5rem 52.5rem; align-items: start; padding: 0 7.5rem var(--gap); interpolate-size: allow-keywords; }   /* 21.10 18:24 Антон про футер 43: пустая полоса между FAQ и футером → низ FAQ 240 → 120, дальше линия футера */
+.faq .fqt { margin: 0; font: 400 6.5rem/6.375rem Foglihten, serif; text-transform: uppercase; color: var(--gold); text-box: trim-start cap alphabetic; }   /* верх букв = первая линия списка */
+.faq .zw { display: inline-block; }
+
+.faq details { padding-bottom: 2rem; border-top: 1px solid rgba(var(--gold-rgb), .5); }
+.faq details:last-child { border-bottom: 1px solid rgba(var(--gold-rgb), .5); }
+.faq summary { display: flex; justify-content: space-between; align-items: center; gap: 2.5rem; padding-top: 2rem; cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:focus-visible { outline: 1px solid var(--warm); outline-offset: .5rem; }
+.faq h3 { margin: 0; font: 400 2rem/2.5rem Foglihten, serif; color: var(--ink); transition: color .3s; }
+.faq summary:hover h3 { color: var(--warm); }
+.faq details[open] h3 { color: var(--gold); }
+.faq .fd { flex: none; width: .53rem; height: .53rem; margin-right: .1rem; box-sizing: border-box; border: 1px solid var(--gold); transform: rotate(45deg); transition: background-color .3s; }   /* ромб 12 по диагонали */
+.faq details[open] .fd { background: var(--gold); }
+.faq details p { max-width: 42.5rem; margin: 0; padding-top: 1.25rem; font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--muted); }
+
+/* карта в «Где ты работаешь?» (14:37 Антон): по колонке ответов 680 × 320, рамка — как разделители. Десктоп — живая Яндекс Карта
+   (JS API 2.1), грузится при первом раскрытии (faq-2010.js); до загрузки — снимок фоном. Тёмная подложка — фильтром, метка — своя #d8b77a */
+.faq .fqm { position: relative; max-width: 42.5rem; height: 20rem; margin-top: 1.5rem; box-sizing: border-box; border: 1px solid rgba(var(--gold-rgb), .5);
+  background: var(--tile) url("map-loc-d-2010.webp") center / cover no-repeat; overflow: hidden; }
+.faq .fqm .mi, .faq details .route { display: none; }
+.faq .fqm .ymap { position: absolute; inset: 0; opacity: 0; transition: opacity .6s; }   /* JS API 2.1: фильтр — только на подложке, метка своя (faq-2010.js) */
+.faq .fqm .ymap.on { opacity: 1; }
+
+/* плавное раскрытие — где браузер умеет ::details-content; где нет, details открывается сразу */
+.faq details::details-content { block-size: 0; overflow: hidden; transition: block-size .45s cubic-bezier(.2,.7,.2,1), content-visibility .45s allow-discrete; }
+.faq details[open]::details-content { block-size: auto; }
+@media (prefers-reduced-motion: reduce) { .faq details::details-content { transition: none; } }
+
+/* ── телефон 360 — кадр 189:72498: заголовок над списком, поля 16 ── */
+@media (max-width: 767px) {
+  .zap:has(~ .faq) { padding-bottom: var(--gap); }   /* запас под полосу меню переходит к последнему блоку — футеру (у него свой) */
+  .faq { --gap: 4rem; grid-template-columns: 1fr; padding: 0 1rem var(--gap); }
+  .faq .fqt { font-size: 2.75rem; line-height: 2.6875rem; }
+  .faq .fql { margin-top: 2rem; }
+  .faq details { padding-bottom: 1.25rem; }
+  .faq summary { gap: 1.5rem; padding-top: 1.25rem; }
+  .faq h3 { font-size: 1.5rem; line-height: 1.875rem; }
+  .faq .fd { width: .44rem; height: .44rem; }   /* ромб 10 */
+  .faq details p { padding-top: .75rem; font-size: .9375rem; line-height: 1.375rem; }
+  /* телефон: снимок карты 200 высотой — ссылкой на маршрут, под ним «Как добраться →» (как в футере) */
+  .faq .fqm { height: 12.5rem; margin-top: 1rem; background: none; }
+  .faq .fqm .mi { display: block; height: 100%; }
+  .faq .fqm .mi img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .faq .fqm .ymap { display: none; }
+  .faq details .route { display: inline-block; margin-top: 1rem; font: 400 .75rem/1.0625rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+}

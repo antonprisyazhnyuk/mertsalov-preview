@@ -1,0 +1,56 @@
+/* «Работы» · вариант Антона · 19.10 — десктоп один в один по кадру Figma 81:213271 («Работы · 1920 · подписи под работами (Основа)»).
+   Всё прочее (телефон, крупный показ, шильдик) — из ro-os без изменений: файл подключён целиком, ниже только отличия кадра.
+   1920: категории столбиком от оси 120, верх 200, шаг 60 (строка 20 + промежуток 40); «РАБОТЫ» Foglihten 80 капсом, верх 944 — прибито к низу окна (56 до низа);
+   работы 540–948 · 972–1368 · 1392–1800, промежуток 24, верх 200, без подписей под работой. */
+@import url("works-r-ro-os.css");
+html[data-v="anton"] { --ro-g: 1.5rem; --ro-top: 10rem; }   /* 19.10: верх работ 160 (Figma 171:33668) */
+
+/* полоса под категории — на всю высоту страницы, клики пропускает к работам */
+.an-rail { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.an-rail .ro-cats { pointer-events: auto; }
+
+@media (min-width: 768px) {
+  .ro-t { top: auto; bottom: 3.5rem; transform: none; text-transform: uppercase; }
+  /* 13:44 Антон: «фильтр тоже должен быть прилипший» — стоит на 200 от верха окна, пока идут работы; в конце страницы уходит вместе с ней */
+  .an-rail { right: auto; width: var(--a2); }
+  /* 19.10 18:43 Антон («меню слева должно выглядеть так», кадр 171:34992 / список 171:36230): по центру высоты окна под хедером — пункты 430–810 из 1080
+     (центр списка 380 — на середине между 160 и низом окна), прилипают в этом положении */
+  /* 20.10 05:56 кадр Антона (секция 174:53681, «Frame 44»): список по центру ОБЛАСТИ ПОД ХЕДЕРОМ — от низа хедера до низа окна:
+     развёрнутый хедер 128 → центр (1080+128)/2 = 604; свёрнутый (плашка 85) → (1080+85)/2 = 582.5; список едет вместе с хедером */
+  .ro-cats { --hd-b: 8rem; --cats-top: calc((100vh + var(--hd-b)) / 2 - var(--cats-h, 23.75rem) / 2);
+    position: sticky; left: auto; top: var(--cats-top); margin: calc((100vh + 8rem) / 2 - var(--cats-h, 23.75rem) / 2) 0 0 var(--a1); width: max-content; flex-direction: column; align-items: flex-start; gap: 2.5rem;
+    transition: top .45s var(--ease); }
+  body.scrolled .ro-cats { --hd-b: calc(5.25rem + 1px); }
+  /* 20.10 06:16 кадр Антона 174:54095: кнопки по 20 (строка), по верху букв — 30 внутри группы, 70 между группами */
+  .ro-cats { gap: 3.125rem; }
+  .ro-grp { display: flex; flex-direction: column; align-items: flex-start; gap: .625rem; }
+  .ro-grp.row { flex-direction: row; align-items: center; gap: 1.25rem; }   /* 06:23 Антон: без слэша, зазор 20 (Figma Frame 48) */
+}
+/* 360 · кадр Антона 84:217722 (14:52 «поправил мобилку с меню внизу»): «Работы» сверху нет, сетка 16–174 · 186–344 (промежуток 12) с 16 сверху,
+   без подписей; категории — лента над нижней полосой (676–716 на 780), фон #1a1a1a 96 %, Jost 12 капсом, шаг 12, листается вбок, прилипает с полосой */
+@media (max-width: 767px) {
+  html[data-v="anton"] { --ro-g: .75rem; --ro-top: 1rem; }
+  .ro-t { display: none; }
+  .an-rail .ro-cats { position: fixed; top: auto; left: 0; right: 0; bottom: var(--bar-h); height: 2.5rem; display: flex; align-items: center; gap: .7rem; padding: 0 1rem;   /* шаг 11.2, а не 12: слова Jost в браузере шире, чем в Figma, на ~0.7 px — так края слов на местах кадра */
+    background: rgba(var(--bg-rgb), .96); font-size: .75rem; line-height: 1.25rem; transition: bottom .45s var(--ease); }
+  body.scrolled .an-rail .ro-cats, body.menu-open .an-rail .ro-cats { bottom: 3.25rem; }
+  .ro-grp { display: contents; }   /* 20.10: на телефоне группы — одной лентой подряд */   /* полоса ужимается до 52 — лента едет за ней */
+}
+/* подписей под работами нет ни на десктопе, ни на телефоне (оба кадра Антона) */
+.ro-it .ro-cap, .ro-it .r-aw { display: none; }
+
+/* ── 19.10 вечер · карточка = работа с кадрами (финальная секция Figma 137:20237, спека п. 2 и 5) ── */
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ro-it { position: relative; }
+.ro-it .r-ph { overflow: hidden; }
+/* кадр k поверх обложки: своя пропорция, вписан (не обрезается) — на фоне карточки */
+.ro-it .fr-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--deep); }
+.ro-it .fr-l[hidden] { display: none; }
+/* видео-обложка и видео-кадр играют на месте фото; сегментов и точек нет (20:00 Антон) */
+.ro-it .fr-cv, .ro-it video.fr-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+/* метка награды — поверх фото справа внизу, −20 / −24 (Figma 171:34914) */
+.ro-it .aw-tag { position: absolute; right: 1.25rem; bottom: 1.5rem; }
+@media (max-width: 767px) {
+  .ro-it .aw-tag { display: none; }   /* 20.10 Антон «да»: на карточке телефона метки награды нет — мелко; награда видна в открытой работе */
+  .ro-it { touch-action: pan-y; }
+}

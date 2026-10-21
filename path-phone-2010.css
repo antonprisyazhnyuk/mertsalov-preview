@@ -1,0 +1,97 @@
+@property --ga { syntax: '<number>'; inherits: true; initial-value: 0; }   /* проявление блика (плавно, через transition) */
+/* 20.10 · экран 3 «Мой путь» на телефоне (< 768) — секция Бекки/Основы с правками Антона, Figma 189:72537 (кадры М1–М11); 15:15 — лист вбок.
+   Кадр 360×800 = блок 360×748 (нижние 52 — полоса меню, она прибита сама) → px кадра / 16 = rem (на телефоне rem = ширина / 360 × 16).
+   Десктопная лента (path-v3 / path-motion) на телефоне скрыта; её правила ≥ 768 не трогаются. Подключает path-phone-2010.js. */
+.pp { display: none; }
+@media (max-width: 767px) {
+  /* 15:15 Антон: экран 3 — прибитый экран высотой окна, кадры М1–М11 в ряд, лист вбок (path-phone-2010.js) */
+  html .path[data-v="v3"]:not(.v3-wide) { padding: 0; min-height: 0; height: 100svh; }
+  .path > .v3-stage, .path > .v3-down { display: none !important; }
+  .pp { display: block; position: relative; height: 100%; overflow: hidden; touch-action: pan-y; }
+  .pp-t { position: relative; display: flex; width: max-content; height: 36.5rem; transition: transform .55s var(--ease); will-change: transform; }
+  .pp-t.drag { transition: none; }
+  .pp-b { position: relative; flex: 0 0 22.5rem; height: 36.5rem; }   /* кадр 360 × 584 px (21.10, было 748) */
+  .pp-b > *, .pp-t > .pp-y, .pp-t > .pp-l, .pp-t > .pp-v { position: absolute; margin: 0; }
+  .pp-b { transform-origin: 50% 0; }   /* низкое окно: кадр вписывается — сперва воздухом, потом уменьшается от верха (path-phone-2010.js, fit) */
+  .pp-down { position: absolute; z-index: 2; left: 11.25rem; top: 16.5rem; width: 1px; clip-path: inset(0 -2px 100% -2px);
+    opacity: 0; transition: opacity .3s; pointer-events: none; }   /* вертикаль под экраном 3: к «Дальше — твоя история» и от него вниз к ромбу рамы анкеты */
+  .pp-down.on { opacity: 1; }
+  /* 21.10 Антон: «Дальше — твоя история» — вниз, не вбок: блок под экраном 3 (М11, 264 px кадра), вертикаль идёт сквозь него к ромбу анкеты */
+  .pp.pp-next { height: 16.5rem; overflow: visible; touch-action: auto; }
+  .pp-next > * { position: absolute; margin: 0; }
+
+  .path .pp .pp-ttl { font: 400 3.5rem/3.5rem Foglihten, serif; color: var(--gold); }   /* сильнее общих правил заголовков экрана */
+  .pp-snd { padding: 0; background: none; border: 0; cursor: pointer; text-align: left; font: 400 .75rem/1rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--warm); -webkit-tap-highlight-color: transparent; }
+  .pp-snd[aria-pressed="true"] { color: var(--ink); }
+  /* 21.10 Антон: значок звука — линия 1.25 золотом, как ромбы и рамки; у строки — перед текстом, на кружке — бейдж снизу справа */
+  .pp-snd { display: inline-flex; align-items: center; gap: .5rem; }
+  .pp-snd.c { justify-content: center; }
+  .pp-snd { transition: opacity .5s; } .pp-snd.gone { opacity: 0; pointer-events: none; }   /* 14:39: подсказка звука — до первого нажатия */
+  /* 21.10 кадр входа 205:3: приветствие в кольце 328 (#d8b77a 55 %), ролик 312; линия начинается точкой 5 */
+  .pp-vid.round.ring { box-sizing: border-box; border: 1px solid rgba(216,183,122,.55); padding: calc(var(--ri) - 1px); }
+  .pp-dot { position: absolute; top: -2px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--gold); }
+  .pp-snd[hidden] { display: none; }
+  .pp-spk { width: 1rem; height: 1rem; flex: none; fill: none; stroke: var(--gold); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+  .pp-mute { position: absolute; z-index: 2; padding: 0; display: grid; place-items: center; cursor: pointer;
+    border-radius: 50%; border: 1px solid rgba(216,183,122,.6); background: rgba(26,26,26,.82); -webkit-tap-highlight-color: transparent; }
+  .pp-again, .pp-paused { position: absolute; left: 50%; top: 50%; z-index: 2; translate: -50% -50%; padding: 0; display: none; place-items: center; border-radius: 50%;
+    border: 1px solid var(--gold); background: rgba(26,26,26,.82); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .pp-paused { pointer-events: none; }
+  .pp-again .pp-spk, .pp-paused .pp-spk { width: 45%; height: 45%; }
+  .pp-spk.pl { fill: var(--gold); }
+  .pp-vid.done .pp-again, .pp-vid.held .pp-paused { display: grid; }
+  .pp-vid.done video { filter: brightness(.55); } .pp-vid.held video { filter: brightness(.7); }
+  .pp-mute::before { content: ""; position: absolute; inset: -.625rem; border-radius: 50%; }   /* палец попадает с запасом */
+  .pp-mute[aria-pressed="true"] { border-color: var(--gold); }
+  .pp-big { font: 400 1.75rem/2.25rem Foglihten, serif;   /* 21.10 Бекка: 28/36 — все 10 кадров встают в 584 без масштаба, ждёт слова Антона (было 32/40) */ color: var(--ink); }
+  .pp-big a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+  .pp-sm { font: 400 1rem/1.5rem Jost, sans-serif; color: var(--ink); }
+  .pp-end { font: 400 2.25rem/2.5rem Foglihten, serif; color: var(--warm); }
+  .pp .c, .pp-end { text-align: center; }
+
+  .pp-img, .pp-vid { overflow: hidden; background: var(--tile); }
+  .pp-img img, .pp-vid video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .pp-vid.round { border-radius: 50%; overflow: visible; background: none; }   /* видео Коли — круг 96, играет сам */
+  .pp-vid.round video { border-radius: 50%; background: var(--tile); }
+    transition: opacity .2s; -webkit-tap-highlight-color: transparent; }
+
+  /* шильдик награды · телефон: по центру своей оси, под работой — лавры 20, «1 МЕСТО» 16, строки 12, разрядка 2 px, буквы по высоте прописной, шаг 8 / 4 */
+  .pp-aw { display: flex; flex-direction: column; align-items: center; gap: .5rem; translate: -50% 0; color: #fff; text-align: center; }
+  .pp-aw .p { display: flex; align-items: center; gap: .25rem; height: 1.25rem; }
+  .pp-aw .p span { white-space: nowrap; font: 400 1rem/1.25rem Jost, sans-serif; letter-spacing: .125em; text-transform: uppercase; text-box: trim-both cap alphabetic; }
+  .pp-aw .lv2 { height: 1.25rem; color: var(--gold); }
+  .pp-aw .lv2.r { transform: scaleX(-1); }
+  .pp-aw .l { font: 400 .75rem/1.25rem Jost, sans-serif; letter-spacing: .1667em; text-transform: uppercase; white-space: nowrap; text-box: trim-both cap alphabetic; }
+  .pp-aw .l + .l { margin-top: -.25rem; }   /* строки подписи через 4 (общий шаг колонки 8) */
+
+  /* линия времени на 704: год Jost 11 золотом серединой на своей оси, отрезки #e7e6e2 55 % — по кадру */
+  .pp-y { top: 35.0625rem; translate: -50% 0; font: 400 .6875rem/.875rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; color: var(--warm);
+    opacity: 0; transition: opacity .5s var(--ease); }
+  .pp-y.on { opacity: 1; }
+  .pp-y::before { content: attr(data-t); position: absolute; inset: 0; pointer-events: none; color: transparent; white-space: nowrap;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 100%) no-repeat; background-size: var(--gw) 100%;
+    background-position: var(--gx, -999px) 0; -webkit-background-clip: text; background-clip: text; }   /* блик линии проходит по цифрам года, как на десктопе */
+  .pp-l { left: 0; top: 35.5rem; height: 1px; clip-path: inset(-2px 100% -2px 0); }   /* одна на весь ряд, ширину ставит скрипт */
+  /* 21.10 Антон: блик — светом по самой линии, мягкой полосой --gw с плавным краем с обеих сторон (как перелив по рамке кнопки); --gx/--gy ставит скрипт, --ga — проявление */
+  .pp { --gw: 7.5rem; }
+  .pp-l, .pp-v { --ga: 0; transition: --ga .45s; }
+  .pp-down { --ga: 0; transition: --ga .45s, opacity .3s; }
+  .pp-l.gl, .pp-v.gl, .pp-down.gl { --ga: 1; }
+  .pp-l > i { position: absolute; top: 0; height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,calc(.85 * var(--ga))) 50%, rgba(255,255,255,0)) calc(var(--gx, -999px) - var(--sl, 0px)) 0 / var(--gw) 1px no-repeat, rgba(231,230,226,.55); }
+  .pp-v, .pp-down { background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,calc(.85 * var(--ga))) 50%, rgba(255,255,255,0)) 0 var(--gy, -999px) / 1px var(--gw) no-repeat, rgba(231,230,226,.55); }
+  .pp-v { width: 1px; clip-path: inset(0 -2px 100% -2px); }
+  /* блик — как на десктопе (кнопка «Записаться»: белый, пик .95, полоса 60 px), бежит за кончиком с отставанием */
+
+  /* появление: тексты — по словам из размытия со скосом (как фраза экрана 2), картинки и шильдики — мягко: прозрачность и подъём на 1.5rem */
+  .pp .pw { display: inline-block; opacity: 0; filter: blur(var(--B, 4px)); transform: skewX(-20deg);
+    transition: opacity .9s var(--ease), filter .9s var(--ease), transform .9s var(--ease); transition-delay: calc(var(--i) * 60ms); }
+  .pp .in .pw { opacity: 1; filter: none; transform: none; }
+  .pp .pr { opacity: 0; transform: translate3d(0, 1.5rem, 0); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease); }
+  .pp .pr.in { opacity: 1; transform: none; }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .pp .pw, .pp .pr, .pp-y { opacity: 1 !important; filter: none !important; transform: none !important; transition: none !important; }
+  .pp-t, .pp-down { transition: none; }
+}
+.pp-mute:focus, .pp-again:focus { outline: none; } .pp-mute:focus-visible, .pp-again:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }

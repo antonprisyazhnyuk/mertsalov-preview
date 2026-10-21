@@ -1,0 +1,63 @@
+/* «Работы» · Розов + Основа · 18.10. Сетка и движение — Розов (apax один в один на 5 осях), заголовок и подписи — Основа.
+   1920: «Работы» прибито к середине окна от оси 120 (Foglihten 80); ряд категорий от оси 540 на высоте 232 (ось строки);
+   работы 540–948 · 972–1368 · 1392–1800 (промежуток 24 серединой на осях 960 и 1380), верх работ — 320.
+   Телефон 360: «Работы» и категории сверху, 2 колонки 16–172 · 188–344 (промежуток серединой на 180), без сдвига — как у рефа. */
+html[data-v="ro-os"] { --ro-g: 1.5rem; --ro-top: 20rem; }
+
+/* «Работы» — стоит на месте, середина окна (Основа; у рефа там лого apax) */
+.ro-t { position: fixed; z-index: 2; left: var(--a1); top: 50%; margin: 0; transform: translateY(-50%);
+  font: 400 5rem/5rem Foglihten, serif; color: var(--ink); pointer-events: none; }
+
+/* ряд категорий: от оси 540, как пункты меню хедера (Jost 14, разрядка .1em, промежуток 40) */
+.ro-cats { position: absolute; z-index: 3; left: var(--a2); top: 13.875rem; display: flex; gap: 2.5rem; }
+.ro-cat { padding: 0; border: 0; background: none; color: var(--muted); cursor: pointer; font: inherit; letter-spacing: inherit; text-transform: inherit; transition: color .2s; -webkit-tap-highlight-color: transparent; }
+.ro-cat:hover, .ro-cat.on { color: var(--warm); }
+.ro-cat:focus { outline: none; } .ro-cat:focus-visible { outline: 1px solid var(--warm); outline-offset: .25rem; }
+.ro-cat[data-empty] { opacity: .35; cursor: default; }   /* заглушка: фото этой категории пока нет */
+
+/* поле работ: 540–1800, обрезано по общему низу колонок (к концу прокрутки колонки сходятся в линию) */
+.ro-f { position: relative; margin-left: var(--a2); width: calc(var(--a5) - var(--a2)); padding-top: var(--ro-top);
+  display: grid; grid-template-columns: calc(var(--span) - var(--ro-g) / 2) calc(var(--span) - var(--ro-g)) calc(var(--span) - var(--ro-g) / 2);
+  column-gap: var(--ro-g); align-items: start; overflow-y: clip; }
+.ro-c { display: flex; flex-direction: column; gap: var(--ro-g); will-change: transform; }
+.ro-it { display: block; transform: scale(var(--ss, 1)); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ro-it.gone { visibility: hidden; }
+.ro-cap { display: block; margin-top: .5rem; font-size: .75rem; line-height: 1rem; letter-spacing: .04em; color: var(--muted); transition: color .2s; }
+.ro-it:hover .ro-cap { color: var(--ink); }
+.ro-it .r-aw { display: flex; margin-top: .5rem; }
+.ro-it:focus { outline: none; } .ro-it:focus-visible { outline: 1px solid var(--gold); outline-offset: .25rem; }
+.ro-pre .ro-it { clip-path: inset(0 0 100% 0); }
+.ro-go .ro-it { clip-path: inset(0); transition: clip-path 1.6s var(--p4); }
+
+/* крупный показ (gal-phone.html, 16.10): фон темнеет до .94, работа целиком в своей пропорции, под ней мелко год · стили */
+.ro-ov { position: fixed; inset: 0; z-index: 60; background: rgba(var(--bg-rgb), 0); transition: background .6s var(--ease); cursor: zoom-out; }
+.ro-ov.in { background: rgba(var(--bg-rgb), .94); }
+.ro-ov .box { position: fixed; overflow: hidden; background: var(--deep); }
+.ro-ov .box img, .ro-ov .box video { display: block; width: 100%; height: 100%; }
+.ro-ov .ln { position: fixed; font-size: .875rem; line-height: 1.25rem; letter-spacing: .06em; color: var(--gold); opacity: 0; transition: opacity .4s; white-space: nowrap; }
+.ro-ov.in.done .ln { opacity: 1; }
+/* шильдик призовой — как на главной: ветви, место крупно, конкурс, год (16.10 18:59 «на большом награда не мелко») */
+.ro-ov .plate { position: fixed; display: flex; align-items: center; gap: .625rem; color: var(--gold); opacity: 0; transform: translateY(.5rem); transition: opacity .5s, transform .5s var(--ease); }
+.ro-ov.in.done .plate { opacity: 1; transform: none; }
+.ro-ov .plate .lv { flex: none; height: 7.8125rem; width: auto; aspect-ratio: 90 / 164.33; }
+.ro-ov .plate .awt { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 14rem; margin: 0 -.25rem; }
+.ro-ov .plate .awc { color: var(--gold); font-size: .75rem; line-height: 1.0625rem; letter-spacing: .2em; text-transform: uppercase; }
+.ro-ov .plate .awp { margin: 0; font: 400 2.75rem/3.5rem Foglihten, serif; color: var(--ink); text-transform: uppercase; white-space: nowrap; }
+.ro-ov .plate .awe, .ro-ov .plate .awy { font-size: .875rem; line-height: 1.25rem; color: var(--ink); }
+
+@media (max-width: 767px) {
+  html[data-v="ro-os"] { --ro-g: 1rem; --ro-top: 9rem; }
+  .ro-t { position: absolute; top: 2rem; transform: none; font-size: 2.5rem; line-height: 3rem; }
+  .ro-cats { left: 0; right: 0; top: 5.75rem; gap: 1.5rem; padding: 0 var(--a1); overflow-x: auto; scrollbar-width: none; font-size: .75rem; line-height: 1.5rem; white-space: nowrap; }
+  .ro-cats::-webkit-scrollbar { display: none; }
+  .ro-cat { flex: none; }
+  .ro-f { margin-left: var(--a1); width: calc(var(--a3) - var(--a1)); grid-template-columns: 1fr 1fr; overflow-y: visible; }
+  .ro-c { will-change: auto; }
+  .ro-cap { font-size: .6875rem; line-height: 1rem; letter-spacing: .02em; }
+  .ro-it .r-aw .lv { height: 1.5rem; }
+  .ro-ov .ln { font-size: .75rem; line-height: 1rem; }
+  .ro-ov .plate .lv { height: 4.5625rem; }
+  .ro-ov .plate .awp { font-size: 1.75rem; line-height: 2.25rem; }
+  .ro-ov .plate .awt { max-width: 11rem; }
+}
+@media (prefers-reduced-motion: reduce) { .ro-pre .ro-it { clip-path: none; } .ro-go .ro-it { transition: none; } }

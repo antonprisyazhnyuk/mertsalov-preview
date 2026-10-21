@@ -1,0 +1,153 @@
+/* 20.10 · экран 4 — анкета. Десктоп — Figma 74:152467 «AL · Анкета · 1920» (в ленте — клон в 176:67966), телефон — 74:151210 «AL · Анкета · 360 · пусто»,
+   состояния: ① 74:153753 перекрытие отмечено · ② 74:155011 два места и цвет · ③ 74:156268 ошибка · ④ 74:157526 отправлено.
+   С 13:15 раскладка — кадр Антона 189:72128 (рама 840 от оси 960, без «ЗАПИСЬ»).
+   Размеры — px кадра / 16 = rem (1rem = 16 px на 1920 и на 360, shell.css). Перекрывает .zap из path-v3.css (подключён раньше).
+   Чего в Figma нет (взято у соседних кадров): фокус поля — линия золотом; набранный текст — #e6e5e1 (как подписи чекбоксов);
+   ошибка согласия и фото места — красным, как поля в ③; десктоп «отправлено» — рама та же, текст по центру, кегли от заголовка. */
+/* 13:16 Антон: «отступы ровненько, чётенько» — по системе, а не с наброска: оси 120 · 960 · 1380 · 1800;
+   между парами (рама → «Как проходит работа?» · шаги → футер) — одно значение --gap 240; от «Дальше — твоя история» до рамы — 0.6 окна (13:26);
+   между строками шагов — 120; верх левого заголовка = верх правого блока по верху букв (text-box). */
+.zap { --gap: 15rem; --err: #c8705c; --line: rgba(167,162,148,.45); padding: calc(60vh - 4rem) 7.5rem var(--gap); border-top: 0; }   /* 13:26 Антон «линия подлиннее»: от низа «Дальше — твоя история» (он на 64 выше конца ленты, экран 1920×1080) до ромба рамы — 0.6 высоты окна */
+#kak-popast, #zapis { scroll-margin-top: 7.5rem; }   /* по якорю рама встаёт ниже хедера */
+
+/* ── кадр Антона 189:72128 (13:15): анкета сразу за лентой · «Как проходит работа?» + шаги 2×2 · футер ── */
+/* левая половина (оси 120…960): заголовок и строка; правая (960…1800): рама */
+.zap .form { grid-template-columns: 52.5rem 52.5rem; gap: 0; margin: 0; }
+.zap .zl { padding-top: 0; }
+.zap .zl h2 { max-width: 43.75rem; margin: 0; font: 400 6.5rem/6.375rem Foglihten, serif; color: var(--gold); text-box: trim-start cap alphabetic; }   /* верх букв = верх рамы */
+.zap .zl p { max-width: 27.5rem; margin: 1.75rem 0 0; font: 400 1.375rem/2rem Jost, sans-serif; color: var(--muted); }
+
+/* «Как проходит работа?» слева, шаги 2×2 справа (оси 960 / 1380) */
+.zap .work { display: grid; grid-template-columns: 52.5rem 45rem; align-items: start; margin-top: var(--gap); }
+.zap .wt { margin: 0; font: 400 6.5rem/6.375rem Foglihten, serif; text-transform: uppercase; color: var(--gold); text-box: trim-start cap alphabetic; }   /* верх букв = верх «01» */
+.zap .steps { grid-template-columns: repeat(2, 22.5rem); column-gap: 3.75rem; row-gap: 7.5rem; margin: 0; }   /* строки шагов — 120 */
+.zap .steps .n { font: 400 4rem/4rem Foglihten, serif; color: var(--warm); text-box: trim-start cap alphabetic; }
+.zap .steps h3 { margin: 1.5rem 0 1rem; font: 400 2.5rem/3rem Foglihten, serif; color: var(--ink); }
+.zap .steps p { font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--muted); text-wrap: balance; }   /* в кадре строки уравновешены */
+
+/* ── рама B: две линии и четыре ромба на осях ── */
+.zap .zr { position: relative; padding: 3.1875rem 3.1875rem 3.625rem; }   /* рама 840: поля 738, отступы 51 / низ 58 */
+/* 14:14 Антон: «форме дать чуть непрозрачности — отсвет делает её нечитабельной»: подложка — фон сайта на 90 % + то же зерно (не плоская плашка), орнамент и свет едва угадываются */
+.zap .zr { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), rgba(var(--bg-rgb), .9); }
+.zap .zr::before, .zap .zr::after { content: ""; position: absolute; pointer-events: none; }
+.zap .zr::before { inset: .0125rem; border: .1rem solid var(--gold); }
+.zap .zr::after { inset: .34375rem; border: .04375rem solid var(--gold); }
+.zap .dm { position: absolute; z-index: 1; width: .75rem; height: .75rem; background: var(--gold); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.zap .dm.t { top: -.3125rem; left: calc(50% - .375rem); } .zap .dm.b { bottom: -.3125rem; left: calc(50% - .375rem); }
+.zap .dm.l { left: -.3125rem; top: calc(50% - .375rem); } .zap .dm.r { right: -.3125rem; top: calc(50% - .375rem); }
+
+/* ── появление по прокрутке (zap-motion-2010.js, 13:26): слова из размытия, рама рисуется от ромба ── */
+.zap .zw { display: inline-block; }
+.zap .zframe { display: none; }
+/* 14:59: и на телефоне (кадр М11 189:72537) — рама есть, рисуется так же */
+.zap.zm .zr::after { display: none; }   /* рамка — линиями SVG, чтобы прорисовываться */
+.zap.zm .zr { background: none; }
+.zap.zm .zr::before { inset: 0; z-index: -1; border: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), rgba(var(--bg-rgb), .9); opacity: var(--zbk, 1); }   /* подложка проявляется вместе с рамой */
+.zap.zm .zframe { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.zap .zframe path { fill: none; stroke: var(--gold); stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+/* 14:14 «отблеск идёт в отрисовку формы»: короткий светлый штрих на кончике рисующейся рамы, мягкое свечение — как блик кнопки «Записаться» */
+.zap .zframe path.zgl { stroke: var(--sheen); stroke-linecap: butt; opacity: 0; }   /* 21.10 15:10: мягкая полоса из трёх отрезков (zap-motion-2010.js), без свечения */
+
+/* ── поля ── */
+.zap .zf { display: flex; flex-direction: column; gap: 2rem; margin: 0; }
+.zap .z3 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }   /* 21.10 20:43 Антон: поле «Город» снято — в ряду имя и связь, пополам */
+.zap .z2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.zap .zi { display: block; min-width: 0; }
+.zap .zk { display: block; font: 400 .75rem/1.0625rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); transition: color .2s; }
+.zap .zk i, .zap .za i { font-style: normal; color: var(--gold); }
+.zap .zh { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.zap .za { font: 400 .75rem/1.0625rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+.zap .za .add, .zap .za .got { cursor: pointer; color: inherit; transition: color .2s; }
+.zap .za .got { padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit; }
+.zap .za .add:hover, .zap .za .got:hover { color: var(--warm); }
+.zap .zf input:not([type=checkbox]):not([type=file]) { display: block; box-sizing: border-box; width: 100%; height: 2.5rem; margin: .75rem 0 0; padding: 0 0 1.125rem;
+  border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; outline: none; color: var(--ink); font: 400 1rem/1.375rem Jost, sans-serif; transition: border-color .2s; }
+.zap .zf textarea { display: block; box-sizing: border-box; width: 100%; height: 8.75rem; margin: .75rem 0 0; padding: 1.125rem; resize: none;
+  border: 1px solid var(--line); border-radius: 0; background: none; outline: none; color: var(--ink); font: 400 1rem/1.5rem Jost, sans-serif; transition: border-color .2s; }
+.zap .zf ::placeholder { color: rgba(167,162,148,.8); opacity: 1; }   /* в кадре #a7a294 на 60 % (контраст 3.3:1) → 80 % — 4.8:1 к фону, 14:14 «читабельно» */
+.zap .zf .other[hidden] { display: none !important; }
+.zap .zf input:not([type=checkbox]):focus, .zap .zf textarea:focus { border-color: var(--gold); }
+
+/* чекбоксы: квадрат 18, отметка 8 золотом; отмеченный — квадрат и подпись золотом (①) */
+.zap .zc { display: flex; flex-wrap: wrap; gap: .75rem; }
+.zap .cb { position: relative; display: flex; gap: .75rem; align-items: flex-start; cursor: pointer; font: 400 .9375rem/1.25rem Jost, sans-serif; color: var(--ink); transition: color .2s; }
+.zap .cb input { position: absolute; opacity: 0; width: 1.125rem; height: 1.125rem; margin: .0625rem 0 0; }
+.zap .cb .sq { flex: none; position: relative; box-sizing: border-box; width: 1.125rem; height: 1.125rem; margin-top: .0625rem; border: 1px solid rgba(167,162,148,.6); transition: border-color .2s; }
+.zap .cb .sq::after { content: ""; position: absolute; inset: .25rem; background: var(--gold); opacity: 0; transition: opacity .15s; }
+.zap .cb input:checked + .sq { border-color: var(--gold); }
+.zap .cb input:checked + .sq::after { opacity: 1; }
+.zap .zc .cb:has(input:checked) { color: var(--gold); }
+.zap .cb input:focus-visible + .sq { outline: 1px solid var(--warm); outline-offset: 2px; }
+.zap .cb a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.zap .zf .hint { flex-basis: 100%; margin: 0; font: 400 .875rem/1.25rem Jost, sans-serif; color: var(--gold); }
+
+/* кнопки выбора: место — несколько (②), цвет — одна */
+.zap .chips { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: .75rem; }
+.zap .chips button { height: 2.5rem; padding: 0 1.0625rem; border: 1px solid rgba(167,162,148,.4); border-radius: 0; background: none; cursor: pointer;
+  font: 400 1rem/1.3125rem Jost, sans-serif; color: var(--muted); transition: color .2s, border-color .2s, background-color .2s; }
+.zap .chips.one { flex-wrap: nowrap; }   /* 21.10 20:45 Антон: «не нравится, что не помещается» — «Не знаю» уходил на вторую строку (так было в кадре 189:72128) → три в ряд */
+.zap .chips.one button { padding: 0 1.0625rem; white-space: nowrap; }   /* поля 17, как у «Места на теле»: 1920 — 329 из 353 */
+.zap .chips.multi { flex-wrap: nowrap; }
+.zap .chips.multi button { flex: 0 1 auto; min-width: 0; white-space: nowrap; }   /* девять мест — в одну строку, как в кадре (запас 7 px; Jost в браузере шире) */   /* в раме 840 «Не знаю» уходит на вторую строку — как в кадре 189:72128 */
+.zap .chips button:hover { border-color: rgba(var(--gold-rgb),.7); color: var(--ink); }
+.zap .chips button.on { background: var(--plate); border-color: var(--gold); color: var(--gold); }
+.zap .chips button:focus-visible { outline: 1px solid var(--warm); outline-offset: 2px; }
+
+/* ошибка (③): подпись целиком и линия — #c8705c; строка «Не хватает: …» над кнопкой */
+.zap .bad > .zk, .zap .bad > .zk i, .zap .bad .zh .zk, .zap .bad .zh .zk i { color: var(--err); }
+.zap .bad > input:not([type=checkbox]), .zap .bad textarea { border-color: var(--err); }
+.zap .cb.bad .sq { border-color: var(--err); }
+.zap .za.bad, .zap .za.bad i { color: var(--err); }
+.zap .zf .err { margin: 0 0 -1.25rem; font: 400 .875rem/1.25rem Jost, sans-serif; color: var(--err); }
+
+/* кнопка «Отправить заявку» — компонент .b из shell.css (ховер, нажатие, фокус, перелив — как «Записаться»), здесь только размер: 360 × 72 (телефон 316 × 60) */
+.zap .send { width: 22.5rem; height: 4.5rem; }
+.zap .send .ph { display: none; }
+.zap .send span { inset: 0; display: grid; place-items: center; font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+
+/* отправлено (④): анкета уходит, в раме — «Спасибо!» по центру */
+.zap .zr.sent .zf { display: none; }
+.zap .zr .zdone { display: grid; place-content: center; min-height: var(--zh, 49rem); text-align: center; outline: none; }
+.zap .zr .zdone[hidden] { display: none; }
+.zap .zr .zdone h3 { margin: 0 0 1.5rem; font: 400 4rem/4rem Foglihten, serif; color: var(--gold); }
+.zap .zr .zdone p { margin: 0; font: 400 1.375rem/2rem Jost, sans-serif; color: var(--ink); }
+
+/* ── телефон 360 — кадр 74:151210: поля в столбик, без рамы; поля 22 (на 6 глубже шагов) ── */
+@media (max-width: 767px) {
+  /* та же последовательность столбиком: анкета · «Как проходит работа?» · шаги */
+  .zap { padding: 3rem 1rem calc(var(--bar-h) + var(--gap)); }
+  .zap { --gap: 4rem; }   /* телефон: то же правило, шаг 64 */
+  .zap .work { grid-template-columns: 1fr; margin-top: var(--gap); }
+  .zap .wt { font-size: 2.75rem; line-height: 2.6875rem; }
+  .zap .steps { grid-template-columns: 1fr; gap: 2rem; margin: 2rem 0 0; }
+  .zap .steps .n { font-size: 2.5rem; line-height: 2.5rem; }
+  .zap .steps h3 { margin: .75rem 0 .5rem; font-size: 1.75rem; line-height: 2.125rem; }
+  .zap .steps p { font-size: 1rem; line-height: 1.5rem; }
+  /* 14:59 Антон утвердил мобилку «Мой путь» (189:72537, кадр М11): рама анкеты на телефоне — по полям 16–344, обнимает заголовок и поля;
+     вертикаль ленты входит в ромб сверху по центру (#form-top). Рама рисуется по блоку .form (у .zr — без позиционирования), внутри отступ 24, сверху 48 */
+  .zap:not(.zpop) .form { position: relative; grid-template-columns: 1fr; gap: 0; margin: 0; padding: 3rem 1.5rem; }
+  .zap:not(.zm):not(.zpop) .form { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), rgba(var(--bg-rgb), .9); }
+  .zap .zl { padding: 0; }
+  .zap .zl h2 { font-size: 2.75rem; line-height: 2.6875rem; }
+  .zap .zl p { max-width: none; margin-top: .75rem; font-size: .9375rem; line-height: 1.375rem; }
+  .zap:not(.zpop) .zr { position: static; margin-top: 2rem; padding: 0; background: none; }
+  .zap.zpop .zr { padding: 3rem 1.5rem; }
+  .zap .z3, .zap .z2 { grid-template-columns: 1fr; }
+  .zap .zf input:not([type=checkbox]):not([type=file]) { height: 2.25rem; padding-bottom: .875rem; }
+  .zap .zf textarea { height: 8.25rem; padding: .875rem; font-size: .9375rem; line-height: 1.375rem; }
+  .zap .zc { flex-direction: column; }
+  .zap .zh { gap: .5rem; } .zap .zh .zk { white-space: nowrap; }   /* «ИДЕЯ *» и «+ ПРИКРЕПИТЬ ПРИМЕРЫ РАБОТ» — в одну строку внутри рамы 280 */
+  .zap .chips { gap: .5rem; }
+  .zap .chips.multi { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .zap .chips button { padding: 0; height: 2.75rem; font-size: .9375rem; line-height: 1.25rem; }
+  .zap .chips.one button { flex: 1 1 auto; height: 2.25rem; padding: 0 .625rem; }   /* телефон: три в ряд на всю ширину 280 (текст 200 + поля 10 + зазоры 8) */
+  .zap .send { width: 100%; height: 3.75rem; }
+  .zap .send .dk { display: none; } .zap .send .ph { display: block; }
+  .zap .send span { font-size: .8125rem; line-height: 1.125rem; }
+  /* ④ телефон: заголовок и строка уходят, в раме остаётся «Спасибо!» (кадр 74:157526) */
+  .zap .form:has(.zr.sent) .zl h2, .zap .form:has(.zr.sent) .zl p { display: none; }
+  .zap .zr.sent { margin-top: 0; }
+  .zap .zr .zdone { min-height: 16.25rem; padding: 0 .5rem; }
+  .zap .zr .zdone h3 { margin-bottom: .875rem; font-size: 2.25rem; line-height: 2.1875rem; }
+  .zap .zr .zdone p { max-width: 15.25rem; margin: 0 auto; font-size: 1.0625rem; line-height: 1.5rem; }   /* в кадре ④ — две строки по 244 */
+}

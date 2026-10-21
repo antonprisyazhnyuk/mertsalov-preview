@@ -1,0 +1,137 @@
+/* 20.10 09:19 · экран 3 «Мой путь» — вариант v3 по кадру Антона (Figma 176:66319). Размеры — px кадра 1920 / 16 = rem.
+   Лента ≥1024: секция высотой 100vh + (960rem − 100vw), внутри прибитая сцена, лента 960rem едет влево от прокрутки (path-v3.js).
+   Тонкие эффекты: блок проявляется один раз, когда въезжает в кадр (прозрачность и подъём на 1rem). Без фоновых букв и мишуры. */
+.path[data-v="v3"] > .ph, .path[data-v="v3"] > .pl, .path[data-v="v3"] > .more, .path[data-v="v3"] > .cols,
+.path[data-v="v3"] > .pys, .path[data-v="v3"] > .slot, .path[data-v="v3"] > .pw { display: none !important; }
+html .path[data-v="v3"] { padding: 0; min-height: 0; }
+
+.path .v3-b > *, .path .v3-head > * { opacity: 0; transform: translateY(1rem); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.path .v3-b > .in, .path .v3-head > .in, .path .v3-b > .v3-y { opacity: 1; transform: none; }
+.path .v3-ttl { margin: 0; font: 400 7.5rem/7.5rem Foglihten, serif; color: var(--gold); white-space: nowrap; }
+.path .v3-snd { padding: 0; background: none; border: 0; cursor: pointer; font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--warm); }
+.path .v3-snd[aria-pressed="true"] { color: var(--ink); }
+/* 20.10 11:53 Антон «что за плашки?»: без заливок — линия из отрезков между годами (зазор 0.5rem) */
+.path .v3-line { position: absolute; height: 1px; }
+.path .v3-line > i { position: absolute; top: 0; height: 0; border-top: 1px solid rgba(var(--gold-rgb), .55); }
+.path .v3-y { font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--warm); }
+.path .v3-big { font: 400 3rem/3.5rem Foglihten, serif; color: var(--ink); }
+.path .v3-big.c { text-align: center; }
+.path.v3-wide .v3-big.v3-up { text-transform: uppercase; }   /* 12:16 кадр Антона: «Сейчас работаю…» капсом */
+.path .v3-down { position: absolute; z-index: 1; left: 50%; width: 0; border-left: 1px solid rgba(var(--gold-rgb), .55); pointer-events: none; }   /* линия от «Дальше — твоя история» вниз к шагам */
+.path .v3-down[hidden] { display: none; }
+.path .v3-big a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.path .v3-q { font: 400 4rem/4.5rem Foglihten, serif; color: var(--ink); }
+.path .v3-sm { font: 400 1.25rem/2rem Jost, sans-serif; color: var(--ink); }
+.path .v3-end { font: 400 4rem/4.5rem Foglihten, serif; color: var(--warm); white-space: nowrap; }
+/* 20.10 11:39 Антон: в конце ленты вместо строки «Как попасть…» — стрелка вниз, как в ДМ: штрих 1px, золото, качается (−0.125rem ↔ 0.25rem, 1.9 с) */
+.path .v3-go a { position: relative; display: block; width: 100%; height: 100%; color: var(--gold); animation: v3-arrow 1.9s ease-in-out infinite; transition: opacity .2s; }
+.path .v3-go .v3-as { position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px solid currentColor; transform-origin: 50% 0; }   /* стержень */
+.path .v3-go .v3-ah { position: absolute; left: 0; bottom: 0; width: 100%; height: .5625rem; }   /* наконечник */
+.path .v3-go a:hover { opacity: .7; }
+.path .v3-go svg { display: block; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1; }
+.path .v3-go path { vector-effect: non-scaling-stroke; }
+@keyframes v3-arrow { 0%, 100% { transform: translateY(-.125rem); } 50% { transform: translateY(.25rem); } }
+@media (prefers-reduced-motion: reduce) { .path .v3-go a { animation: none; } }
+.path .v3-img, .path .v3-vid { margin: 0; overflow: hidden; background: var(--tile); }
+.path .v3-img img, .path .v3-vid video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.path .v3-vid { position: relative; }
+.path .v3-vid video.cut { transform: scale(1.12); transform-origin: 50% 100%; }   /* у J07 сверху шуточная надпись истории — срезана */
+.path .v3-play { position: absolute; left: 50%; top: 50%; width: 3rem; height: 3rem; margin: -1.5rem 0 0 -1.5rem; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(26,26,26,.55); display: grid; place-items: center; cursor: pointer; transition: opacity .2s; }
+.path .v3-play svg { width: .875rem; height: 1rem; margin-left: .2rem; fill: #fff; }
+.path .v3-vid.loud .v3-play { opacity: 0; }
+.path .v3-aw { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; color: #fff; }
+.path .v3-aw.center { align-items: center; }
+.path .v3-aw .p { display: flex; align-items: center; gap: .5rem; }
+.path .v3-aw .p span { font: 400 1.25rem/1 Jost, sans-serif; letter-spacing: .125em; text-transform: uppercase; }
+.path .v3-aw .l { font: 400 1rem/1 Jost, sans-serif; letter-spacing: .156em; text-transform: uppercase; white-space: nowrap; }
+.path .v3-aw .l + .l { font-size: .875rem; letter-spacing: .1786em; }
+.path .v3-aw .lv2 { height: 1.5625rem; color: var(--gold); }
+
+/* ── лента ≥1024 ── */
+.path.v3-wide { height: calc(100vh + 960rem - 100vw); }   /* 13:39: лента снова 15360 px кадра (блок конвенций шире) */
+.path.v3-wide .v3-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.path.v3-wide .v3-track { position: absolute; left: 0; top: 0; width: 960rem; height: 67.5rem; transform-origin: 0 0; will-change: transform; }   /* 12:23: место по высоте и масштаб ставит скрипт (под шапкой ≥ 32 px, до низа окна) */
+.path.v3-wide .v3-head > *, .path.v3-wide .v3-b > * { position: absolute; }
+.path .v3-head > .v3-snd { opacity: 1; transform: none; }   /* 12:02: кнопка звука видна сразу, без проявления (11:07 «пропала кнопка») */
+.path.v3-wide .v3-y { transform: translate(-50%, -50%); white-space: nowrap; }   /* год прерывает линию зазором между отрезками, как в кадре — без заливки */
+.path.v3-wide .v3-aw.center { transform: none; }
+
+/* ── уже 1024: та же последовательность сверху вниз ── */
+.path:not(.v3-wide)[data-v="v3"] { padding: 2rem 1rem calc(var(--bar-h) + 2rem); }
+.path:not(.v3-wide) .v3-head { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+.path:not(.v3-wide) .v3-ttl { font-size: 3rem; line-height: 3rem; }
+.path:not(.v3-wide) .v3-b { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; padding: 2rem 0; border-top: 1px solid rgba(var(--gold-rgb), .4); }
+.path:not(.v3-wide) .v3-b:has(> .v3-y) { border-top: 0; }   /* 11:53: у вехи с годом линию рисует сам год — от его правого края, без заливки */
+.path:not(.v3-wide) .v3-y { align-self: stretch; display: flex; align-items: center; gap: .5rem; margin-top: -2.6rem; }
+.path:not(.v3-wide) .v3-y::after { content: ""; flex: 1; border-top: 1px solid rgba(var(--gold-rgb), .4); }
+.path:not(.v3-wide) .v3-img { max-width: 100%; background: none; }
+.path:not(.v3-wide) .v3-img img { width: auto; max-width: 100%; height: auto; max-height: 70svh; }   /* не крупнее родного размера — 2012 (496 px) не мутнеет */
+.path:not(.v3-wide) .v3-vid { width: 100%; aspect-ratio: 1; }
+.path:not(.v3-wide) .v3-vid.story { width: 62%; aspect-ratio: 9 / 16; }
+.path:not(.v3-wide) .v3-big { font-size: 1.5rem; line-height: 1.875rem; text-align: center; }
+.path:not(.v3-wide) .v3-q { font-size: 1.75rem; line-height: 2.125rem; text-align: center; }
+.path:not(.v3-wide) .v3-sm { font-size: 1rem; line-height: 1.5rem; text-align: center; }
+.path:not(.v3-wide) .v3-end { font-size: 2rem; line-height: 2.5rem; white-space: normal; text-align: center; }
+.path:not(.v3-wide) .v3-aw { align-items: center; }
+.path:not(.v3-wide) .v3-go { width: 1rem; height: 4rem; }
+.path:not(.v3-wide) .v3-aw .p span { font-size: 1rem; }
+.path:not(.v3-wide) .v3-aw .l { font-size: .75rem; white-space: normal; text-align: center; }
+.path:not(.v3-wide) .v3-aw .l + .l { font-size: .6875rem; }
+
+/* ── после ленты: шаги и анкета (кадр 176:67966 «конец ленты → вниз»; анкета 74:152467 — в код пока заглушкой) ── */
+.zap { padding: 6rem 7.5rem 8rem; border-top: 1px solid rgba(var(--gold-rgb), .15); }
+.zap .steps { display: grid; grid-template-columns: repeat(4, 22.5rem); gap: 3.75rem; }
+.zap .n { font: 400 4rem/1 Foglihten, serif; color: var(--warm); }
+.zap h3 { margin: 1.5rem 0 1rem; font: 400 2.5rem/1 Foglihten, serif; color: var(--warm); }
+.zap .steps p { margin: 0; font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--ink); }
+.zap .form { display: grid; grid-template-columns: 22.5rem 1fr; gap: 3.75rem; margin-top: 8rem; }
+.zap .k { font: 400 .875rem/1 Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--warm); }
+.zap h2 { margin: 1rem 0 1.5rem; font: 400 6.5rem/6rem Foglihten, serif; color: var(--warm); }
+.zap .form p { margin: 0; font: 400 1.375rem/2rem Jost, sans-serif; color: var(--ink); }
+.zap .stub { min-height: 28rem; border: 1px solid rgba(var(--gold-rgb), .6); outline: 1px solid rgba(var(--gold-rgb), .35); outline-offset: -.5rem; display: grid; place-items: center;
+  font: 400 1rem/1.5 Jost, sans-serif; color: var(--muted); text-align: center; padding: 2rem; }
+@media (max-width: 767px) {
+  .zap { padding: 3rem 1rem calc(var(--bar-h) + 3rem); }
+  .zap .steps { grid-template-columns: 1fr; gap: 2rem; }
+  .zap .n { font-size: 2.5rem; } .zap h3 { font-size: 1.75rem; margin: .75rem 0 .5rem; } .zap .steps p { font-size: 1rem; line-height: 1.5rem; }
+  .zap .form { grid-template-columns: 1fr; gap: 1.5rem; margin-top: 3rem; } .zap h2 { font-size: 3rem; line-height: 3rem; } .zap .form p { font-size: 1.0625rem; line-height: 1.625rem; }
+  .zap .stub { min-height: 16rem; }
+}
+/* 21.10 Антон: видео Коли — кругом в кольце (приветствие 603 в 627, этапы 172 в 180; кадры 205:144 и 176:66319); значок звука на круге под 45° */
+.path .v3-vid.round { overflow: visible; background: none; border: 1px solid rgba(216, 183, 122, .55); border-radius: 50%; box-sizing: border-box; }
+.path .v3-cr { position: absolute; border-radius: 50%; overflow: hidden; background: var(--tile); }
+.path .v3-cr video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.path .v3-mute { position: absolute; z-index: 2; padding: 0; display: grid; place-items: center; cursor: pointer; border-radius: 50%;
+  border: 1px solid rgba(216, 183, 122, .6); background: rgba(26, 26, 26, .82); transition: border-color .3s; }
+.path .v3-mute:hover, .path .v3-vid.loud .v3-mute { border-color: var(--gold); }
+.path .v3-spk { width: 1.25rem; height: 1.25rem; flex: none; fill: none; stroke: var(--gold); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+.path .v3-mute .v3-spk { grid-area: 1 / 1; width: 45%; height: 45%; }
+.path .v3-mute .v3-spk.on, .path .v3-vid.loud .v3-mute .v3-spk.off { display: none; }
+.path .v3-vid.loud .v3-mute .v3-spk.on { display: block; }
+.path .v3-snd { display: inline-flex; align-items: center; gap: .5rem; }
+.path:not(.v3-wide) .v3-vid.round { width: 60%; aspect-ratio: 1; }
+.path:not(.v3-wide) .v3-vid.round .v3-mute { display: none; }
+/* 21.10 14:25 Антон: строки «Включить звук» нет — звук значком на кругах; досмотрел — ролик стоит, по центру значок «снова» */
+.path .v3-head > .v3-snd { display: none; }
+/* 14:39–14:41 Антон: на входе (круг по центру) рядом со значком динамика справа — подсказка «Включить звук»; нажал (значок или подсказку) — больше не появляется */
+.path .v3-hint { position: absolute; z-index: 2; translate: 0 -50%; padding: 0; border: 0; background: none; cursor: pointer; white-space: nowrap;
+  font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); opacity: 0; pointer-events: none; transition: opacity .5s; }
+.path.intro-c:not(.hint-gone) .v3-hint { opacity: 1; pointer-events: auto; }
+.path .v3-again { position: absolute; left: 50%; top: 50%; z-index: 2; translate: -50% -50%; padding: 0; display: none; place-items: center; cursor: pointer; border-radius: 50%;
+  border: 1px solid var(--gold); background: rgba(26, 26, 26, .82); }
+.path .v3-again .v3-spk { width: 45%; height: 45%; }
+.path .v3-vid.done .v3-again { display: grid; }
+.path .v3-vid.done .v3-cr video { filter: brightness(.55); transition: filter .4s; }
+.path .v3-vid.snd .v3-mute { border-color: var(--gold); }
+.path .v3-vid.snd .v3-mute .v3-spk.off { display: none; }
+.path .v3-vid.snd .v3-mute .v3-spk.on { display: block; }
+.path .v3-paused { position: absolute; left: 50%; top: 50%; z-index: 2; translate: -50% -50%; display: none; place-items: center; border-radius: 50%; pointer-events: none;
+  border: 1px solid var(--gold); background: rgba(26, 26, 26, .82); }
+.path .v3-paused .v3-spk { width: 45%; height: 45%; fill: var(--gold); }
+.path .v3-vid.held .v3-paused { display: grid; }
+.path .v3-vid.held .v3-cr video { filter: brightness(.7); }
+.path .v3-greet { z-index: 3; }   /* 14:41: над невидимым ещё текстом 2002 — иначе подсказку не нажать */
+/* 14:54: после клика мышью у значков нет синей обводки фокуса; с клавиатуры — золотая */
+.path .v3-mute:focus, .path .v3-again:focus, .path .v3-hint:focus { outline: none; }
+.path .v3-mute:focus-visible, .path .v3-again:focus-visible, .path .v3-hint:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }

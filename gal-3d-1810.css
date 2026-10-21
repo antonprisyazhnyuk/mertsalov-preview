@@ -1,0 +1,135 @@
+/* 18.10 · второй экран главной · Infinite Canvas (Codrops, MIT) — слово Антона 18.10 07:24 «ну давай делать».
+   Десктоп ≥1024 с WebGL: отрезок ~3,5 экрана, сцена прибита (sticky), полёт в глубину — от обычной прокрутки, колесо не перехватываем.
+   <1024 и без WebGL — принятая карусель Б (gal-phone.html), перенесена как есть: размеры в px, как в её файле (там корень 16 px). */
+
+/* ── десктоп: сцена ─────────────────────────── */
+.s3d { display: none; position: relative; height: calc((var(--len, 3.2) + var(--intro, 1.075)) * 100vh); }   /* v6: + вводная часть (фраза → кнопка → работы выплывают), --intro экранов */
+@media (min-width: 1024px) { html:not(.no3d) .s3d { display: block; } }
+.s3d .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.s3d canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 1.2s var(--ease); }
+.s3d canvas.on { opacity: 1; }
+.s3d .stage.hot, .s3d .stage.hot canvas { cursor: zoom-in; }
+.s3d .stage.grab canvas { cursor: grab; } .s3d .stage.grabbing canvas { cursor: grabbing; }
+
+/* фраза и кнопка — HTML поверх сцены; центр на оси 960, ширина между осями 540 и 1380 */
+.s3d .txt { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; padding-top: 2.5rem; }
+/* v4 · 08:55–08:56 Антон «текст точно крупнее», кадр Figma 81:196503: Foglihten, межстрочный 1.0, ровно 4 строки, по центру 960;
+   кегль — ручка «размер фразы» (--qpx, px при 1920; по умолчанию 108, в Figma 120), на других ширинах пропорционально (rem); не шире полосы 120–1800 */
+.s3d .q { max-width: 105rem; margin: 0 0 3rem; text-align: center; white-space: nowrap; text-transform: uppercase;   /* 08:59 Антон: в макете капсом; в разметке — обычный регистр (для поиска) */ font: 400 calc(var(--qpx, 108) * 1rem / 16)/1 Foglihten, serif; color: var(--gold); }
+.s3d .b { pointer-events: auto; }
+/* v2 · 18.10: фраза лежит поверх работ; под буквами — мягкое пятно цвета фона (без прямоугольников и краёв), чтобы читалась */
+.s3d .q { position: relative; z-index: 0; }
+.s3d .q::before { content: ""; position: absolute; z-index: -1; left: -14%; right: -14%; top: -55%; bottom: -55%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(35,35,35, calc(var(--spot, .8) * 1)), rgba(35,35,35, calc(var(--spot, .8) * .62)) 55%, rgba(35,35,35, 0)); }
+/* v3: цвет пятна и дымки — 35/35/35, как фон с зерном на экране (#1a1a1a + зерно ≈ 35), а не #1a1a1a: иначе пятно и тающие работы темнее фона — «тень» */
+.b.bw { width: 17.5rem; }
+/* v2 · 18.10 08:02 Антон: «при наведении на картинку виден задний фон» — свет обоев под мышью проступал сквозь полупрозрачные (тающие) работы.
+   Пока курсор над сценой второго экрана, свет руки выключен; обои, зерно и свет — под сценой, на первом экране всё как на index */
+.wall-lit, .wall-shade { transition: opacity .35s; }
+/* 09:56 Антон: свет нужен и на пустом поле второго экрана → общее выключение над сценой снято; непрозрачные работы закрывают свет сами (холст над обоями),
+   а в прямоугольниках полупрозрачных работ у курсора свет вырезается маской (gal-3d-1810.js) */
+
+/* работы для поиска: обычные <img>, видны поисковику и читалке, глазу — нет (не display:none) */
+.vh { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* открытая работа: перелёт к центру и раскрытие в своей пропорции (как принятый перелёт CodePen в gal-phone.html) */
+.ov { position: fixed; inset: 0; z-index: 50; background: rgba(var(--bg-rgb), 0); transition: background .6s var(--ease); cursor: zoom-out; }
+.ov.in { background: rgba(var(--bg-rgb), .94); }
+.ov .box { position: fixed; overflow: hidden; }
+.ov .box img, .ov .box video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ov .ln { position: fixed; display: flex; gap: 1rem; align-items: center; font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .06em; text-transform: uppercase;
+  opacity: 0; transition: opacity .4s; white-space: nowrap; }
+.ov .ln .yr { color: var(--gold); } .ov .ln .st { color: var(--muted); }
+.ov.in.done .ln { opacity: 1; }
+.ov .plate { position: fixed; display: flex; align-items: center; gap: .625rem; color: var(--gold); opacity: 0; transform: translateY(.5rem); transition: opacity .5s, transform .5s var(--ease); }
+.ov.in.done .plate { opacity: 1; transform: none; }
+.ov .plate .lv { flex: none; height: 7.8125rem; width: auto; aspect-ratio: 90 / 164.33; }
+.ov .plate .awt { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 14rem; margin: 0 -.25rem; }
+.ov .plate .awc { color: var(--gold); font-size: .75rem; line-height: 1.0625rem; letter-spacing: .2em; text-transform: uppercase; }
+.ov .plate .awp { margin: 0; font: 400 2.75rem/3.5rem Foglihten, serif; color: var(--ink); text-transform: uppercase; white-space: nowrap; }
+.ov .plate .awe, .ov .plate .awy { font-size: .875rem; line-height: 1.25rem; color: var(--ink); }
+
+/* ── третий экран · заглушка ─────────────────── */
+.path { min-height: 100vh; padding: 10rem 7.5rem; border-top: 1px solid rgba(var(--gold-rgb), .15); }
+.path h2 { font: 400 4rem/1 Foglihten, serif; color: var(--warm); margin: 0 0 3rem; }
+.path p { color: var(--muted); font-size: 1.25rem; max-width: 50rem; margin: 0; }
+@media (max-width: 767px) { .path { padding: 4rem 1rem 7rem; } .path h2 { font-size: 2.5rem; margin-bottom: 1.5rem; } .path p { font-size: 1rem; } }
+
+/* ── карусель Б (gal-phone.html, принята 16.10) — <1024 и без WebGL ── */
+.s2 { --soft: #d9d4c7; position: relative; height: calc(100dvh - 64px); min-height: 480px; overflow: hidden; }
+@media (min-width: 1024px) { html:not(.no3d) .s2 { display: none; } }
+.s2 .caps { font: 400 12px/17px Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.s2 .rib { display: flex; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.s2 .rib::-webkit-scrollbar { display: none; }
+.s2 .sl { position: relative; flex: 0 0 100%; height: 100%; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; margin: 0; }
+.s2 .sl img, .s2 .sl video { position: absolute; top: 0; left: calc(var(--px, .15) * -100%); width: calc(100% + var(--px, .15) * 200%); height: 100%; object-fit: cover; will-change: transform; user-select: none; -webkit-user-drag: none; }
+.s2.nopx .sl img { left: 0; width: 100%; }
+.s2 .sl video { left: 0 !important; width: 100% !important; object-fit: cover; background: var(--bg); transform: none !important; }
+.s2 .sh-top { position: absolute; left: 0; right: 0; top: 0; height: 64px; pointer-events: none; z-index: 1; background: linear-gradient(to bottom, rgba(var(--bg-rgb),.6), rgba(var(--bg-rgb),0)); }
+.s2 .prog { position: absolute; left: 16px; right: 16px; top: 16px; display: flex; gap: 4px; z-index: 3; pointer-events: none; }
+.s2 .prog i { flex: 1; height: 2px; background: rgba(107,103,94,.6); transition: background .2s; }
+.s2 .prog i.done { background: var(--ink); } .s2 .prog i.on { background: var(--warm); }
+.s2 .ui { position: absolute; left: 16px; right: 16px; bottom: 20px; z-index: 3; }
+.s2 .tabs { display: flex; align-items: center; gap: 16px; margin-bottom: 0; }
+.s2 .tabs .all { margin-left: auto; color: var(--soft); }
+/* 19.10 · слайд по паре Антона Figma 172:44714 (кадр 171:37961) — как открытая работа на телефоне (.wo-aw, .wo-y в shell.css).
+   Награда текстом вверху слева под полосками: левый край 16, верх 42; «N МЕСТО» Jost 16 капс, разрядка 2 px, между веточками 10.7×20 (--gold), зазор 4;
+   ниже через 8 — номинация и «конкурс, город», Jost 12 капс, разрядка 2 px, зазор 4; белым. Год Foglihten 24/38 (--warm) по центру, строка 668–706 из 780 (низ слайда − 48).
+   Тап по слайду — открытая работа (gal-3d-1810.js). Прежний угол (год 40 и шильдик внизу слева) снят */
+.s2 .sl[data-wo] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.s2 .sl:focus { outline: none; } .s2 .sl:focus-visible { outline: 1px solid var(--warm); outline-offset: -.25rem; }
+.s2 .sl .aw { position: absolute; left: 1rem; top: 2.625rem; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; color: var(--wo-white, #fff); pointer-events: none; }
+.s2 .sl .aw .p { display: flex; align-items: center; gap: .25rem; }
+.s2 .sl .aw .lv2 { display: block; flex: none; height: 1.25rem; width: auto; color: var(--gold); }   /* как .lv2 в shell.css — и на стенде без каркаса */
+.s2 .sl .aw .p span, .s2 .sl .aw .l { font: 400 1rem/1.25rem Jost, sans-serif; letter-spacing: .125rem; text-transform: uppercase; white-space: nowrap; text-box: trim-both cap alphabetic; }
+.s2 .sl .aw .l { font-size: .75rem; }
+.s2 .sl .aw .ls { display: flex; flex-direction: column; gap: .25rem; }
+.s2 .sl .yr { position: absolute; left: 0; right: 0; top: calc(100% - 3rem); z-index: 2; margin: 0; text-align: center; font: 400 1.5rem/2.375rem Foglihten, serif; color: var(--warm); pointer-events: none; }
+/* затемнения умножением (19:53 · 19:58 · 17.10 09:53), ?s2sh=normal — прежнее */
+.s2 .sl::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 105px; z-index: 1; pointer-events: none; mix-blend-mode: multiply;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(120,108,94,.6) 45%, rgba(42,37,32,1) 100%); }
+.s2 .sl.prize::after { height: 132px; }   /* как принято (Figma 172:44436 — 132 у призовых) */
+.s2 > .sh-top { mix-blend-mode: multiply; background: linear-gradient(to top, rgba(255,255,255,0) 0%, rgba(120,108,94,.6) 45%, rgba(42,37,32,1) 100%); }
+.s2.shn .sl::after { mix-blend-mode: normal; background: linear-gradient(to bottom, rgba(var(--bg-rgb),0) 0%, rgba(var(--bg-rgb),.55) 55%, rgba(var(--bg-rgb),.9) 100%); }
+.s2.shn > .sh-top { mix-blend-mode: normal; background: linear-gradient(to bottom, rgba(var(--bg-rgb),.6), rgba(var(--bg-rgb),0)); }
+
+/* ── v6 · 18.10 09:10 Антон ───────────────────
+   1) переход: слова фразы выходят из размытия по прокрутке, потом кнопка, потом из дымки выплывают работы (gal-3d-1810.js)
+   2) появление первого экрана: фон → портрет → имя (слова из размытия) → формула → хедер (тише). Портрет и имя в разметке сразу */
+.s3d .ql { display: block; }
+/* 09:13 Антон: текст появляется эффектом №4 Codrops ScrollBlurTypography — слово из размытия с наклоном; слово — inline-block, чтобы работал наклон */
+.s3d .q .w, .hero .w { display: inline-block; will-change: opacity, transform, filter; }
+.s3d .q .c, .hero .c { display: inline-block; will-change: opacity, transform; }
+html.txt-wave .s3d .q .c, html.txt-wave .hero .c, html.txt-wave .hero .formula .w { transform-origin: 50% 0; }   /* №2: transformOrigin 50% 0% */
+html.txt-stretch .s3d .q .w, html.txt-stretch .hero .w { perspective: 2000px; }   /* №6: perspective 2000 у слова */
+html.txt-rise .s3d .q .c, html.txt-rise .hero .c, html.txt-widen .s3d .q .c, html.txt-widen .hero .c { transform-origin: 50% 100%; }   /* index2 №10, №13: origin 50% 100% */
+html.txt-e14 .w[data-odd="0"] .c { transform-origin: 100% 0; } html.txt-e14 .w[data-odd="1"] .c { transform-origin: 0 100%; }   /* index2 №14 */
+html.intro .hero .portrait { opacity: .02; }   /* не 0: портрет — главная картинка (LCP), в разметке и на экране с первой отрисовки */
+html.intro .hero .name, html.intro .hero .formula, html.intro .hd { opacity: 0; }   /* 20.10 Антон: нижнее меню телефона — сразу, в появлении не участвует */
+
+/* ── v6 · 09:25 Антон: «порезанный по низу портрет просто тупо плывёт вверх» ──
+   первый экран прибит (sticky) на --dis экрана прокрутки и растворяется в дымку: портрет и имя темнеют до фона, чуть размываются и отходят вглубь (scale .96);
+   формула уезжает как обычно; второй экран наезжает сразу после растворения (отрезок поднят на экран вверх, его сцена в это время пустая).
+   Низ портрета — мягкий (маска), и в покое, и при уходе. Только десктоп со сценой; телефон и карусель — как было */
+.hero .portrait { -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%); mask-image: linear-gradient(to bottom, #000 80%, transparent 100%); }
+@media (min-width: 1024px) {
+  html:not(.no3d) .hero-pin { height: calc(100svh + var(--dis, .6) * 100vh); }
+  html:not(.no3d) .hero-pin .hero { position: sticky; top: 0; }
+  html:not(.no3d) .s3d { margin-top: -100vh; }
+}
+html:not(.q-on) .s3d .q::before { display: none; }   /* v6: пятно — только когда фраза видна (CLS 0.005 от сдвига пятна при подгрузке шрифта) */
+
+/* ── v7 · 09:51 Антон: шторка между первым и вторым экраном — от прокрутки; текста на ней нет. Под хедером (хедер — навигация, остаётся) */
+.s3c { position: fixed; inset: 0; z-index: 8; background: var(--bg); pointer-events: none; clip-path: inset(100% 0 0 0); }
+.s3c.dark { background: #141414; }   /* край «темнее фона» */
+.s3c > i { position: absolute; inset: 0; opacity: .08; mix-blend-mode: screen; image-rendering: pixelated; background-repeat: repeat; background-size: 128px 128px; }   /* зерно — как у фона главной */
+.s3c-line { position: fixed; left: 0; right: 0; top: 0; height: 1px; z-index: 9; background: var(--gold); pointer-events: none; will-change: transform; }
+
+/* ── v7 · 09:55 Антон: переход «линией» (по умолчанию) — грань с полосой цвета плашки хедера поднимается от низа к хедеру; выше — первый экран, ниже — второй.
+   Отрезок второго экрана начинается с самого верха (сцена прибита сразу, под первым экраном, пока пустая) */
+/* 10:57 Антон: «имеется в виду одна маленькая золотая полоска» — полосу под линией убрали, осталась линия 1 px цвета --gold (как граница «Путь мастера») */
+.s3l { position: fixed; left: 0; right: 0; top: 0; height: 1px; z-index: 9; pointer-events: none; will-change: transform; background: var(--gold); }
+@media (min-width: 1024px) { html.tr-line:not(.no3d) .s3d { margin-top: calc(-100vh - var(--dis, .7) * 100vh); } }
+@media (min-width: 1024px) { html:not(.no3d):not(.q-on) .s3d .txt { visibility: hidden; } }   /* v7: фраза скрыта до своей очереди с первой отрисовки — сцена при «линии» стоит под первым экраном с самого начала */
+.hero .formula .fl { display: block; will-change: opacity, transform, filter; }   /* v8 · 10:58: формула строками */
