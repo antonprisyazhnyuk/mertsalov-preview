@@ -16,17 +16,35 @@ window.RV = (({ anton: 1, rozov: 1, osnova: 1, mix: 1, free: 1, "ro-os": 1 })[ne
 document.documentElement.dataset.v = RV;
 document.write(`<link rel="stylesheet" href="works-r-${RV}.css">`);
 </script>
-<link rel="stylesheet" href="shell.css">   <!-- каркас: после стилей страницы, перекрывает их старую копию хедера -->
+<link rel="stylesheet" href="shell.css">
+<link rel="stylesheet" href="footer-2010.css?v=2110e">   <!-- футер и плашка cookie, как на главной -->   <!-- каркас: после стилей страницы, перекрывает их старую копию хедера -->
 </head>
 <body data-page="works">
 <script src="shell.js"></script>   <!-- каркас: обои, хедер, полоса и шторка телефона, зерно (fx.js) -->
 
 <main class="pg" id="pg"></main>
+<!-- 21.10 21:42 Антон: «а где футер в „Работах“?» — футер был только на главной; тот же, что в index.html (копия разметки, правится в обоих) + плашка cookie -->
+<!-- 21.10 20:26 · футер — кадр Антона 215:114758 (1920 × 376) один в один; телефон 360 — от него столбиком. Карта — в FAQ «Где ты работаешь?».
+     Меню и языки — те же адреса, что в shell.js; «Написать» открывает окно «Сотрудничество» (coop-2110.js). Ссылки соцсетей и политики — заглушки (ждут Колю). -->
+<footer class="ft" id="footer" aria-label="Контакты">
+  <i class="ftg" aria-hidden="true"></i>
+  <svg class="mk" viewBox="0 0 923 846" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path fill-rule="evenodd" clip-rule="evenodd" d="M465.667 550.723H466.42L547.721 49.7734L556.479 51.1943L475.754 548.595L615.021 99.6523L623.495 102.281L486.827 542.843L661.413 155.746L669.502 159.395L493.008 550.723H498.525L773.865 41.3047H922.462V52.7773H881.479L855.763 100.356V676.168C855.763 722.061 882.687 748.832 922.462 748.832V760.305H729.709V748.832H737.358C777.132 748.832 804.056 722.059 804.056 676.166V196.022L488.248 780.313L461.23 738.887L434.214 780.313L118.406 196.022V676.166C118.406 722.059 145.33 748.831 185.104 748.831L192.753 748.832V760.305H0V748.832C39.7749 748.832 66.699 722.061 66.6992 676.168V100.356L40.9824 52.7773H0V41.3047H148.597L423.937 550.723H429.454L252.96 159.395L261.049 155.746L435.632 542.837L298.967 102.281L307.44 99.6523L446.707 548.595L365.983 51.1943L374.741 49.7734L456.043 550.723H456.795V0H465.667V550.723ZM81.0791 683.816C81.0791 720.531 65.7812 737.358 50.4834 748.832H134.621C119.324 737.358 104.027 720.53 104.026 683.815V171.336H105.063L81.0791 126.962V683.816ZM817.398 171.336H818.436V683.815C818.435 720.53 803.138 737.357 787.841 748.831L871.979 748.832C856.681 737.358 841.383 720.531 841.383 683.816V126.962L817.398 171.336ZM461.231 695.291L808.51 52.7773H782.044L461.231 646.327L140.418 52.7773H113.952L461.231 695.291Z" fill="currentColor"/> <path fill-rule="evenodd" clip-rule="evenodd" d="M461.174 769.305L486.118 807.55L461.174 845.795L436.23 807.55L461.174 769.305ZM461.174 786.653L474.804 807.55L461.174 828.447L447.544 807.55L461.174 786.653Z" fill="currentColor"/> </svg>
+  <nav class="nav" aria-label="Разделы"><a href="index.html">Главная</a><a href="works-r-1710.html">Работы</a><a href="#about">Обо мне</a><a href="#blog">Блог</a><a href="shop.html">Магазин</a></nav>
+  <div class="lng"><a class="on" href="#ru" aria-current="true">RU</a><a href="#en">EN</a><a href="#de">DE</a></div>
+  <ul class="soc" aria-label="Связь"><li><a href="#tg">Telegram</a></li><li><a href="#vk">VK</a></li><li><a href="#ig">Instagram<span aria-hidden="true">*</span></a></li></ul>
+  <div class="adr"><address>Москва, Олимпийский проспект, 10&nbsp;к1–2</address><a class="go" href="https://locationtattoo.ru/mercalov" target="_blank" rel="noopener">Студия «Локация»</a></div>
+  <div class="gst"><p class="gs">Открыт к гест-спотам и&nbsp;сотрудничеству</p><a class="go" href="#sotrudnichestvo" data-coop>Написать</a></div>
+  <a class="pol" href="#policy">Политика обработки персональных данных</a>
+  <p class="cr">© 2008–<span class="yr">2026</span> Николай Мерцалов</p>
+  <p class="meta">*Meta запрещена в РФ</p>
+</footer>
+<div class="ck" role="dialog" aria-label="Cookie и Яндекс Метрика" hidden><p>Сайт использует <a href="#policy">cookie</a></p><button class="ok caps" type="button">ОК</button></div>
 
 
 <script src="works-data.js"></script>   <!-- 19.10: один файл работ на сайт (кадры, награды, названия) -->
 <script src="works-r-data.js"></script>
 <script>document.write(`<script src="works-r-${RV}.js"><\/script>`);</script>
 <script>if (new URLSearchParams(location.search).has("ax")) { const a = document.createElement("div"); a.className = "axes"; a.innerHTML = "<i></i>".repeat(5); document.body.append(a); }</script>
+<script src="footer-2010.js?v=2110g" defer></script>
 </body>
 </html>
