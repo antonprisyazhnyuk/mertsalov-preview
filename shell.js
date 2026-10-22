@@ -126,7 +126,9 @@ document.addEventListener("click", e => { const a = e.target.closest && e.target
 const rec = document.querySelector(".bar a.rec");   // «Запись» в полосе телефона — тот же попап
 // 22.10 10:05–10:12 Антон: открыта запись — «Запись» в полосе становится «Закрыть»; открыто меню — «Запись» переключает на запись, и наоборот
 const zpOpen = () => !!(window.ZPOP && ZPOP.isOpen && ZPOP.isOpen());
-if (rec) rec.addEventListener("click", e => { e.preventDefault();
+// 22.10 11:20 баголов: открыто «Сотрудничество» — «Запись»/«Меню» в полосе открывались поверх или под ним, после «Закрыть» оно оставалось на экране → сперва закрываем его
+const coopOff = () => { if (window.COOP && document.querySelector(".zpov.zco.in")) COOP.close(); };
+if (rec) rec.addEventListener("click", e => { e.preventDefault(); coopOff();
   if (zpOpen()) { ZPOP.close(); return; }
   if (drawer.classList.contains("open")) setMenu(false);
   openZapis(rec); });
@@ -192,7 +194,7 @@ function setMenu(open) {
   menuBtn.setAttribute("aria-expanded", open); menuBtn.textContent = open ? "Закрыть" : "Меню";
   body.classList.toggle("menu-open", open);
 }
-menuBtn.addEventListener("click", () => { if (zpOpen()) { ZPOP.close(); setMenu(true); return; } setMenu(!drawer.classList.contains("open")); });
+menuBtn.addEventListener("click", () => { coopOff(); if (zpOpen()) { ZPOP.close(); setMenu(true); return; } setMenu(!drawer.classList.contains("open")); });
 drawer.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => setMenu(false)));
 
 // ── шторка между страницами · 18.10 — правило рефа Codrops Isle Thorne Collective (transitions/loading-curtain.ts):
