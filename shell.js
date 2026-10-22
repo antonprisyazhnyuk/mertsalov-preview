@@ -122,6 +122,7 @@ const openZapis = async opener => {
 };
 b.addEventListener("click", () => openZapis(b));   // «Записаться» → попап анкеты
 document.querySelector(".hd .cta").replaceChildren(b);
+document.addEventListener("click", e => { const a = e.target.closest && e.target.closest("[data-zapis]"); if (!a) return; e.preventDefault(); openZapis(a); });   // 22.10: ссылки в тексте («Записываю» в «Частых вопросах») — то же окно; через документ: блоки страницы дорисовываются позже shell.js
 const rec = document.querySelector(".bar a.rec");   // «Запись» в полосе телефона — тот же попап
 // 22.10 10:05–10:12 Антон: открыта запись — «Запись» в полосе становится «Закрыть»; открыто меню — «Запись» переключает на запись, и наоборот
 const zpOpen = () => !!(window.ZPOP && ZPOP.isOpen && ZPOP.isOpen());
