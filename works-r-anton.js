@@ -25,8 +25,11 @@ const has = (w, k) => w.c.includes(k) || (w.tg || []).includes(k);
 const CAT_GROUPS = [[["", "Все"], ["fresh", "Свежие"]], [["bw", "Чёрно-белые"], ["color", "Цветные"]],
   [["real", "Реализм"], ["port", "Портреты"], ["deco", "Ар-деко"], ["dark", "Dark art"]], [["cover", "Перекрытия"], ["healed", "Зажившие"]], [["paint", "Живопись"]]]
   .map(g => g.filter(([k]) => !k || ALL.some(w => has(w, k)))).filter(g => g.length);
-const catBtn = ([k, l]) => `<button class="ro-cat${k ? "" : " on"}" type="button" data-k="${k}" aria-pressed="${!k}">${l}</button>`;
+const catBtn = ([k, l]) => `<button class="ro-cat${k === flt ? " on" : ""}" type="button" data-k="${k}" aria-pressed="${k === flt}">${l}</button>`;
 let flt = "";
+// 22.10 12:08 Антон: из «Обо мне» («Перекрытия») — ссылка на «Работы» с выбранным фильтром → ?c=<ключ> (works-r-1710.html?c=cover); выбор категории пишется в адрес — ссылкой можно поделиться
+{ const c = new URLSearchParams(location.search).get("c"); if (c && CAT_GROUPS.some(g => g.some(([k]) => k === c))) flt = c; }
+const keepCat = () => { const u = new URL(location.href); if (flt) u.searchParams.set("c", flt); else u.searchParams.delete("c"); history.replaceState(history.state, "", u); };
 
 // категории — в полосе на всю высоту страницы: на десктопе список липнет к окну (13:44 «фильтр тоже должен быть прилипший») и уходит с концом страницы
 pg.innerHTML = `<h1 class="ro-t vh">Работы</h1>
@@ -34,10 +37,12 @@ pg.innerHTML = `<h1 class="ro-t vh">Работы</h1>
   `<div class="ro-grp${i ? "" : " row"}">${g.map(catBtn).join("")}</div>`).join("")}</nav></div>
 <div class="ro-f" id="rof"></div>`;
 const field = document.getElementById("rof"), cats = pg.querySelector(".ro-cats");
+// 22.10: открыли с ?c= — на телефоне лента категорий листается вбок, выбранный пункт докручиваем к середине
+if (flt) requestAnimationFrame(() => { const on = cats.querySelector(".ro-cat.on"); if (on && cats.scrollWidth > cats.clientWidth) cats.scrollLeft = on.offsetLeft - (cats.clientWidth - on.offsetWidth) / 2; });
 { const put = () => cats.style.setProperty("--cats-h", cats.offsetHeight + "px"); put(); if ("ResizeObserver" in window) new ResizeObserver(put).observe(cats); document.fonts && document.fonts.ready.then(put); }   // 20.10: центр списка категорий по его высоте
 cats.addEventListener("click", e => { const b = e.target.closest("button.ro-cat"); if (!b || b.dataset.k === flt) return; flt = b.dataset.k;
   cats.querySelectorAll("button.ro-cat").forEach(x => { const on = x.dataset.k === flt; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
-  build(); });
+  keepCat(); build(); });
 
 // 20.10 Lighthouse: родное «ленивое» кружево Хрома на телефоне тянуло ~30 кадров (до 1250 px за экраном) рядом с главным; теперь кадр грузится, когда до него осталось 500 px.
 //   Пока не загружен — на месте серая подложка .r-ph с готовой пропорцией, как и у родной ленивой загрузки.
