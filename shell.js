@@ -117,13 +117,19 @@ document.head.insertAdjacentHTML("beforeend", "<style>.b.sb:hover .i, .b.sb:hove
 const SHELL_BASE = (document.currentScript && document.currentScript.src || "").replace(/[^/]*$/, "");
 let zpopLoad = null;
 const openZapis = async opener => {
-  if (!window.ZPOP) zpopLoad = zpopLoad || new Promise(res => { const s = document.createElement("script"); s.src = SHELL_BASE + "zpop-2010.js?v=2110"; s.onload = s.onerror = res; document.head.appendChild(s); });
+  if (!window.ZPOP) zpopLoad = zpopLoad || new Promise(res => { const s = document.createElement("script"); s.src = SHELL_BASE + "zpop-2010.js?v=2210"; s.onload = s.onerror = res; document.head.appendChild(s); });
   await zpopLoad; if (window.ZPOP) ZPOP.open(opener); else location.href = ZAPIS;   // модуль не загрузился — по-старому, к анкете
 };
 b.addEventListener("click", () => openZapis(b));   // «Записаться» → попап анкеты
 document.querySelector(".hd .cta").replaceChildren(b);
 const rec = document.querySelector(".bar a.rec");   // «Запись» в полосе телефона — тот же попап
-if (rec) rec.addEventListener("click", e => { e.preventDefault(); openZapis(rec); });
+// 22.10 10:05–10:12 Антон: открыта запись — «Запись» в полосе становится «Закрыть»; открыто меню — «Запись» переключает на запись, и наоборот
+const zpOpen = () => !!(window.ZPOP && ZPOP.isOpen && ZPOP.isOpen());
+if (rec) rec.addEventListener("click", e => { e.preventDefault();
+  if (zpOpen()) { ZPOP.close(); return; }
+  if (drawer.classList.contains("open")) setMenu(false);
+  openZapis(rec); });
+document.addEventListener("zpop", e => { if (!rec) return; rec.textContent = e.detail ? "Закрыть" : "Запись"; rec.setAttribute("aria-expanded", e.detail); });
 
 // ── свет руки: мышь и палец двигают пятно на обоях ──
 const lit = e => { const p = e.touches ? e.touches[0] : e; root.style.setProperty("--mx", p.clientX + "px"); root.style.setProperty("--my", p.clientY + "px"); };
@@ -175,7 +181,7 @@ function setMenu(open) {
   menuBtn.setAttribute("aria-expanded", open); menuBtn.textContent = open ? "Закрыть" : "Меню";
   body.classList.toggle("menu-open", open);
 }
-menuBtn.addEventListener("click", () => setMenu(!drawer.classList.contains("open")));
+menuBtn.addEventListener("click", () => { if (zpOpen()) { ZPOP.close(); setMenu(true); return; } setMenu(!drawer.classList.contains("open")); });
 drawer.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => setMenu(false)));
 
 // ── шторка между страницами · 18.10 — правило рефа Codrops Isle Thorne Collective (transitions/loading-curtain.ts):

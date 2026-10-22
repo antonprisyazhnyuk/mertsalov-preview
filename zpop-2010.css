@@ -29,4 +29,9 @@ html.zp-on { overflow: hidden; }
   .zpbg { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .zap.zpop { width: auto; min-height: 100%; margin: 0; padding: 4rem 1rem calc(var(--bar-h) + 2rem); box-sizing: border-box; }   /* рама по полям 16–344, как на главной (14:59) */
   .zpx { top: 1rem; right: 1rem; }
+  /* 22.10 10:11 Антон: запись на телефоне — без рамы и крестика, поля по сетке 16–344; закрывает «Закрыть» в полосе (shell.js). «Сотрудничество» (.zco) — как было (10:12) */
+  .zpov:not(.zco) .zpx, .zpov:not(.zco) .zframe, .zpov:not(.zco) .dm { display: none; }
+  .zpov:not(.zco) .zap.zpop { padding-top: 3rem; }
+  .zpov:not(.zco) .zap.zpop .zr { padding: 0; background: none; }
+  .zpov:not(.zco) .zap.zpop .zr::before, .zpov:not(.zco) .zap.zpop .zr::after { content: none; }
 }

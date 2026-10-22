@@ -79,11 +79,12 @@ main { position: relative; z-index: 1; }
   /* полоса: вверху страницы полупрозрачная, при прокрутке темнеет и уменьшается 64 → 52, знак 38 → 32 */
   .bar { display: block; position: fixed; z-index: 20; left: 0; right: 0; bottom: 0; height: 4rem; background: rgba(var(--deep-rgb),.55);
     -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: height .45s var(--ease), background .45s; }
-  body.scrolled .bar, body.menu-open .bar { height: 3.25rem; background: rgba(var(--deep-rgb),.92); }
+  body.scrolled .bar, body.menu-open .bar, html.zp-on .bar { height: 3.25rem; background: rgba(var(--deep-rgb),.92); }
+  html.zp-on .bar { background: rgb(var(--deep-rgb)); }   /* 22.10: над анкетой записи — плотная, поля не просвечивают */
   .bar { z-index: 1001; }   /* 20.10 Антон: «моб меню всегда» — над шторкой переходов (1000) */
   html.bar-now .bar, html.bar-now .bar .mark { transition: none !important; }   /* 20.10: при открытии страницы — без ужатия на глазах */
   .bar .mark { transition: width .45s var(--ease), top .45s var(--ease); }
-  body.scrolled .bar .mark, body.menu-open .bar .mark { width: 2rem; top: .6875rem; }
+  body.scrolled .bar .mark, body.menu-open .bar .mark, html.zp-on .bar .mark { width: 2rem; top: .6875rem; }
   .bar button.menu, .bar a.rec { height: 100% !important; }
   .wall-lit { opacity: .25; -webkit-mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%); mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%); }   /* 14:58: свет как на десктопе */
   .bar .caps { font-size: .75rem; line-height: 1.0625rem; }

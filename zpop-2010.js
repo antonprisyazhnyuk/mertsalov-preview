@@ -54,7 +54,7 @@
 
   const build = async () => {
     if (!document.querySelector('link[href*="form-2010.css"]')) await load("link", "form-2010.css?v=2110b");
-    if (!document.querySelector('link[href*="zpop-2010.css"]')) await load("link", "zpop-2010.css?v=2010");
+    if (!document.querySelector('link[href*="zpop-2010.css"]')) await load("link", "zpop-2010.css?v=2210");
     if (!window.ZFORM) await load("script", "form-2010.js?v=2010");
     ov = document.createElement("div"); ov.className = "zpov"; ov.hidden = true;
     ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Заявка на сеанс");
@@ -86,13 +86,15 @@
     document.documentElement.classList.add("zp-on");
     ov.hidden = false; ov.scrollTop = 0; geom();
     requestAnimationFrame(() => requestAnimationFrame(() => ov.classList.add("in")));
+    document.dispatchEvent(new CustomEvent("zpop", { detail: true }));   // 22.10: полоса телефона — «Запись» → «Закрыть» (shell.js)
     setTimeout(() => { const i = zr.querySelector(".zf:not([hidden]) input:not([type=file]), .zdone:not([hidden])"); i && i.focus({ preventScroll: true }); }, 60);
   };
   const close = () => {
     if (!ov || ov.hidden) return;
     ov.classList.remove("in"); document.documentElement.classList.remove("zp-on");
+    document.dispatchEvent(new CustomEvent("zpop", { detail: false }));
     setTimeout(() => { ov.hidden = true; }, 260);
     if (last && last.focus) last.focus({ preventScroll: true });
   };
-  window.ZPOP = { open, close };
+  window.ZPOP = { open, close, isOpen: () => !!ov && !ov.hidden && ov.classList.contains("in") };
 })();
