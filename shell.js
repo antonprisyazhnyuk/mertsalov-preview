@@ -161,7 +161,8 @@ document.querySelectorAll('.hd nav a[data-k="contacts"], .drawer nav a[data-k="c
   e.preventDefault(); scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
 }));
 // 21.10 16:21 Антон: в меню телефона нужен пункт «Главная» (18.10 07:04 «наверное надо») — первым; на самой главной — наверх без перезагрузки
-document.querySelectorAll('.drawer nav a[data-k="home"]').forEach(a => a.addEventListener("click", e => {
+// 22.10 Антон: «клики по лого почему не перенаправляют на главную» — на самой главной знак тоже наверх (было: та же страница — ничего)
+document.querySelectorAll('.drawer nav a[data-k="home"], .hd .mark, .bar .mark').forEach(a => a.addEventListener("click", e => {
   if (PAGE) return;
   e.preventDefault(); root.classList.add("jump"); scrollTo({ top: 0, behavior: "instant" });   // jump — страховка шагов экранов в index.html не принимает прыжок за инерцию (возвращала на «Мой путь», 1640)
   setTimeout(() => root.classList.remove("jump"), 400);
