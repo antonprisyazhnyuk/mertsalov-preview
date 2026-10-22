@@ -42,16 +42,19 @@
 
 /* ── телефон 360 — кадр 187:25: столбиком, поля 16; полоса меню остаётся видна ── */
 @media (max-width: 767px) {
-  /* футер телефона 360 — от кадра Антона 215:114758: те же пункты столбиком по оси 180, знак за текстом; низ — над полосой меню 52 */
-  .ft { display: flex; flex-direction: column; align-items: center; padding: 2.5rem 1rem calc(3.25rem + 2.5rem); text-align: center; }
-  .ft .mk { left: calc(50% - 10.25rem); top: 7.875rem; width: 20.5rem; }   /* 328 × 300, по центру столбика */
-  .ft .lng { order: 1; }
-  .ft .ftbr { display: none; }   /* переносы адреса и гест-спотов — только десктоп (227:114839) */
-  .ft .gst { order: 2; margin-top: 2.5rem; text-align: center; } .ft .gst .go { margin: 0 auto; }
-  .ft .nav { order: 3; margin: 3rem 0 0; flex-wrap: wrap; justify-content: center; gap: .75rem 2rem; max-width: 17rem; white-space: normal; }
-  .ft .soc { order: 4; margin-top: 2.5rem; gap: 2rem; }
-  .ft .adr { order: 5; margin-top: 3rem; } .ft .adr .go { margin: 0 auto; }
-  .ft .pol { order: 6; margin-top: 3rem; } .ft .cr { order: 7; margin-top: .5rem; } .ft .meta { order: 8; margin-top: .5rem; }
+  /* 22.10 09:43 Антон: «моб футер» — кадр 220:30, короткий: меню и языки скрыты стилями (из кода не удалять — поиск), поля 40.
+     студия 53 → адрес 82 (по центру) · соцсети 190 (40–320, по краям) · гест-споты слева / «Написать» справа 270 · данные и cookie / Meta 378 · © 435 · полоса меню 484 */
+  .ft { grid-template-columns: 1fr auto; padding: 3.3125rem 2.5rem calc(3.25rem + 2rem); }
+  .ft .mk { left: calc(50% - 10.25rem); top: 6rem; width: 20.5rem; }   /* 328 × 300 по оси 180, верх 96 */
+  .ft .nav, .ft .lng { display: none; }
+  .ft .adr { grid-column: 1 / -1; grid-row: 1; margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .ft .adr .go { order: -1; margin: 0 0 .5625rem; }   /* студия над адресом: 53 → 82 */
+  .ft .soc { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; justify-content: space-between; gap: 0; margin-top: 3.75rem; }
+  .ft .gst { grid-column: 1 / -1; grid-row: 3; justify-self: stretch; display: flex; justify-content: space-between; align-items: flex-start; margin-top: 3.75rem; text-align: left; }
+  .ft .gst .go { margin: .1875rem 0 0; }   /* 270 → 273, как в кадре */
+  .ft .pol, .ft .meta { grid-row: 4; margin-top: 3.75rem; line-height: 1.0625rem; }
+  .ft .pol { grid-column: 1; font-size: .6875rem; } .ft .meta { grid-column: 2; font-size: .625rem; }   /* 11 и 10, как в кадре */
+  .ft .cr { grid-column: 1 / -1; grid-row: 5; margin-top: 2.5rem; }   /* 395 → 435; низ 452, до полосы меню 32 */
   /* плашка — над полосой меню, на 8 выше её верха */
   /* 19:44 Антон: полоса на телефоне — «тоже хрень» → та же карточка, что на десктопе (кадр 215:114747, 299 × 62), справа 16, на 8 выше полосы меню */
   /* 19:52 Антон: «норм» — его кадр 215:114750 (Frame 46): 211 × 43, поля 20 / 12, текст 13/19, «ОК» 12 капс, между ними 20; справа 16, на 8 выше полосы меню */
