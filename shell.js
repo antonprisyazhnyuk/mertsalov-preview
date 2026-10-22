@@ -130,6 +130,16 @@ if (rec) rec.addEventListener("click", e => { e.preventDefault();
   if (zpOpen()) { ZPOP.close(); return; }
   if (drawer.classList.contains("open")) setMenu(false);
   openZapis(rec); });
+// 22.10 10:30 Антон (iPhone): «как только нажимаешь инпут — странный скролл» — Safari при клавиатуре прокручивал страницу ПОД окном записи
+// (overflow: hidden у html его не держит), полоса меню уезжала вверх, под ней была видна главная; 10:32 «если свайпаешь в открытом меню — тоже скролл».
+// Пока открыто окно (zp-on — запись и «Сотрудничество») или меню (menu-open): на сенсорных страница закреплена на месте (body fixed);
+// при закрытии возвращаем ту же прокрутку без анимации (jump — шаги экранов не дёргаются)
+if (matchMedia("(pointer: coarse)").matches) { let lockY = null;
+  const sync = () => { const on = root.classList.contains("zp-on") || body.classList.contains("menu-open");
+    if (on && lockY === null) { lockY = scrollY; Object.assign(body.style, { position: "fixed", top: -lockY + "px", left: "0", right: "0" }); }
+    else if (!on && lockY !== null) { const y = lockY; lockY = null; root.classList.add("jump"); Object.assign(body.style, { position: "", top: "", left: "", right: "" });
+      scrollTo({ top: y, behavior: "instant" }); setTimeout(() => root.classList.remove("jump"), 400); } };
+  const mo = new MutationObserver(sync); mo.observe(root, { attributes: true, attributeFilter: ["class"] }); mo.observe(body, { attributes: true, attributeFilter: ["class"] }); }
 document.addEventListener("zpop", e => { if (!rec) return; rec.textContent = e.detail ? "Закрыть" : "Запись"; rec.setAttribute("aria-expanded", e.detail); });
 
 // ── свет руки: мышь и палец двигают пятно на обоях ──

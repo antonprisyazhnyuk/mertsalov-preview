@@ -48,9 +48,12 @@ LATE.wake = m => { const d = m.dataset; if (d.lsrc) m.src = d.lsrc; if (d.lposte
 html .s3d .txt { padding-top: calc(5.25rem + 1px - var(--qpx, 108) * 1rem / 16 * .0625); }
 html .s3d .q { margin-bottom: 1.75rem; }
 
-html.pcut { --pc-cut: url("portrait.webp") var(--pc-x, 0) var(--pc-y, 0) / var(--pc-w, 0) var(--pc-h, 0) no-repeat, linear-gradient(#000, #000) 0 0 / 100% var(--pc-v, 100%) no-repeat; }
-html.pcut .wall, html.pcut .wall-shade { -webkit-mask: linear-gradient(#000, #000), var(--pc-cut); mask: linear-gradient(#000, #000), var(--pc-cut); mask-composite: subtract, intersect; }
-html.pcut .wall-lit { -webkit-mask: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%), var(--pc-cut); mask: radial-gradient(circle 150px at var(--mx) var(--my), #000 0, transparent 100%), var(--pc-cut); mask-composite: subtract, intersect; }
+/* 22.10 10:33 Антон (iPhone): «проблема с обоями на заднем фоне» — вырез маской с наложением (mask-composite) Safari считает только внутри
+   прямоугольника портрета: обои и свет руки пропадали везде, кроме полосы рядом с портретом (повторено в WebKit). Теперь без наложения масок:
+   под портретом — заглушка цвета фона по силуэту (маска — сам портрет), она закрывает обои только там, где силуэт; мягкий низ портрета — над ней.
+   Место заглушки (--pc-hx/--pc-hy/--pc-w/--pc-h, от угла .hero) ставит тот же скрипт внизу страницы; линия перехода срезает её вместе с .hero. */
+html.pcut .hero::before { content: ""; position: absolute; left: var(--pc-hx, 0); top: var(--pc-hy, 0); width: var(--pc-w, 0); height: var(--pc-h, 0); pointer-events: none;
+  background: var(--bg); -webkit-mask: url("portrait.webp") 0 0 / 100% 100% no-repeat; mask: url("portrait.webp") 0 0 / 100% 100% no-repeat; }
 
 /* ── телефон 360 ──────────────────────────── */
 @media (max-width: 767px) {
@@ -295,7 +298,7 @@ addEventListener("DOMContentLoaded", () => {
   const put = () => { q = 0;
     const b = p.getBoundingClientRect(), h = hero.getBoundingClientRect(), clip = /inset\(\S+ \S+ ([\d.]+)px/.exec(hero.style.clipPath || "");
     const v = getComputedStyle(hero).visibility === "hidden" ? "0px" : clip ? Math.max(0, h.bottom - +clip[1]) + "px" : "100%";
-    [["--pc-x", b.left + "px"], ["--pc-y", b.top + "px"], ["--pc-w", b.width + "px"], ["--pc-h", b.height + "px"], ["--pc-v", v]].forEach(([k, x]) => r.style.setProperty(k, x)); };
+    [["--pc-x", b.left + "px"], ["--pc-y", b.top + "px"], ["--pc-hx", b.left - h.left + "px"], ["--pc-hy", b.top - h.top + "px"], ["--pc-w", b.width + "px"], ["--pc-h", b.height + "px"], ["--pc-v", v]].forEach(([k, x]) => r.style.setProperty(k, x)); };
   const ask = () => { if (!q) q = requestAnimationFrame(put); };
   addEventListener("scroll", ask, { passive: true }); addEventListener("resize", ask); put();
 });</script>

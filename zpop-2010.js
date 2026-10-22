@@ -54,7 +54,7 @@
 
   const build = async () => {
     if (!document.querySelector('link[href*="form-2010.css"]')) await load("link", "form-2010.css?v=2110b");
-    if (!document.querySelector('link[href*="zpop-2010.css"]')) await load("link", "zpop-2010.css?v=2210");
+    if (!document.querySelector('link[href*="zpop-2010.css"]')) await load("link", "zpop-2010.css?v=2210b");
     if (!window.ZFORM) await load("script", "form-2010.js?v=2010");
     ov = document.createElement("div"); ov.className = "zpov"; ov.hidden = true;
     ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Заявка на сеанс");

@@ -51,7 +51,7 @@
   let ready = null, api = null;
   const build = async () => {
     if (!document.querySelector('link[href*="form-2010.css"]')) await load("link", "form-2010.css?v=2110b");
-    if (!document.querySelector('link[href*="zpop-2010.css"]')) await load("link", "zpop-2010.css?v=2210");
+    if (!document.querySelector('link[href*="zpop-2010.css"]')) await load("link", "zpop-2010.css?v=2210b");
     if (!document.querySelector('link[href*="coop-2110.css"]')) await load("link", "coop-2110.css?v=2110c");
     const ov = document.createElement("div"); ov.className = "zpov zco"; ov.hidden = true;
     ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Сотрудничество");

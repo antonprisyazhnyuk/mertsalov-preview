@@ -92,6 +92,7 @@ main { position: relative; z-index: 1; }
     background: none; border: 0; color: var(--gold); cursor: pointer; transition: color .15s, transform .12s; -webkit-tap-highlight-color: transparent; }   /* 16.10 16:02 Антон: #cbb88f, как в Figma 74:131982 */
   .bar button.menu { left: 0; padding-left: 1rem; }   /* 22.10 Антон: «у нас же сетка» — края по осям 16 · 344 (было 22.7 / 23.7 по буквам) */
   .bar a.rec { right: 0; padding-right: calc(1rem - .1em); }   /* разрядка после последней буквы — в Figma её нет */
+  .bar button.menu:focus:not(:focus-visible), .bar a.rec:focus:not(:focus-visible) { outline: none; }   /* 22.10: после закрытия окна фокус возвращается на «Запись» — без рамки */
   .bar button.menu:active, .bar a.rec:active { color: var(--warm); transform: scale(.96); }
   .bar .mark { position: absolute; left: 50%; top: .9375rem; width: 2.375rem; transform: translateX(-50%); color: var(--gold); }
   .bar .mark svg { display: block; width: 100%; height: auto; }
