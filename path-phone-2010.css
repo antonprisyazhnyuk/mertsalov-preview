@@ -37,7 +37,7 @@
   .pp-again, .pp-paused { position: absolute; left: 50%; top: 50%; z-index: 2; translate: -50% -50%; padding: 0; display: none; place-items: center; border-radius: 50%;
     border: 1px solid var(--gold); background: rgba(26,26,26,.82); cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .pp-paused { pointer-events: none; }
-  .pp-again .pp-spk, .pp-paused .pp-spk { width: 45%; height: 45%; }
+  .pp-again .pp-spk, .pp-paused .pp-spk { position: absolute; inset: 0; margin: auto; width: 45%; height: 45%; }   /* 22.10 iPhone (GitHub): в Safari значок в сетке с высотой 45 % уезжал к низу круга — ставим по центру абсолютно */
   .pp-spk.pl { fill: var(--gold); }
   .pp-vid.done .pp-again, .pp-vid.held .pp-paused { display: grid; }
   .pp-vid.done video { filter: brightness(.55); } .pp-vid.held video { filter: brightness(.7); }

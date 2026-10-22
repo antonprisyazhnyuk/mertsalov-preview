@@ -120,7 +120,7 @@ html .path[data-v="v3"] { padding: 0; min-height: 0; }
 .path.intro-c:not(.hint-gone) .v3-hint { opacity: 1; pointer-events: auto; }
 .path .v3-again { position: absolute; left: 50%; top: 50%; z-index: 2; translate: -50% -50%; padding: 0; display: none; place-items: center; cursor: pointer; border-radius: 50%;
   border: 1px solid var(--gold); background: rgba(26, 26, 26, .82); }
-.path .v3-again .v3-spk { width: 45%; height: 45%; }
+.path .v3-again .v3-spk { position: absolute; inset: 0; margin: auto; width: 45%; height: 45%; }   /* 22.10: в Safari значок уезжал к низу круга (как на телефоне) */
 .path .v3-vid.done .v3-again { display: grid; }
 .path .v3-vid.done .v3-cr video { filter: brightness(.55); transition: filter .4s; }
 .path .v3-vid.snd .v3-mute { border-color: var(--gold); }
@@ -128,7 +128,7 @@ html .path[data-v="v3"] { padding: 0; min-height: 0; }
 .path .v3-vid.snd .v3-mute .v3-spk.on { display: block; }
 .path .v3-paused { position: absolute; left: 50%; top: 50%; z-index: 2; translate: -50% -50%; display: none; place-items: center; border-radius: 50%; pointer-events: none;
   border: 1px solid var(--gold); background: rgba(26, 26, 26, .82); }
-.path .v3-paused .v3-spk { width: 45%; height: 45%; fill: var(--gold); }
+.path .v3-paused .v3-spk { position: absolute; inset: 0; margin: auto; width: 45%; height: 45%; fill: var(--gold); }
 .path .v3-vid.held .v3-paused { display: grid; }
 .path .v3-vid.held .v3-cr video { filter: brightness(.7); }
 .path .v3-greet { z-index: 3; }   /* 14:41: над невидимым ещё текстом 2002 — иначе подсказку не нажать */
