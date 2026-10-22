@@ -1,0 +1,181 @@
+/* Блог · 22.10 — по кадрам Figma merts-draft, страница «Блог · варианты · 21.10», секция «Блог · Основа» 212:31825 (выбор Антона 22.10):
+   список 1920 212:46512 · 360 212:52648; статья 1920 212:56835 · 360 212:64874 (правки Антона 22.10: этаж «Человек под работу» скрыт — текст, кадры остались;
+   шильдик награды под текстом «Конвенции»). Размеры — px кадра / 16 = rem (1rem = 16 px на 1920 и на 360, shell.css).
+   Оси 120 · 540 · 960 · 1380 · 1800, телефон 16 · 180 · 344. Каркас — shell.css, футер — footer-2010.css. Разметку строит blog-2210.js из blog-data.js.
+   Статья — этажи «подзаголовок на полях 120 · текст 540 · кадр, прижатый к 1800»; вес статьи в списке — шириной обложки (840 · 420 · без). */
+:root {
+  --a1: 7.5rem; --a2: 33.75rem; --a3: 60rem;   /* оси 120 · 540 · 960 */
+  --bl-col: 24.75rem;                          /* колонка текста 396 */
+  --bl-w: 78.75rem;                            /* 540–1800 */
+  --bp-w: 105rem;                              /* 120–1800 */
+}
+:where(.bl, .bp) :where(p, h1, h2, h3, figure) { margin: 0; }
+:where(.bl, .bp) :where(h1, h2, h3) { font-weight: 400; }
+.bl a:focus, .bp a:focus, .bl button:focus { outline: none; }
+.bl a:focus-visible, .bp a:focus-visible, .bl button:focus-visible, .bp button:focus-visible { outline: 1px solid var(--warm); outline-offset: .25rem; }
+.bl-t, .bl h1, .bp h1, .bp-fh, .bp-mh, .bp-cta-h { text-transform: uppercase; }   /* капсом в кадре (регистр Figma) */
+.bl br.m, .bp br.m { display: none; }   /* перенос только телефона */
+
+/* ── список · шапка 120 / 160: H1 Foglihten 48/56, лид 18/28 через 16 ── */
+.bl { position: relative; padding: 10rem 0; }   /* верх статей 160; последняя → футер 160 */
+.bl-hd { position: absolute; left: var(--a1); top: 10rem; width: var(--bl-col); }
+.bl-hd h1 { font: 400 3rem/3.5rem Foglihten, serif; color: var(--gold); }
+.bl-lead { margin-top: 1rem; font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--muted); }
+
+/* ── рубрики · 120, 14/20 капсом, шаг 32; выбранная теплее. По центру видимой области — общая функция shell.js ([data-side-center]);
+      без скрипта — липкие на месте кадра (376) ── */
+.bl-rail { position: absolute; left: 0; top: 0; bottom: 0; width: var(--a2); z-index: 2; pointer-events: none; }
+.bl-cats { position: sticky; top: 23.5rem; margin: 23.5rem 0 0 var(--a1); width: max-content; display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; pointer-events: auto; }
+.bl-cat { padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; color: var(--muted); white-space: nowrap; transition: color .2s; }
+.bl-cat:hover, .bl-cat.on { color: var(--warm); }
+
+/* ── статья в списке: текст 540 (396) · обложка прижата к 1800, 3:2; дата — по нижней линии обложки; между статьями 120 ── */
+.bl-list { margin-left: var(--a2); width: var(--bl-w); }
+.bl-it { display: grid; grid-template-columns: var(--bl-col) 1fr; grid-template-rows: auto auto auto 1fr;
+  grid-template-areas: "c ph" "t ph" "a ph" "d ph"; }
+.bl-it + .bl-it { margin-top: 7.5rem; }
+.bl-it[hidden] { display: none; }
+.bl-c { grid-area: c; color: var(--muted); white-space: nowrap; }
+.bl-t { grid-area: t; margin-top: 1.25rem; font: 400 2rem/2.5rem Foglihten, serif; color: var(--gold); white-space: nowrap; }   /* строки — как в кадре (\n в данных): браузер набирает Foglihten шире Figma */
+.bl-t a { transition: color .2s; }
+.bl-t a:hover { color: var(--warm); }
+.bl-a { grid-area: a; margin-top: 1rem; font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--muted); }
+.bl-d { grid-area: d; align-self: end; margin-top: 1.75rem; color: var(--muted); white-space: nowrap; }
+.bl-ph { grid-area: ph; justify-self: end; display: block; width: 52.5rem; aspect-ratio: 3 / 2; overflow: hidden; background: var(--deep); }
+.bl-it[data-wt="420"] .bl-ph { width: 26.25rem; }
+.bl-ph img, .bp-ph img { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity .2s; }
+.bl-ph:hover img { opacity: .88; }
+.bl-it.soon { grid-template-areas: "c ph" "t ph"; grid-template-rows: auto auto; }
+.bl-it.soon .bl-t { white-space: normal; color: var(--muted); }
+
+/* ── статья · 1920 ── */
+.bp { position: relative; padding: 10rem 0 10.25rem; }   /* H1 160; плашка призыва → футер 164 */
+.bp-tape { display: contents; }   /* десктоп: обёртки нет, «← Блог» на полях */
+.bp-back { position: absolute; z-index: 2; left: var(--a1); top: 10.5rem; color: var(--warm); transition: color .2s; }
+.bp-back:hover { color: var(--gold); }
+.bp-hd, .bp-main, .bp-lead, .bp-cta { margin-left: var(--a2); width: var(--bl-w); }
+.bp h1 { font: 400 4rem/4.5rem Foglihten, serif; color: var(--gold); text-wrap: balance; }   /* Бивис — одной строкой, как в кадре; длиннее 1260 — переносится */
+.bp-meta { margin-top: 1.5rem; font: 400 1rem/1.5rem Jost, sans-serif; color: var(--muted); }
+.bp-main { margin-top: 2.5rem; }
+.bp-main .bp-ph { width: 100%; aspect-ratio: 3 / 2; }
+.bp-cap { margin-top: 1rem; font: 400 .875rem/1.25rem Jost, sans-serif; color: var(--muted); }
+.bp-lead { margin-top: 3.75rem; max-width: 51rem; font: 400 1.75rem/2.5rem Jost, sans-serif; color: var(--ink); }
+.bp-ph { display: block; overflow: hidden; background: var(--deep); }
+a.bp-ph { cursor: zoom-in; }
+a.bp-ph:hover img { opacity: .88; }
+
+/* этаж: подзаголовок 120 (396) · текст 540 (396) · кадры прижаты к 1800 (420 · 408 + 24 + 408 · 840); подпись под кадром через 16 */
+.bp-fl { margin: 6rem 0 0 var(--a1); width: var(--bp-w); display: grid; grid-template-columns: var(--bl-col) 1.5rem var(--bl-col) 1.5rem 1fr;
+  grid-template-areas: "h . tx . ph" ". . . . cap"; align-items: start; }
+.bp-lead + .bp-fl { margin-top: 5rem; }
+.bp-fl.pair { margin-top: 6.25rem; }   /* кадр: этаж 1 → пара 100, пара → этаж 3 — 96 */
+.bp-fh { grid-area: h; font: 400 1.5rem/2rem Foglihten, serif; color: var(--gold); }
+.bp-tx { grid-area: tx; align-self: stretch; display: flex; flex-direction: column; }
+.bp-tx p { font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--ink); }
+.bp-tx .aw-full { margin-top: auto; padding-top: 1.5rem; margin-bottom: -.09375rem; }   /* низ строк шильдика — по низу кадра (кадр 3241.5 при низе фото 3240) */
+.bp-phs { grid-area: ph; justify-self: end; display: flex; gap: 1.5rem; }
+.bp-phs .bp-ph { width: 26.25rem; aspect-ratio: var(--r, 1); }
+.bp-fl.pair .bp-phs .bp-ph { width: 25.5rem; }
+.bp-fl.big .bp-phs .bp-ph { width: 52.5rem; }
+.bp-fl > .bp-cap { grid-area: cap; }
+
+/* ещё в блоге: подзаголовок на полях + карточка списка (420) */
+.bp-more { margin: 10.25rem 0 0 var(--a1); width: var(--bp-w); display: grid; grid-template-columns: var(--bl-col) 1.5rem 1fr; align-items: start; }
+.bp-mh { grid-column: 1; font: 400 1.5rem/2rem Foglihten, serif; color: var(--gold); }
+.bp-more .bl-it { grid-column: 3; }
+
+/* ── призыв · отдельный блок (Антон 17:26–17:31, кадр 212:56835 перевыгружен 17:49): плашка в раме 540–1800 × 210 — общий .fplate (shell.css), как гест-споты «Обо мне»;
+      заголовок Foglihten 48/56 с 49, строка 22/34 через 23, кнопка 200 × 52 справа (поле 64) на линии заголовка. Тексты — blog-data.js (CTA) ── */
+.bp-cta { margin-top: 10rem; display: grid; grid-template-columns: 1fr auto; align-items: start; min-height: 13.125rem; padding: 3.0625rem 4rem 3rem; }
+.bp-cta-h { grid-column: 1; width: 56.25rem; font: 400 3rem/3.5rem Foglihten, serif; color: var(--warm); }
+.bp-cta-t { grid-column: 1; width: 49.25rem; margin-top: 1.4375rem; font: 400 1.375rem/2.125rem Jost, sans-serif; color: var(--ink); }   /* в кадре Jost Light — на сайте Jost только Regular (Антон 15:03) */
+.bp-cta button.b { grid-column: 2; grid-row: 1; align-self: center; z-index: 2; }
+
+/* ── телефон 360 ── */
+@media (max-width: 767px) {
+  :root { --a1: 1rem; --a2: 11.25rem; --a3: 21.5rem; --bl-w: 20.5rem; --bp-w: 20.5rem; }
+  .bl br.m, .bp br.m { display: inline; }
+  .bl br.d, .bp br.d { display: none; }
+
+  /* список · кадр 212:52648: H1 32/40 с 32, лид 16/24 через 8; рубрики — лентой над полосой меню (как «Работы»), не строкой под лидом */
+  body[data-page] > main.bl { margin-bottom: 0; padding: 2rem 0 6.25rem; }   /* последняя → футер 100 */
+  .bl-hd { position: static; margin-left: var(--a1); width: var(--bl-w); }
+  .bl-hd h1 { font-size: 2rem; line-height: 2.5rem; }
+  .bl-lead { margin-top: .5rem; font-size: 1rem; line-height: 1.5rem; }
+  .bl-rail { position: static; width: auto; }
+  .bl-cats { position: fixed; z-index: 14; left: 0; right: 0; top: auto; bottom: 3.25rem; height: 2.5rem; margin: 0; width: auto; flex-direction: row; align-items: center;
+    gap: 1.5rem; padding: 0 1rem; overflow-x: auto; scrollbar-width: none; background: rgb(var(--bg-rgb)); transition: opacity .2s, visibility 0s; }   /* шаг 24 — как строка рубрик в кадре */
+  .bl-cats::-webkit-scrollbar { display: none; }
+  .bl-cat { font-size: .75rem; line-height: 1rem; }
+  body.menu-open .bl-cats, html.zp-on .bl-cats, html.wo-on .bl-cats, .bl-cats.off { opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
+  .bl-list { margin: 3rem 0 0 var(--a1); }   /* выведено: в кадре под лидом строка рубрик (лид → рубрики 24 → обложка 40); без неё обложка через 48 */
+
+  /* карточка: большая (840) — обложка 328 × 216, под ней рубрика и дата строкой через 24, заголовок 24/32 через 16, анонс 16/24 через 16;
+     малая (420) — рубрика и дата слева, обложка 164 × 112 на 180; дата по низу обложки; заголовок через 24 */
+  .bl-it { grid-template-columns: 1fr auto; grid-template-rows: auto; grid-template-areas: "ph ph" "c d" "t t" "a a"; }
+  .bl-it + .bl-it { margin-top: 4rem; }
+  .bl-c, .bl-d, .bl-cat { letter-spacing: .1em; }
+  .bl-c, .bl-d { font-size: .75rem; line-height: 1rem; }
+  .bl-ph { width: 20.5rem; height: 13.5rem; aspect-ratio: auto; }
+  .bl-it[data-wt="840"] .bl-c { margin-top: 1.5rem; }
+  .bl-it[data-wt="840"] .bl-d { align-self: start; margin-top: 1.5rem; }
+  .bl-t { margin-top: 1rem; font-size: 1.5rem; line-height: 2rem; }
+  .bl-a { font-size: 1rem; line-height: 1.5rem; }
+  .bl-it[data-wt="420"] { grid-template-columns: 1fr 10.25rem; grid-template-rows: auto 1fr auto auto; grid-template-areas: "c ph" "d ph" "t t" "a a"; }
+  .bl-it[data-wt="420"] .bl-ph { width: 10.25rem; height: 7rem; }
+  .bl-it[data-wt="420"] .bl-d { margin-top: 0; }
+  .bl-it[data-wt="420"] .bl-t { margin-top: 1.5rem; }
+  .bl-it.soon { grid-template-areas: "c" "t"; grid-template-columns: 1fr; }
+  .bl-it.soon .bl-t { margin-top: .75rem; }
+
+  /* статья · кадр 212:64874: «← Блог» 12/16 с 24, H1 32/40 через 16, строка 14/20 через 16, кадр 328 × 216 через 28, подпись 12/16 через 8, вводная 22/32 через 32 */
+  body[data-page] > main.bp { margin-bottom: 0; padding: 1.5rem 0 4.75rem; }   /* плашка → футер 76 */
+  .bp > * { margin-left: var(--a1); }
+  /* «← Блог» — не сверху, а лентой над полосой меню (Антон 18:02–18:06, как «← Магазин»): тот же вид, что лента рубрик — 40, поля 16, непрозрачная, 12 капсом */
+  .bp-tape { position: fixed; z-index: 14; left: 0; right: 0; bottom: 3.25rem; height: 2.5rem; padding: 0 1rem; display: flex; align-items: center;
+    background: rgb(var(--bg-rgb)); transition: opacity .2s, visibility 0s; }
+  .bp-back { position: static; font-size: .75rem; line-height: 1.25rem; padding: .625rem 1rem; margin: 0 -1rem; }   /* зона тапа во всю высоту ленты */
+  body.menu-open .bp-tape, html.zp-on .bp-tape, html.wo-on .bp-tape { opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
+  .bp-page .ft { padding-bottom: calc(3.25rem + 2rem + 2.5rem); }
+  /* плашка cookie стоит на 8 над полосой (footer-2010.css) — лента её закрывала вместе с «ОК»; на страницах блога с лентой — на 8 над лентой */
+  body.bp-page .ck, body[data-view="list"] .ck { bottom: calc(3.25rem + 2.5rem + .5rem); }   /* низ футера над полосой (52) и лентой (40) — прокручивается целиком */
+  .bp-hd { margin-top: 0; }   /* «← Блог» ушёл в ленту — H1 с 24 (в кадре 56 под «← Блог» на 24) */
+  .bp h1 { font-size: 2rem; line-height: 2.5rem; text-wrap: wrap; }
+  .bp-meta { margin-top: 1rem; font-size: .875rem; line-height: 1.25rem; }
+  .bp-main { margin-top: 1.75rem; }
+  .bp-main .bp-ph { height: 13.5rem; aspect-ratio: auto; }
+  .bp-cap { margin-top: .5rem; font-size: .75rem; line-height: 1rem; }
+  .bp-lead { margin-top: 2rem; max-width: none; width: var(--bl-w); font-size: 1.375rem; line-height: 2rem; }
+
+  /* этажи: с малым кадром — подзаголовок 148 слева, кадр 164 справа, текст под ними через 24; пара — 156 + 16 + 156;
+     с большим кадром — подзаголовок, текст через 12, шильдик через 24, кадр 328, подпись через 12 */
+  .bp-fl { margin-top: 3.75rem; display: flex; flex-direction: column; }
+  .bp-lead + .bp-fl { margin-top: 3.5rem; }
+  .bp-fl.pair { margin-top: 1.5rem; }
+  .bp-fh { font-size: 1.25rem; line-height: 1.75rem; }
+  .bp-tx { margin-top: .75rem; }
+  .bp-tx p { font-size: 1rem; line-height: 1.5rem; }
+  .bp-tx .aw-full { margin: 0; padding-top: 1.5rem; }
+  .bp-phs { justify-self: auto; gap: 1rem; }
+  .bp-fl.big .bp-phs { margin-top: 1.71875rem; }   /* верх кадра — 79 ниже верха шильдика (кадр 1492 → 1571) */
+  .bp-phs .bp-ph, .bp-fl.big .bp-phs .bp-ph { width: 20.5rem; }
+  .bp-fl.pair .bp-phs .bp-ph { width: 9.75rem; }
+  .bp-fl > .bp-cap { margin-top: .75rem; }
+  .bp-fl.side { display: grid; grid-template-columns: 1fr 10.25rem; grid-template-areas: "h ph" "tx tx"; }
+  .bp-fl.side .bp-phs .bp-ph { width: 10.25rem; }
+  .bp-fl.side .bp-fh { padding-right: 1rem; }
+  .bp-fl.side .bp-tx { margin-top: 1.5rem; }
+
+  /* ещё в блоге: подпись 12/16 капсом (Jost, не Foglihten), карточка малая через 20 */
+  .bp-more { margin-top: 4.25rem; display: block; }
+  .bp-mh { font: 400 .75rem/1rem Jost, sans-serif; letter-spacing: .1em; color: var(--muted); }
+  .bp-more .bl-it { margin-top: 1.25rem; }
+  .bp-more .bl-a { margin-top: .75rem; }   /* кадр: в «Ещё в блоге» анонс через 12 (в списке — 16) */
+
+  /* призыв · кадр 212:64874 (Антон 17:34): всё по центру — заголовок 28/32 с 32, строка 15/22 через 16, кнопка во всю ширину 280 × 52 через 24, низ 32 */
+  .bp-cta { margin-top: 4rem; min-height: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.5rem; }
+  .bp-cta-h { width: 17.5rem; font-size: 1.75rem; line-height: 2rem; }
+  .bp-cta-t { width: 17.5rem; margin-top: 1rem; font-size: .9375rem; line-height: 1.375rem; }
+  .bp-cta button.b { width: 17.5rem; margin-top: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .bl-cat, .bl-t a, .bl-ph img, .bp-ph img, .bp-back { transition: none; } }

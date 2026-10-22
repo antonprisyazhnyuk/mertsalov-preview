@@ -1,0 +1,241 @@
+/* «Обо мне» · 22.10 — по кадрам Figma merts-draft, страница «Обо мне · варианты · 21.10» (правки Антона 15:50):
+   десктоп 236:157331 · 360 236:157894 (вариант 1 — 16:54 Антон «вот этот берём»; вариант 2 снят); липкая петля — 237:158197.
+   Размеры — px кадра / 16 = rem (1rem = 16 px на 1920 и на 360, shell.css). Каркас (хедер, полоса и шторка телефона, обои, зерно) — shell.css,
+   футер — footer-2010.css.
+   Система отступов кадра: десктоп — низ раздела → линия 128 · линия → заголовок 64 · заголовок → текст 48 · текст → ссылка 24;
+   телефон — раздел → линия 80 · линия → заголовок 32 · заголовок → текст 24 · текст → ссылка 16. */
+:root {
+  --a1: 7.5rem; --a2: 33.75rem; --a3: 60rem; --a4: 86.25rem; --a5: 112.5rem;   /* оси 120 · 540 · 960 · 1380 · 1800 */
+  --ab-w: 78.75rem;                                       /* 540–1800 */
+  --ab-line: rgba(var(--gold-rgb), .5);                   /* линии раздела и строк: золото 50 % */
+  --ab-sec: 8rem; --ab-top: 4rem; --ab-h: 3rem;           /* низ раздела → линия · линия → заголовок · заголовок → текст */
+}
+.ab { position: relative; padding: 15rem 0 8rem; }          /* лид и фото с 240; плашка → футер 128 */
+:where(.ab) :where(p, h1, h2, h3, ul) { margin: 0; }   /* сброс без веса: отступы ниже задают классы */
+:where(.ab) :where(h1, h2, h3) { font-weight: 400; }
+:where(.ab) :where(ul) { padding: 0; list-style: none; }
+/* капсом в кадре (регистр задан в Figma, буквы строчные): стержень, темы принципов, «Перекрытие…», «Открыт к гест-спотам…» — сверено парой кадров */
+.ab-core, .ab-th h3, .ab-ov-h, .ab-gs-h { text-transform: uppercase; }
+.ab a:focus { outline: none; }
+.ab a:focus-visible, .ab button:focus-visible { outline: 1px solid var(--warm); outline-offset: .25rem; }
+
+/* ── меню разделов · 120, пункты 504–692 с шагом 28 (строка 20 + 8); липкое ── */
+.ab-rail { position: absolute; left: 0; top: 0; bottom: 8rem; width: var(--a2); z-index: 2; pointer-events: none; }   /* 16:35 Антон: «меню прибивается к низу» — полоса кончается по низу плашки гест-спотов, не у футера */
+.ab-nav { --nav-top: calc((100vh + 8rem) / 2 - 6.25rem);   /* по центру области под хедером: 504 при окне 1080, как в кадре */
+  position: sticky; top: var(--nav-top); margin: var(--nav-top) 0 0 var(--a1); width: max-content; display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; pointer-events: auto; }
+/* 16:36 Антон: список всегда по центру видимой области между низом хедера и низом окна или верхом футера — общая функция shell.js ([data-side-center]) */
+.ab-nav a { color: var(--muted); transition: color .2s; white-space: nowrap; }
+.ab-nav a:hover, .ab-nav a.on { color: var(--warm); }
+
+/* ── 1 · Обо мне: лид 540 / 240 (317), фото 960 / 240 (585 × 624); стержень 540 / 992; путь 960 / 1168 (584) ── */
+.ab-hero { margin-left: var(--a2); width: var(--ab-w); display: grid; grid-template-columns: 26.25rem 36.5625rem; align-items: start; }
+.ab-lead { width: 19.8125rem; font: 400 1.5rem/2.25rem Jost, sans-serif; }
+.ab-photo { display: block; width: 36.5625rem; height: 39rem; background: var(--deep); }
+.ab-photo img, .ab-te-ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ab-core { grid-column: 1 / -1; margin-top: var(--ab-sec); font: 400 3.5rem/4rem Foglihten, serif; color: var(--warm); white-space: nowrap; }   /* две строки, как в кадре: браузер набирает Foglihten шире Figma */
+.ab-path { grid-column: 2; width: 36.5rem; margin-top: var(--ab-h); font: 400 1.25rem/2rem Jost, sans-serif; }
+.ab-path p + p { margin-top: 1rem; }
+
+/* ── раздел: линия 1260 на 540, 128 от низа предыдущего; заголовок 64 ниже линии ── */
+.ab-sec { margin: var(--ab-sec) 0 0 var(--a2); width: var(--ab-w); padding-top: var(--ab-top); border-top: 1px solid var(--ab-line); scroll-margin-top: 8rem; }   /* к разделу — линия под хедером */
+.ab-h { font: 400 4rem/4rem Foglihten, serif; color: var(--gold); }
+.ab-hero { scroll-margin-top: 15rem; }
+
+/* ── 2 · Принципы · 236:157331 — тема 540 (408), текст 960 (312) на 11 ниже темы; линии 540–1296 над строками; петля 480 × 600 на 1320, верх по заголовку ── */
+.ab-pr { display: grid; grid-template-columns: 26.25rem 21rem 1.5rem 30rem; align-items: start; }
+.ab-pr-hd { grid-column: 1 / 3; grid-row: 1; min-height: 37.5rem; }   /* строки начинаются под петлёй: 600 + 64 */
+.ab-pr-lead { width: 23.75rem; margin-top: var(--ab-h); font: 400 1.5rem/2.25rem Jost, sans-serif; }
+.ab-loop { grid-column: 4; grid-row: 1 / span 6; align-self: start; height: 37.5rem; position: sticky; z-index: 1; background: var(--deep);
+  top: calc((100vh + 8rem) / 2 - 18.75rem); }   /* липкая: по центру области под хедером, как категории «Работ»; едет, пока идут строки */
+.ab-loop video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ab-row { grid-column: 1 / 3; display: grid; grid-template-columns: 26.25rem 21rem; align-items: start; padding: 2rem 0; border-top: 1px solid var(--ab-line); }
+.ab-loop + .ab-row { margin-top: 4rem; }   /* первая строка */
+.ab-row:last-child { padding-bottom: 0; }
+.ab-th h3 { width: 25.5rem; font: 400 2rem/2.5rem Foglihten, serif; color: var(--ink); }
+.ab-tx p { width: 19.5rem; margin-top: .6875rem; font: 400 1.125rem/1.75rem Jost, sans-serif; }
+
+/* ── 3 · Перекрытия: миниатюры 72 × 96 на 540 (шаг 112), шторка 668 (584 × 730), текст 1380 (420); подпись под шторкой через 24 ── */
+.ab-ov { display: grid; grid-template-columns: 4.5rem 3.5rem 36.5rem 8rem 26.25rem; align-items: start; }
+.ab-ov-txt { grid-column: 5; grid-row: 1; }
+.ab-ov-h { width: 26.1875rem; font: 400 3.5rem/4rem Foglihten, serif; color: var(--warm); }
+.ab-ov-p { width: 21rem; margin-top: var(--ab-h); font: 400 1.125rem/1.75rem Jost, sans-serif; }
+/* 15:54 Антон: «Не спеши на лазер» — не кнопка, а призыв: Foglihten 32/40 золотом, переливается — светлая полоса слева направо ~1.5 с,
+   сама раз в 9–14 с и при наведении (как блик знака М, shell.js); клик — анкета записи с отметкой «перекрытие» (about-2210.js) */
+.ab-ov-a { display: block; width: 26.25rem; margin-top: 1.5rem; font: 400 2rem/2.5rem Foglihten, serif; color: var(--gold);
+  background: linear-gradient(100deg, var(--gold) 0 40%, rgba(255,255,255,.9) 50%, var(--gold) 60% 100%) 100% 0 / 250% 100% no-repeat;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.ab-ov-a.sheen { animation: ab-sheen 1.5s linear; }
+@keyframes ab-sheen { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.ab-ba { grid-column: 3; grid-row: 1; position: relative; width: 36.5rem; height: 45.625rem; overflow: hidden; background: var(--deep);
+  cursor: ew-resize; touch-action: pan-y; user-select: none; -webkit-user-select: none; --x: 50%; }
+.ab-ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; -webkit-user-drag: none; }
+.ab-ba .af { clip-path: inset(0 0 0 var(--x)); }   /* 22.10 12:35 Антон: слева старая, справа новая — «после» правее границы */
+.ab-ba .ln, .ab-ba .kn { display: none; }          /* граница с ромбом — только на телефоне (кадр 236:157894); на десктопе её нет */
+.ab-pull { display: none; }
+.ab-ths { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 1rem; }
+.ab-ths button { position: relative; display: block; width: 4.5rem; height: 6rem; padding: 0; border: 0; background: var(--deep); cursor: pointer; opacity: .45; transition: opacity .15s; }
+.ab-ths button:hover { opacity: .75; }
+.ab-ths button.on { opacity: 1; }
+.ab-ths button.on::after { content: ""; position: absolute; inset: 0; border: 1px solid var(--gold); }
+.ab-ths img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ab-ov-all { grid-column: 3; grid-row: 2; justify-self: center; margin-top: 1.5rem; }
+
+/* ── списки «Награды» и «Обо мне пишут»: заголовок 540, строки 960–1800: название 32/40 (680) · год справа (120) · подпись 18/28 через 8;
+   линия 32 под подписью, следующая строка 32 под линией ── */
+.ab-ls { display: grid; grid-template-columns: 26.25rem 52.5rem; align-items: start; }
+.ab-ls > .ab-h, .ab-ps-hd { grid-column: 1; }
+.ab-list { grid-column: 2; grid-row: 1; }
+.ab-it { position: relative; display: grid; grid-template-columns: 42.5rem 2.5rem 7.5rem; padding: 2rem 0; border-bottom: 1px solid var(--ab-line); color: var(--ink); transition: border-color .2s; }
+.ab-list li:first-child .ab-it { padding-top: 0; }
+.ab-it .n, .ab-it .y { grid-row: 1; font: 400 2rem/2.5rem Foglihten, serif; transition: color .2s; }
+.ab-it .n { grid-column: 1; }
+.ab-it .y { grid-column: 3; text-align: right; color: var(--gold); }
+.ab-it .s { grid-column: 1 / -1; margin-top: .5rem; font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--muted); }
+.ab-it .tm { display: none; }
+/* наведение (кадр: строка 2019) — название, год и линия золотом, фото работы 300 × 300 поверх строки на 1430, центром по строке */
+.ab-it .pv { position: absolute; z-index: 2; left: 29.375rem; top: 50%; width: 18.75rem; height: 18.75rem; object-fit: cover; translate: 0 -50%;
+  opacity: 0; transition: opacity .15s var(--ease); pointer-events: none; }
+a.ab-it:hover, a.ab-it:focus-visible { border-bottom-color: var(--warm); }
+a.ab-it:hover .n, a.ab-it:hover .y, a.ab-it:focus-visible .n, a.ab-it:focus-visible .y { color: var(--warm); }
+a.ab-it:hover .pv, a.ab-it:focus-visible .pv { opacity: 1; }
+a.ab-it:focus-visible { outline-offset: .5rem; }
+/* «Обо мне пишут» · 16:33 Антон: строки — ссылки на источники; при наведении название теплее и стрелка ↗ (на телефоне видна всегда); профили — подчёркнутые ссылки, как «Данные и cookie» */
+.ab-it .ar { display: inline-block; width: .5em; height: .5em; margin-left: .3em; vertical-align: .05em; overflow: visible;
+  fill: none; stroke: currentColor; stroke-width: 1; opacity: 0; transition: opacity .2s; }   /* 17:00 iPhone: символ ↗ iOS рисовал синим эмодзи — стрелка SVG цветом текста */
+a.ab-it:hover .ar, a.ab-it:focus-visible .ar { opacity: 1; }
+.ab-pf a { white-space: nowrap; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; transition: color .2s; }
+.ab-pf a:hover { color: var(--warm); }
+.ab-ps-lead { width: 14.5rem; margin-top: var(--ab-h); font: 400 1.5rem/2.25rem Jost, sans-serif; }
+
+/* ── 4 · Учу: фото 540 (420 × 565); справа заголовок и цитаты по центру оси 1380, столбцом по центру фото ── */
+.ab-te { display: grid; grid-template-columns: 26.25rem 52.5rem; }
+.ab-te-ph { display: block; width: 26.25rem; height: 35.3125rem; background: var(--deep); }
+.ab-te-txt { align-self: start; margin-top: 3.5625rem;   /* 15:55: ссылка стала 20 — блок встаёт верхом на 57 ниже фото, как в кадре (раньше — по центру фото) */
+  display: flex; flex-direction: column; align-items: center; text-align: center; }
+.ab-te-txt .ab-h { width: 30.5rem; }
+.ab-te-txt p { width: 32.375rem; margin-top: 1.5rem; font: 400 1.125rem/1.75rem Jost, sans-serif; }
+.ab-te-txt .ab-h + p { margin-top: var(--ab-h); }
+.ab-te-a { margin-top: 1.5rem; }
+
+/* ── 5 · Студия: заголовок 540 · студия 960 (408) · строка 1380 (420) · карта 960 (840 × 360) через 48 · «Как добраться» через 24 ── */
+.ab-sd { display: grid; grid-template-columns: 26.25rem 26.25rem 26.25rem; align-items: start; }
+.ab-sd-n { grid-column: 2; }
+.ab-sd-name { width: 25.5rem; font: 400 2rem/2.5rem Foglihten, serif; }
+.ab-sd-adr { margin-top: .5rem; font: 400 1.125rem/1.75rem Jost, sans-serif; color: var(--muted); }
+.ab-sd-row { grid-column: 3; font: 400 1.125rem/1.75rem Jost, sans-serif; }
+.ab-sd-map { grid-column: 2 / 4; display: block; height: 22.5rem; margin-top: var(--ab-h); background: var(--deep); }
+.ab-sd-map { position: relative; overflow: hidden; }
+.ab-sd-map .mi, .ab-sd-map img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ab-sd-map .ymap { position: absolute; inset: 0; opacity: 0; transition: opacity .6s; }   /* живая карта (faq-2010.js YMAP) проявляется поверх снимка */
+.ab-sd-map .ymap.on { opacity: 1; }
+.ab-sd-go { grid-column: 2; width: fit-content; margin-top: 1.5rem; }
+
+/* ── плашка гест-спотов: 540–1800 × 292, #242424, поля 48 / 64; кнопка 200 × 52 справа по центру ── */
+.ab-gs { margin: var(--ab-sec) 0 0 var(--a2); width: var(--ab-w); display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 2rem; padding: 3rem 4rem; }
+/* 15:55 Антон: плашка в раме, как анкета записи — рама и ромбы теперь общие: .fplate (shell.css, 22.10 17:50) */
+.ab-gs-h { grid-column: 1; width: 56.25rem; font: 400 3rem/3.5rem Foglihten, serif; color: var(--warm); }
+.ab-gs-p { grid-column: 1; width: 49.25rem; margin-top: 1rem; font: 400 1.375rem/2.125rem Jost, sans-serif; }   /* в кадре Jost Light — на сайте Jost только Regular (Антон 15:03) */
+.ab-gs-b { grid-column: 2; grid-row: 1 / 3; }
+/* 15:54 Антон: текстовые кнопки сайта — капс Jost 14, разрядка .1em, золото, при наведении теплее */
+.ab-tb { display: block; width: fit-content; font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); transition: color .2s; }
+.ab-tb:hover { color: var(--warm); }
+
+/* ── телефон 360 · кадр 236:157894: колонка 16–344, всё столбиком ── */
+@media (max-width: 767px) {
+  :root { --a1: 1rem; --a2: 11.25rem; --a3: 21.5rem; --ab-w: 20.5rem; --ab-sec: 5rem; --ab-top: 2rem; --ab-h: 1.5rem; }
+  .ab br.bd { display: none; }
+  body[data-page] > main.ab { margin-bottom: 0; padding: 3rem 0 5rem; }   /* фото с 48; плашка → футер 80 */
+  .ab > section, .ab > aside { margin-left: var(--a1); }
+
+  /* лента разделов над полосой меню: 688–728 на 780, фон #1a1a1a 96 %, Jost 12 капсом, листается вбок (как категории «Работ») */
+  .ab-rail { position: static; width: auto; }
+  .ab-nav { position: fixed; z-index: 14; left: 0; right: 0; top: auto; bottom: 3.25rem; height: 2.5rem; margin: 0; width: auto; transform: none; flex-direction: row; align-items: center;
+    gap: .7rem; padding: 0 1rem; overflow-x: auto; scrollbar-width: none; background: rgb(var(--bg-rgb));   /* 17:00 Антон: просвечивал текст страницы — фон плотный */
+    font-size: .75rem; line-height: 1.25rem; transition: opacity .2s, visibility 0s; }
+  .ab-nav::-webkit-scrollbar { display: none; }
+  .ab-nav::after { content: ""; flex: none; width: .3rem; height: 1px; }   /* поле справа у последнего пункта при прокрутке */
+  body.menu-open .ab-nav, html.zp-on .ab-nav, html.wo-on .ab-nav, .ab-nav.off { opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
+
+  .ab-hero { display: flex; flex-direction: column; width: var(--ab-w); margin-left: var(--a1); scroll-margin-top: 3rem; }
+  .ab-photo { order: -1; width: 20.5rem; height: 21.875rem; }
+  .ab-lead { width: auto; margin-top: 1.5rem; font-size: 1.125rem; line-height: 1.75rem; }
+  .ab-core { margin-top: 5rem; font-size: 1.75rem; line-height: 2rem; white-space: normal; }
+  .ab-path { width: auto; margin-top: 1.5rem; font-size: 1rem; line-height: 1.5rem; }
+
+  .ab-sec { scroll-margin-top: 1.5rem; }
+  .ab-h { font-size: 2rem; line-height: 2.25rem; }
+
+  /* Принципы: столбиком — петля 328 × 410 над строками, строки через линии */
+  .ab-pr { display: flex; flex-direction: column; }
+  .ab-pr-hd { min-height: 0; }
+  .ab-pr-lead { width: auto; font-size: 1rem; line-height: 1.5rem; }
+  .ab-loop { position: relative; top: auto; width: 20.5rem; height: 25.625rem; margin-top: 1.5rem; }
+  .ab-row { display: block; padding: 1.5rem 0; }
+  .ab-loop + .ab-row { margin-top: 2rem; }
+  .ab-row:last-child { padding-bottom: 0; }
+  .ab-th h3 { width: auto; font-size: 1.5rem; line-height: 1.75rem; }
+  .ab-tx p { width: auto; margin-top: .5rem; font-size: 1rem; line-height: 1.5rem; }
+
+  /* Перекрытия: заголовок 28/32 → текст 24 → ссылка 16 → шторка 328 × 410 через 24 → «тяни» 16 → миниатюры 56 × 70 лентой через 24 → подпись 16 */
+  .ab-ov, .ab-pr, .ab-sd { align-items: stretch; }   /* у сетки десктопа start — столбик тянем на всю колонку */
+  .ab-ov { display: flex; flex-direction: column; }
+  .ab-ov-txt { order: 0; }
+  .ab-ov-h { width: auto; font-size: 1.75rem; line-height: 2rem; }
+  .ab-ov-p { width: auto; font-size: 1rem; line-height: 1.5rem; }
+  .ab-ov-a { width: auto; margin-top: 1rem; font-size: 1.5rem; line-height: 1.75rem; }   /* выведено: кадр 360 до правки 15:54; кегль как у тем принципов на телефоне */
+  .ab-ba { order: 1; width: 20.5rem; height: 25.625rem; margin-top: 1.5rem; cursor: default; }
+  .ab-ba .ln { display: block; position: absolute; top: 0; bottom: 0; left: var(--x); width: 1px; translate: -50% 0; background: var(--warm); pointer-events: none; }
+  .ab-ba .kn { display: block; position: absolute; left: var(--x); top: 50%; width: 2.5rem; height: 2.5rem; translate: -50% -50%; overflow: visible; pointer-events: none;
+    fill: none; stroke: var(--warm); stroke-width: 1.5; }
+  .ab-ba .kn path:first-child { fill: rgba(var(--bg-rgb), .35); }
+  .ab-pull { display: block; order: 2; align-self: center; margin-top: 1rem; font-size: .75rem; line-height: 1rem; letter-spacing: .1167em; color: var(--warm); }
+  .ab-ths { order: 3; flex-direction: row; justify-content: center; gap: .5rem; margin-top: 1.5rem; }
+  .ab-ths button { width: 3.5rem; height: 4.375rem; }
+  .ab-ov-all { order: 4; align-self: center; margin-top: 1rem; font-size: .75rem; line-height: 1rem; letter-spacing: .1167em; }   /* под миниатюрами — 12, как в кадре 360 */
+
+  /* списки: год 20/28 над названием (256), подпись 14/20; миниатюра 56 × 56 справа на уровне года; линия 24 под подписью, следующая строка 24 под линией */
+  .ab-ls { display: block; }
+  .ab-list { margin-top: 1.5rem; }
+  .ab-it { grid-template-columns: 16rem 1rem 3.5rem; padding: 1.5rem 0; }
+  .ab-it .y { grid-column: 1; grid-row: 1; text-align: left; font-size: 1.25rem; line-height: 1.75rem; }
+  .ab-it .n { grid-column: 1; grid-row: 2; margin-top: .5rem; font-size: 1.25rem; line-height: 1.75rem; }
+  .ab-it .s { grid-column: 1 / -1; grid-row: 3; font-size: .875rem; line-height: 1.25rem; }
+  .ab-it.ny .n { grid-row: 1; margin-top: 0; }   /* строка без года: название сверху */
+  .ab-it.ny .s { grid-row: 2; }
+  .ab-it .pv { display: none; }
+  .ab-it .tm { display: block; grid-column: 3; grid-row: 1 / 4; width: 3.5rem; height: 3.5rem; object-fit: cover; }
+  .ab-ps .ab-it .s { grid-column: 1 / -1; }
+  .ab-ps-lead { width: auto; font-size: 1rem; line-height: 1.5rem; }
+  a.ab-it:hover .n, a.ab-it:hover .y { color: inherit; }
+  a.ab-it:hover .y { color: var(--gold); }
+  a.ab-it:hover { border-bottom-color: var(--ab-line); }
+  .ab-it .ar { opacity: 1; }   /* на телефоне стрелка видна всегда */
+
+  /* Учу: заголовок → фото 328 × 441 через 24 → цитаты 16/24 через 24, между ними 16 → ссылка 16 */
+  .ab-te { display: flex; flex-direction: column; }
+  .ab-te-ph { order: 1; width: 20.5rem; height: 27.5625rem; margin-top: 1.5rem; }
+  .ab-te-txt { display: contents; text-align: left; }
+  .ab-te-txt .ab-h { order: 0; width: auto; }
+  .ab-te-txt p, .ab-te-a { order: 2; width: auto; margin-top: 1rem; }
+  .ab-te-txt p { font-size: 1rem; line-height: 1.5rem; }
+  .ab-te-txt .ab-h + p { margin-top: 1.5rem; }
+  .ab-te-a { width: fit-content; }
+
+  /* Студия: заголовок → студия 24/28 через 24 → адрес 14/20 через 8 → строка 16/24 через 24 → карта 328 × 144 через 24 → ссылка 14/20 через 16 */
+  .ab-sd { display: flex; flex-direction: column; }
+  .ab-sd-n { margin-top: 1.5rem; }
+  .ab-sd-name { width: auto; font-size: 1.5rem; line-height: 1.75rem; }
+  .ab-sd-adr { font-size: .875rem; line-height: 1.25rem; }
+  .ab-sd-row { margin-top: 1.5rem; font-size: 1rem; line-height: 1.5rem; }
+  .ab-sd-map { height: 9rem; margin-top: 1.5rem; }
+  .ab-sd-map .ymap { display: none; }   /* телефон — снимок, карту не грузим */
+  .ab-sd-go { margin-top: 1rem; }
+
+  /* плашка · 17:35 Антон «как призыв в статье блога» (212:64874), кадр 236:157894 «гест-споты · плашка в раме»: 328 × 340, всё по центру,
+     поля 32 / 24; заголовок 28/32 (280) → текст 15/22 через 16 → ступенчатая кнопка 280 × 52 через 24 */
+  .ab-gs { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.5rem; }
+  .ab-gs-h { width: 17.5rem; font-size: 1.75rem; line-height: 2rem; }
+  .ab-gs-p { width: 17.5rem; font-size: .9375rem; line-height: 1.375rem; }
+  .ab-gs-b { width: 17.5rem; margin-top: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .ab-nav a, .ab-ths button, .ab-it, .ab-it .pv, .ab-tb { transition: none; } .ab-ov-a.sheen { animation: none; } }

@@ -33,7 +33,7 @@ const keepCat = () => { const u = new URL(location.href); if (flt) u.searchParam
 
 // категории — в полосе на всю высоту страницы: на десктопе список липнет к окну (13:44 «фильтр тоже должен быть прилипший») и уходит с концом страницы
 pg.innerHTML = `<h1 class="ro-t vh">Работы</h1>
-<div class="an-rail"><nav class="ro-cats caps" aria-label="Категории">${CAT_GROUPS.map((g, i) =>
+<div class="an-rail"><nav class="ro-cats caps" aria-label="Категории" data-side-center>${CAT_GROUPS.map((g, i) =>
   `<div class="ro-grp${i ? "" : " row"}">${g.map(catBtn).join("")}</div>`).join("")}</nav></div>
 <div class="ro-f" id="rof"></div>`;
 const field = document.getElementById("rof"), cats = pg.querySelector(".ro-cats");

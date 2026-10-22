@@ -1,0 +1,189 @@
+/* Магазин · 22.10 — каталог (shop.html) и карточка товара (shop-item.html). Пишет только окно магазина.
+   Эталон — кадры Figma merts-draft, секция 235:140963 (Антон правил 22.10 до 17:09): каталог 235:140964 / 237:158253,
+   принт 235:141787 / 237:158324, оригинал 237:158502 / 237:158403, футболка 237:160546 / 237:162619, таблица размеров 237:162731 / 237:164816.
+   Числа — px кадра / 16 = rem (1rem = 16 px на 1920 и на 360, как в shell.css). Оси 120 · 540 · 960 · 1380 · 1800 / 16 · 180 · 344.
+   Токены — shell.css (:root); своё здесь только то, чего там нет. */
+:root { --sh-val: #d9d4c7; --sh-line: #4d4a43; --sh-chip-on: #262420; --sh-frame: #5e5240; --sh-row: #2e2c28; --sh-head: #3a3833; --sh-note: #6f6a5f; --sh-dim: 13,13,13; }
+.rub { font-family: Jost, sans-serif; }   /* ₽ — Jost (подмножество jost-400-rub.woff2): в Foglihten этого знака нет, в кадре он тоже Jost */
+.sh-cap { font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.sh-lnk { color: var(--warm); transition: color .2s; }
+.sh-lnk:hover { color: var(--ink); }
+a:focus-visible, button:focus-visible { outline: 1px solid var(--warm); outline-offset: .25rem; }
+
+/* ═════ каталог · 1920 (235:140964) ═════ */
+.sh { position: relative; padding: 10rem 0 10rem 33.75rem; min-height: 100vh; }   /* короткая страница (фильтр на 2 товара) не короче окна: футер не подпрыгивает к середине экрана */   /* плитки с 160; низ плиток 1396 → футер 1556 */
+/* категории — столбиком на оси 120, как на «Работах»: «Все» отдельно, ниже группа (шаг 30), между группами 70; липнут к окну (верх 544 при окне 1080) */
+/* 17:35 Антон («блин»: на короткой странице список стоял над футером) → общая функция shell.js [data-side-center]: по центру между низом хедера
+   и min(низ окна, верх футера), fixed со сдвигом --sc-y (shell.css). Здесь — только место до её запуска и ось 120 */
+.sh-cats { position: absolute; left: 7.5rem; top: 34rem; margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 3.125rem; pointer-events: auto; }
+.sh-grp { display: flex; flex-direction: column; align-items: flex-start; gap: .625rem; }
+.sh-cat { padding: 0; border: 0; background: none; cursor: pointer; color: var(--muted); transition: color .2s; }
+.sh-cat:hover, .sh-cat.on { color: var(--warm); }
+/* плитки — три колонки 540–948 · 972–1368 · 1392–1800, промежуток 24 */
+.sh-f { display: flex; align-items: flex-start; gap: 1.5rem; }
+.sh-col { display: flex; flex-direction: column; gap: 1.5rem; width: 25.5rem; }
+.sh-col:nth-child(2) { width: 24.75rem; }
+.sh-it { position: relative; display: block; overflow: hidden; background: var(--deep); }
+.sh-it img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+.sh-it:hover img { transform: scale(1.03); }
+/* принт на паспарту: картина целиком, высота 240, сверху 48 (235:143830 / 235:143834) */
+.sh-it.pl { background: var(--deep); }
+.sh-it.pl img { position: absolute; left: 50%; top: 3rem; width: auto; height: 15rem; transform: translateX(-50%); object-fit: contain; }
+.sh-it.pl:hover img { transform: translateX(-50%) scale(1.03); }
+/* подпись на плитке: справа снизу, тип белым, цена золотом; 16 / 20, разрядка 2 px; низ цены — 24 от низа плитки */
+.sh-lb { position: absolute; right: 1.25rem; bottom: 1.5rem; left: 1.25rem; display: flex; flex-direction: column; align-items: flex-end; gap: .25rem;
+  font: 400 1rem/1.25rem Jost, sans-serif; letter-spacing: .125em; text-transform: uppercase; text-align: right; pointer-events: none; }
+.sh-lb .ty { color: var(--sheen); } .sh-lb .pr { color: var(--warm); }
+.sh-lb .ty .m { display: none; }
+
+/* ═════ карточка · 1920 (235:141787 · 237:158502 · 237:160546) ═════ */
+.si { position: relative; padding-bottom: 7.1875rem; }   /* низ цены «Ещё в магазине» → футер: 115 */
+.si-hero { position: relative; height: 65rem; }   /* первый экран 0–1040: картина 160–1040 */
+.si-tape { display: contents; }
+.si-back { position: absolute; left: 7.5rem; top: 9.5rem; color: var(--sh-val); transition: color .2s; }   /* «← Магазин» 120, 152 */
+.si-back:hover { color: var(--warm); }
+.si-ty { position: absolute; left: 7.5rem; top: 29.0625rem; margin: 0; font: 400 1.25rem/1.1875rem Foglihten, serif; color: var(--gold); }   /* 120, 465 */
+.si-t { position: absolute; left: 7.5rem; top: 35rem; width: 22.75rem; margin: 0; font: 400 2.75rem/2.75rem Foglihten, serif; color: var(--warm); white-space: pre-line; }   /* 120, 560 */
+.si-pic { position: absolute; top: 10rem; left: 36.5625rem; width: 46.875rem; height: 55rem; background: var(--deep); }   /* паспарту 750 × 880 на оси 960 (585–1335) */
+.si-pic img { position: absolute; left: 4.4375rem; top: 3.75rem; width: 38rem; height: 47.5rem; object-fit: contain; }   /* картина 608 × 760 по центру */
+.si.merch .si-pic { left: 39.875rem; width: 41.25rem; background: none; }   /* футболка 660 × 880 с 638 (кадр 237:160546) */
+.si.merch .si-pic img { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* паспорт — ось 1380, ширина 318; строки через 28 */
+.si-pass { position: absolute; left: 86.25rem; top: 21.0625rem; width: 19.875rem; display: flex; flex-direction: column; gap: 1.75rem; }   /* принт: верх 337 */
+.si.orig .si-pass { top: 28.0625rem; }   /* оригинал: 449 */
+.si.merch .si-pass { top: 24.0625rem; }   /* мерч: 385 */
+.pr-row { margin: 0; }
+.pr-row dt, .pr-k { display: block; margin: 0; font: 400 .75rem/1rem Jost, sans-serif; letter-spacing: .1667em; text-transform: uppercase; color: var(--muted); }   /* 12 / 16, разрядка 2 px */
+.pr-row dd { margin: .375rem 0 0; font: 400 1rem/1.625rem Jost, sans-serif; color: var(--sh-val); }   /* значение через 6, 16 / 26 */
+.pr-ed svg { display: block; width: 100%; height: .875rem; margin-top: .625rem; }   /* шкала 50 насечек: 318 × 14 */
+.pr-ed .fr { stroke: var(--warm); stroke-width: 2; } .pr-ed .gn { stroke: var(--muted); stroke-width: 1; opacity: .35; }
+.pr-ed p { margin: .625rem 0 0; font: 400 1rem/1.625rem Jost, sans-serif; color: var(--sh-val); }
+.pr-line { height: 1px; background: rgba(var(--gold-rgb), .4); }
+.pr-price { margin: 0; font: 400 2.25rem/2.5rem Foglihten, serif; color: var(--ink); }   /* 36 / 40 */
+/* размер кнопками: 56 × 40, промежуток 8; выбранный — золотом на тёмной плашке */
+.pr-sz { display: flex; gap: .5rem; margin-top: .625rem; }
+.pr-sz button { width: 3.5rem; height: 2.5rem; padding: 0; border: 1px solid var(--sh-line); background: none; cursor: pointer; color: var(--muted);
+  font: 400 .875rem/1.25rem Jost, sans-serif; letter-spacing: .1em; transition: border-color .2s, color .2s, background .2s; }
+.pr-sz button:hover { color: var(--warm); }
+.pr-sz button[aria-checked="true"] { border-color: var(--warm); background: var(--sh-chip-on); color: var(--warm); }
+.pr-tab { display: block; margin-top: 1rem; padding: 0; border: 0; background: none; cursor: pointer; }   /* «Таблица размеров» — через 16 под кнопками */
+/* этажи: подпись на оси 120, картинка с 540; между этажами 120 */
+.si-fl { position: relative; margin-top: 7.5rem; }
+.si-fl > h2 { position: absolute; left: 7.5rem; top: 0; margin: 0; color: var(--muted); font-weight: 400; }
+.si-fl .md { position: relative; margin-left: 33.75rem; width: 52.5rem; aspect-ratio: 840 / 560; background: var(--deep); overflow: hidden; }
+.si-fl .md img, .si-fl .md video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.si-fl.f-wall .md { width: 78.75rem; aspect-ratio: 1260 / 709; }
+.si-fl.f-body .md { width: 78.75rem; aspect-ratio: 1260 / 704; display: flex; align-items: center; justify-content: center; }
+.si-fl.f-process .md { aspect-ratio: 840 / 472; }
+.md .ph { margin: 0; font: 400 .75rem/1rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--sh-note); }   /* ⚠ «кадра на теле пока нет» */
+.md .play { position: absolute; left: 50%; top: 50%; width: 2.1875rem; height: 2.5rem; transform: translate(-50%, -50%); opacity: .8; pointer-events: none; transition: opacity .3s; }
+.md.on .play { opacity: 0; }
+/* «Ещё в магазине»: три плитки 404 × 505 с 540, шаг 24; «Смотреть все» под подписью (кадр Антона 237:158244: 120, +42) */
+.si-more { position: relative; margin-top: 7.5rem; }
+.si-more > h2 { position: absolute; left: 7.5rem; top: 0; margin: 0; color: var(--muted); font-weight: 400; }
+.si-more .all { position: absolute; left: 7.5rem; top: 2.625rem; }
+.mo-row { display: flex; gap: 1.5rem; margin: 0 0 0 33.75rem; padding: 0; list-style: none; }
+.mo { width: 25.25rem; }
+.mo a { display: block; }
+.mo .ph { position: relative; display: block; height: 31.5625rem; background: var(--deep); overflow: hidden; }
+.mo .ph img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+.mo.pl .ph img { position: absolute; left: 50%; top: 50%; width: 18.75rem; height: 18.75rem; transform: translate(-50%, -50%); object-fit: contain; }   /* картина на паспарту: 300 (Череп), портрет — 280 × 350 */
+.mo.pl.tall .ph img { width: 17.5rem; height: 21.875rem; }
+.mo a:hover .ph img { transform: scale(1.03); } .mo.pl a:hover .ph img { transform: translate(-50%, -50%) scale(1.03); }
+.mo .ty { display: block; margin-top: 1.5rem; color: var(--muted); }   /* тип через 24 под плиткой */
+.mo .nm { display: block; margin-top: .5rem; font: 400 1.25rem/1.25rem Foglihten, serif; color: var(--warm); white-space: nowrap; }
+.mo .pr { display: block; margin-top: .75rem; font: 400 1rem/1.625rem Jost, sans-serif; color: var(--muted); }
+.mo .nm br { display: none; }
+
+/* ═════ окно «Таблица размеров» · 1920 (237:162731): 736 × 512 по центру, фон #0d0d0d 72 % ═════ */
+.sz { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; }
+.sz[hidden] { display: none; }
+.sz-bg { position: absolute; inset: 0; background: rgba(var(--sh-dim), .72); opacity: 0; transition: opacity .25s var(--ease); }
+.sz-w { position: relative; width: 46rem; padding: 3rem; background: var(--deep); border: 1px solid var(--sh-frame); opacity: 0; transform: translateY(.75rem); transition: opacity .25s var(--ease), transform .25s var(--ease); }
+.sz.in .sz-bg, .sz.in .sz-w { opacity: 1; } .sz.in .sz-w { transform: none; }
+.sz-h { margin: 0; font: 400 2rem/2.5rem Foglihten, serif; color: var(--warm); }
+.sz-x { position: absolute; right: 3rem; top: 3.625rem; padding: 0; border: 0; background: none; cursor: pointer; color: var(--warm); }
+.sz-s { margin: .5rem 0 0; font: 400 .875rem/1.25rem Jost, sans-serif; color: var(--muted); }
+.sz-t { width: 100%; margin-top: 2rem; border-collapse: collapse; }
+.sz-t th, .sz-t td { padding: 0; text-align: left; vertical-align: top; }
+.sz-t th:nth-child(1), .sz-t td:nth-child(1) { width: 10rem; } .sz-t th:nth-child(2), .sz-t td:nth-child(2) { width: 12rem; } .sz-t th:nth-child(3), .sz-t td:nth-child(3) { width: 10rem; }
+.sz-t th { height: 1.75rem; font: 400 .75rem/1rem Jost, sans-serif; letter-spacing: .1667em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--sh-head); }
+.sz-t tbody tr:first-child td { padding-top: .9375rem; }
+.sz-t td { height: 3rem; font: 400 1rem/1.5rem Jost, sans-serif; color: var(--sh-val); box-shadow: inset 0 -.5rem 0 var(--deep), inset 0 calc(-.5rem - 1px) 0 var(--sh-row); }   /* линия строки на +40, шаг 48 */
+.sz-t tbody tr:first-child td { height: 3.9375rem; }
+.sz-t tr.on td { color: var(--warm); }
+.sz-n { margin: 1rem 0 0; font: 400 .75rem/1rem Jost, sans-serif; color: var(--sh-note); }
+html.sz-on { overflow: hidden; }
+
+/* ═════ телефон 360 ═════ */
+@media (max-width: 767px) {
+  /* каталог 237:158253: две колонки 16–174 · 186–344, промежуток 12, с 16 сверху; низ плиток 737 → футер 784 */
+  .sh { padding: 1rem 0 2.9375rem 1rem; min-height: 100svh; }   /* короткий фильтр не короче экрана: футер не заезжает вверх */
+  .sh-list .ft, .si-page .ft { padding-bottom: calc(3.25rem + 2rem + 2.5rem); }   /* низ футера над полосой (52) и лентой (40) — прокручивается целиком */
+  body.sh-list .ck, body.si-page .ck { bottom: calc(3.25rem + 2.5rem + .5rem); }   /* плашка cookie — над лентой (полоса 52 + лента 40 + 8), иначе лента закрывала «ОК» (баг из окна блога, как blog-2210.css) */
+  .sh-f, .sh-col { gap: .75rem; }
+  .sh-col, .sh-col:nth-child(2) { width: 9.875rem; }
+  .sh-it.pl img { top: 1rem; height: 5.625rem; }   /* картина на паспарту: высота 90, сверху 16 */
+  .sh-lb { right: .625rem; left: .625rem; bottom: .625rem; gap: .125rem; font-size: .6875rem; line-height: .875rem; letter-spacing: .1em; }   /* 11 / 14 */
+  .sh-lb .ty .d { display: none; } .sh-lb .ty .m { display: inline; }
+  /* категории — лента над нижней полосой (как «Работы · 360»): 40 высотой, фон 96 %, 12 капсом, шаг 12, листается вбок */
+  .sh-cats { position: fixed; z-index: 19; left: 0; right: 0; top: auto; bottom: 3.25rem; height: 2.5rem; margin: 0; padding: 0 1rem; flex-direction: row; align-items: center; gap: .7rem;
+    background: rgb(var(--bg-rgb)); overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+  .sh-cats::-webkit-scrollbar { display: none; }
+  .sh-grp { display: contents; }
+  .sh-cat { font-size: .75rem; line-height: 1.25rem; flex: none; }
+
+  /* карточка 237:158324 · 237:158403 · 237:162619. 17:41 Антон (кадр 237:162619 «и вот так давай»): паспорт по центру — название, размер,
+     «Таблица размеров», цвет, материал, линия, цена, «Заказать»; у мерча подписи типа нет. 17:42: «← Магазин» — внизу над полосой, как «← Назад» у открытой работы */
+  .si { padding-bottom: 4rem; }   /* низ цен «Ещё» → футер 64 */
+  .si-hero { height: auto; padding-top: 0; }
+  /* 18:02 Антон: «зачем изобретать велосипеды — над меню есть такая штука» → «← Магазин» в ленте над полосой, тем же элементом и видом,
+     что лента категорий каталога (.sh-cats): 40 высотой, фон 96 %, 12 капсом, поля 16, прилипает с полосой; золотом, как активный пункт */
+  .si-tape { position: fixed; z-index: 19; left: 0; right: 0; bottom: 3.25rem; height: 2.5rem; padding: 0 1rem; display: flex; align-items: center;
+    background: rgb(var(--bg-rgb)); }   /* 18:06: фон плотный — сквозь 96 % читался текст страницы (как лента разделов «Обо мне», 17:00) */
+  .si-back { position: static; font-size: .75rem; line-height: 1.25rem; color: var(--warm); padding: .625rem 1rem; margin: 0 -1rem; }   /* зона тапа во всю высоту ленты */
+  .si-pic, .si.merch .si-pic { position: relative; top: auto; left: auto; width: 100%; height: 28rem; }   /* паспарту во всю ширину: 360 × 448 */
+  .si-pic img { left: 2.25rem; top: 2.75rem; width: 18rem; height: 22.5rem; }   /* картина 288 × 360 */
+  .si.merch .si-pic { height: 30rem; }   /* футболка 360 × 480 */
+  .si-ty { position: static; margin: 2rem 1rem 0; font-size: 1rem; line-height: 1.25rem; text-align: center; }   /* тип через 32 под картиной, 16 / 20 */
+  .si.merch .si-ty { display: none; }
+  .si-t { position: static; width: auto; margin: .5rem 1rem 0; font-size: 2rem; line-height: 2.25rem; text-align: center; }   /* название через 28, 32 / 36 */
+  .si.merch .si-t { margin-top: 2rem; }   /* без типа: картина → название 32 (17:53 Антон: «отступ от картинки до заголовка уменьшать»; кадр 237:162619 — 536 → 568) */
+  .si-pass, .si.orig .si-pass, .si.merch .si-pass { position: static; width: auto; margin: 2rem 1rem 0; align-items: center; text-align: center; }   /* паспорт через 32, ширина 328, всё по центру */
+  .si-pass > * { max-width: 100%; }
+  .pr-line, .pr-ed { align-self: stretch; }
+  .pr-sz { gap: .5rem; justify-content: center; }
+  .pr-tab { margin: 1rem auto 0; }
+  .si-fl, .si-more { margin-top: 4rem; }
+  .si-fl > h2, .si-more > h2 { position: static; margin-left: 1rem; font-size: .75rem; letter-spacing: .1em; }
+  body[data-page="shop"] > main { margin-bottom: 0; }   /* запас под полосу (shell.css) не нужен: за страницей футер, низ которого и есть место полосы (кадры 237:158253, 237:158324) */
+  .si-hero + .si-fl, .si-hero + .si-more { margin-top: 3.9375rem; }   /* паспорт → первый этаж 63 (кадр 237:158324: 1073 → 1136) */
+  .si-fl .md, .si-fl.f-wall .md, .si-fl.f-body .md, .si-fl.f-process .md { width: 100%; margin: .75rem 0 0; aspect-ratio: 360 / 200; }   /* картинка через 12 (верх подписи + 32) во всю ширину */
+  .si-fl.f-detail .md, .si-fl.f-sign .md { aspect-ratio: 360 / 240; }
+  .md .play { width: 1.3125rem; height: 1.5rem; }
+  .si-more .all { position: absolute; left: auto; right: 1rem; top: 0; font-size: .75rem; line-height: 1.25rem; }
+  .mo-row { margin: .75rem 0 0; padding: 0 1rem; gap: .75rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 1rem; scrollbar-width: none; }   /* лента вбок: 158 × 198, шаг 12 */
+  .mo-row::-webkit-scrollbar { display: none; }
+  .mo { flex: none; width: 9.875rem; scroll-snap-align: start; }
+  .mo .ph { height: 12.375rem; }
+  .mo.pl .ph img { width: 7.5rem; height: 7.5rem; }
+  .mo.pl.tall .ph img { width: 8rem; height: 9.875rem; }   /* портрет на паспарту 128 × 158 (237:158403) */
+  .mo .ty { margin-top: .75rem; font-size: .6875rem; line-height: .875rem; letter-spacing: .1em; }   /* 11 / 14 */
+  .mo .nm { margin-top: .25rem; min-height: 2.25rem; font-size: .875rem; line-height: 1.125rem; white-space: normal; }   /* 14 / 18, две строки — цена в одну линию */
+  .mo .nm br { display: inline; }
+  .mo .pr { margin-top: .375rem; font-size: .75rem; line-height: 1rem; letter-spacing: .1em; }
+
+  /* таблица размеров 237:164816 — шторка снизу 360 × 448 */
+  .sz { bottom: 3.25rem; align-items: flex-end; }   /* полоса телефона всегда видна (shell.css, z 1001) — шторка стоит на ней; в кадре нижние 52 — место полосы */
+  .sz-w { width: 100%; padding: 1.5rem 1rem 0; border-width: 1px 0 0; transform: translateY(100%); }
+  .sz-h { font-size: 1.5rem; line-height: 2rem; }
+  .sz-x { right: 1rem; top: 2rem; }
+  .sz-s { margin-top: .75rem; }
+  .sz-t { margin-top: 1.5rem; }
+  .sz-t th:nth-child(1), .sz-t td:nth-child(1) { width: 5rem; } .sz-t th:nth-child(2), .sz-t td:nth-child(2), .sz-t th:nth-child(3), .sz-t td:nth-child(3) { width: 5.5rem; }
+  .sz-t td { height: 2.5rem; }
+  .sz-t tbody tr:first-child td { height: 3.4375rem; }
+  .sz-n { margin-top: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .sh-it img, .mo .ph img, .sz-bg, .sz-w { transition: none; } }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

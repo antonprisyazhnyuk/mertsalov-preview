@@ -49,5 +49,5 @@
   .faq .fqm .mi { display: block; height: 100%; }
   .faq .fqm .mi img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .faq .fqm .ymap { display: none; }
-  .faq details .route { display: inline-block; margin-top: 1rem; font: 400 .75rem/1.0625rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+  .faq details .route { display: inline-block; margin-top: 1rem; font: 400 .875rem/1.25rem Jost, sans-serif;   /* 22.10: 12 → 14, как все текстовые кнопки */ letter-spacing: .1em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
 }

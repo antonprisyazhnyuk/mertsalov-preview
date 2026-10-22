@@ -4,34 +4,44 @@
    у футера), метка — своя: ромб в ромбе #d8b77a, как ромбы сайта, 40 px, центр ромба = студия; фильтр её не трогает.
    Ключ API — в data-key у .fqm (без ключа API работает, но пишет в консоль «Invalid API key»; к выкладке ключ получить).
    API не загрузился — остаётся снимок карты фоном. Колесо мыши карту не зумит (прокрутка страницы важнее). */
-(() => {
-  const m = document.querySelector(".faq .fqm"), d = m && m.closest("details");
-  if (!d) return;
-  const WIDE = matchMedia("(min-width: 768px)"), [lon, lat] = m.dataset.ll.split(",").map(Number), AT = [lat, lon];
+// 22.10 · живая карта студии — одна на сайт: YMAP.mount(рамка, "долгота,широта"[, ключ]) → Promise(карта). Зовут «Частые вопросы» (ниже)
+// и «Студия» на about.html (about-2210.js). API грузится один раз; не загрузился — промис отклонён, под рамкой остаётся снимок карты.
+window.YMAP = window.YMAP || (() => {
   const PIN = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">' +
     '<path d="M20 1.5 38.5 20 20 38.5 1.5 20Z" fill="#1a1a1a" fill-opacity=".6" stroke="#d8b77a" stroke-width="1.4"/>' +
     '<path d="M20 6.5 33.5 20 20 33.5 6.5 20Z" fill="none" stroke="#d8b77a" stroke-width=".7"/>' +
     '<path d="M20 12.5 27.5 20 20 27.5 12.5 20Z" fill="#d8b77a"/></svg>');
-  let started = false;
-  const api = () => new Promise((ok, no) => {
+  let wait = null;
+  const api = key => wait || (wait = new Promise((ok, no) => {
     if (window.ymaps) return ymaps.ready(ok, no);
     const s = document.createElement("script");
-    s.src = "https://api-maps.yandex.ru/2.1/?lang=ru_RU" + (m.dataset.key ? "&apikey=" + encodeURIComponent(m.dataset.key) : "");
-    s.onload = () => ymaps.ready(ok, no); s.onerror = no;
+    s.src = "https://api-maps.yandex.ru/2.1/?lang=ru_RU" + (key ? "&apikey=" + encodeURIComponent(key) : "");
+    s.onload = () => window.ymaps ? ymaps.ready(ok, no) : no(new Error("ymaps нет"));   // скрипт пришёл битым (блокировщик, сеть) — отказ, остаётся снимок
+    s.onerror = no;
     document.head.appendChild(s);
+  }).catch(e => { wait = null; throw e; }));
+  const mount = (host, ll, key) => api(key).then(() => {
+    const [lon, lat] = ll.split(",").map(Number), AT = [lat, lon];
+    const box = document.createElement("div"); box.className = "ymap"; host.appendChild(box);
+    const map = new ymaps.Map(box, { center: AT, zoom: 15, controls: ["zoomControl"] });
+    map.behaviors.disable("scrollZoom");
+    map.panes.get("ground").getElement().style.filter = "grayscale(1) invert(.9) sepia(.22) brightness(.82) contrast(.92)";
+    map.geoObjects.add(new ymaps.Placemark(AT, { hintContent: "Студия «Локация»" },
+      { iconLayout: "default#image", iconImageHref: PIN, iconImageSize: [40, 40], iconImageOffset: [-20, -20] }));
+    requestAnimationFrame(() => box.classList.add("on"));
+    return map;
   });
+  return { mount };
+})();
+(() => {
+  const m = document.querySelector(".faq .fqm"), d = m && m.closest("details");
+  if (!d) return;
+  const WIDE = matchMedia("(min-width: 768px)");
+  let started = false;
   const load = () => {
     if (started || !d.open || !WIDE.matches) return;
     started = true;
-    api().then(() => {
-      const box = document.createElement("div"); box.className = "ymap"; m.appendChild(box);
-      const map = new ymaps.Map(box, { center: AT, zoom: 15, controls: ["zoomControl"] });
-      map.behaviors.disable("scrollZoom");
-      map.panes.get("ground").getElement().style.filter = "grayscale(1) invert(.9) sepia(.22) brightness(.82) contrast(.92)";
-      map.geoObjects.add(new ymaps.Placemark(AT, { hintContent: "Студия «Локация»" },
-        { iconLayout: "default#image", iconImageHref: PIN, iconImageSize: [40, 40], iconImageOffset: [-20, -20] }));
-      requestAnimationFrame(() => box.classList.add("on"));
-    }).catch(() => { started = false; });
+    YMAP.mount(m, m.dataset.ll, m.dataset.key).catch(() => { started = false; });
   };
   d.addEventListener("toggle", load);
   WIDE.addEventListener("change", load);

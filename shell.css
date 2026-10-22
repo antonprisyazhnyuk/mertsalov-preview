@@ -34,6 +34,8 @@ a { color: inherit; text-decoration: none; }
 .wall-shade { position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background: radial-gradient(circle 400px at var(--mx) var(--my), rgba(var(--warm-rgb),.02), transparent 70%); }
 main { position: relative; z-index: 1; }
+/* боковой список по центру видимой области — shell.js ставит --sc-y (22.10: категории «Работ», меню «Обо мне»); телефон — как задумано страницей */
+@media (min-width: 768px) { html.sc-on [data-side-center] { position: fixed; top: 0; margin-top: 0; transform: translateY(var(--sc-y, 0)); transition: none; } }
 
 /* ── хедер 1920 ── */
 /* при прокрутке: плашка темнеет 0 → .88 с размытием, хедер 128 → 92, знак 96 → 56, всё за .45 с */
@@ -236,3 +238,20 @@ html.wo-on body > main { visibility: hidden; }   /* под открытой ра
 .aw-tag { display: inline-flex; align-items: center; gap: .5rem; color: var(--wo-white); pointer-events: none; }
 .aw-tag span { font: 400 1rem/1.25rem Jost, sans-serif; letter-spacing: .125em; text-transform: uppercase; white-space: nowrap; text-box: trim-both cap alphabetic; }
 @media (max-width: 767px) { .aw-tag { gap: .25rem; } .aw-tag span { display: none; } }
+/* 22.10 · полная метка награды в тексте (WO.awardFull, статья блога — Figma 212:56835 / 212:64874, одинаково на 1920 и 360):
+   «N МЕСТО» Jost 16/20 разрядка 2 между веточками (зазор 4); ниже две строки Jost 12 разрядка 2 с шагом 13 — номинация и конвенция; белым */
+.aw-full { display: flex; flex-direction: column; align-items: flex-start; color: var(--wo-white); }
+.aw-full .p { display: flex; align-items: center; gap: .25rem; }
+.aw-full .p span, .aw-full .l { font: 400 1rem/1.25rem Jost, sans-serif; letter-spacing: .125em; text-transform: uppercase; white-space: nowrap; }
+.aw-full .ls { display: flex; flex-direction: column; margin-top: .34375rem; }
+.aw-full .l { font-size: .75rem; line-height: .8125rem; letter-spacing: .1667em; }
+/* 22.10 · плашка в раме — общая (Антон 17:26: призыв статьи блога — как плашка гест-спотов «Обо мне»; рама как анкета записи form-2010.css .zr / .dm):
+   фон #242424, внешняя линия 1.6 золото, внутренняя 0.7 с отступом 6, ромбы 10 центром на внешней линии посередине сторон.
+   Разметка: <… class="fplate"><i class="fd fd-t"></i><i class="fd fd-b"></i><i class="fd fd-l"></i><i class="fd fd-r"></i> …</…>; раскладку внутри задаёт страница */
+.fplate { position: relative; background: var(--plate); }
+.fplate::before, .fplate::after { content: ""; position: absolute; pointer-events: none; }
+.fplate::before { inset: 0; border: .1rem solid var(--gold); }
+.fplate::after { inset: .375rem; border: .04375rem solid var(--gold); }
+.fplate > .fd { position: absolute; z-index: 1; width: .625rem; height: .625rem; background: var(--gold); rotate: 45deg; }
+.fplate > .fd-t { top: -.3125rem; left: calc(50% - .3125rem); } .fplate > .fd-b { bottom: -.3125rem; left: calc(50% - .3125rem); }
+.fplate > .fd-l { left: -.3125rem; top: calc(50% - .3125rem); } .fplate > .fd-r { right: -.3125rem; top: calc(50% - .3125rem); }

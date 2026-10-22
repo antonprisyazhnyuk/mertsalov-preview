@@ -1,0 +1,32 @@
+/* 22.10 18:09 · окно «Заказ» (order-2210.js) — кадры Figma 238:169260 (1920) · 238:173443 (360) · «Спасибо» 238:171370 / 238:173599.
+   Рама, затемнение, крестик, поля, галочка, кнопка — общие стили окон (zpop-2010.css, form-2010.css, coop-2110.css: .zhd, .zs2).
+   Здесь — только своё окна: что заказываешь и экран «Спасибо». Кнопки размеров — .pr-sz из shop-2210.css (страница товара). */
+.zor .or-it { display: grid; grid-template-columns: 6rem 1fr auto; column-gap: 1.5rem; align-items: start; }   /* миниатюра 96 × 128, текст с 711 */
+.zor .or-ph { grid-row: 1 / span 2; width: 6rem; height: 8rem; background: var(--deep); overflow: hidden; }
+.zor .or-ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.zor .or-ph.pl img { object-fit: contain; padding: .5rem; }   /* картина — целиком на паспарту */
+.zor .or-ty { display: block; font: 400 .75rem/1.0625rem Jost, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.zor .or-nm { margin: .5rem 0 0; font: 400 1.75rem/2rem Foglihten, serif; color: var(--warm); white-space: pre-line; }
+.zor .or-nm br { display: none; }
+.zor .or-pr { grid-column: 3; grid-row: 1 / span 2; margin: 1.5625rem 0 0; font: 400 2.25rem/2.5rem Foglihten, serif; color: var(--ink); white-space: nowrap; }   /* цена справа, на уровне названия */
+.zor .or-sz { grid-column: 2; margin-top: 1rem; }
+.zor .or-sz .pr-k { display: block; margin: 0; font: 400 .75rem/1rem Jost, sans-serif; letter-spacing: .1667em; text-transform: uppercase; color: var(--muted); }
+.zor .or-sz dd { margin: .375rem 0 0; font: 400 1rem/1.625rem Jost, sans-serif; color: var(--sh-val); }
+.zor .or-ln { height: 1px; margin: -.5rem 0 0; background: rgba(var(--gold-rgb), .4); }   /* линия золото 40 %: сводка → линия 24, линия → поля 32 (у .zf свой шаг 32) */
+/* «Спасибо» — по кадру 238:171370: слева, заголовок как у окна, строка ниже; рама — по содержимому */
+.zor .zr .zdone { display: block; min-height: 0; text-align: left; }
+.zor .zr .zdone h3 { margin: 1rem 0 0; font: 400 3.5rem/3.25rem Foglihten, serif; text-transform: uppercase; color: var(--gold); }
+.zor .zr .zdone p { margin: 1rem 0 0; max-width: none; font: 400 1rem/1.5rem Jost, sans-serif; color: var(--ink); }
+
+@media (max-width: 767px) {
+  /* 238:173443: миниатюра 72 × 96, текст с 128, цена под названием, размеры — строкой ниже во всю ширину (кнопки 48, шаг 8) */
+  .zor .or-it { grid-template-columns: 4.5rem 1fr; column-gap: 1rem; }
+  .zor .or-ph { width: 4.5rem; height: 6rem; }
+  .zor .or-nm { margin-top: .25rem; font-size: 1.25rem; line-height: 1.5rem; }
+  .zor .or-nm br { display: inline; }
+  .zor .or-pr { grid-column: 2; grid-row: 2 / span 1; margin: .25rem 0 0; font-size: 1.5rem; line-height: 1.75rem; }
+  .zor .or-sz { grid-column: 1 / -1; margin-top: 1rem; }
+  .zor .or-sz .pr-sz button { width: 3rem; }
+  .zor .or-ln { margin: -.5rem 0 -.5rem; }   /* 24 и 24 */
+  .zor .zr .zdone h3 { margin-top: 0; font-size: 2rem; line-height: 2rem; }
+}

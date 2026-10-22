@@ -10,8 +10,8 @@ const PAGE = body.dataset.page || "";
 // ── адреса прототипа ──
 const NAV = [
   ["works", "works-r-1710.html", "Работы", "РАБОТЫ"],
-  ["about", "#about", "Обо мне", "ОБО МНЕ"],
-  ["blog", "#blog", "Блог", "БЛОГ"],
+  ["about", "about.html", "Обо мне", "ОБО МНЕ"],   // 22.10: страница «Обо мне» (about.html)
+  ["blog", "blog.html", "Блог", "БЛОГ"],   // 22.10: блог (blog.html, статья — blog-post.html?id=)
   ["shop", "shop.html", "Магазин", "МАГАЗИН"],   // 21.10 17:55 Антон: «сейчас надо будет его показать для Коли» — виден, ведёт на заглушку «скоро» (было: скрыт до запуска)
   ["contacts", "#footer", "Контакты", "КОНТАКТЫ"],
 ];
@@ -161,6 +161,23 @@ const onScroll = () => { const on = scrollY > 40; hd.classList.toggle("scrolled"
 root.classList.add("bar-now"); addEventListener("scroll", onScroll, { passive: true }); onScroll();
 // 20.10: при открытии страницы полоса сразу в своём виде — без ужатия 64 → 52 на глазах (и после восстановления прокрутки браузером)
 addEventListener("load", () => setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("bar-now"))), 300), { once: true });
+// ── боковой список по центру видимой области (десктоп) · 22.10 Антон («Обо мне» 16:36, «Работы» 17:17): элемент с [data-side-center] стоит
+//    по центру между низом хедера (свёрнутого — низом плашки) и низом окна, а когда футер на экране — верхом футера; места меньше высоты списка —
+//    прижат к хедеру с отступом 24. Стоит fixed со сдвигом --sc-y (shell.css). Хедер сворачивается за .45 с — пересчёт кадрами ещё полсекунды.
+//    Пользуются: категории «Работ» (works-r-anton.js), меню разделов «Обо мне» (about.html); будущим страницам — тот же атрибут. Телефон не трогаем.
+{ const WIDE = matchMedia("(min-width: 768px)"), plate = hd.querySelector(".plate");
+  const place = () => { const list = document.querySelectorAll("[data-side-center]"); if (!list.length || !WIDE.matches) return;
+    root.classList.add("sc-on");
+    const top = hd.classList.contains("scrolled") ? plate.getBoundingClientRect().bottom : hd.getBoundingClientRect().bottom;
+    const ft = document.getElementById("footer"), bot = Math.min(innerHeight, ft ? ft.getBoundingClientRect().top : innerHeight);
+    const gap = 1.5 * parseFloat(getComputedStyle(root).fontSize);
+    list.forEach(el => el.style.setProperty("--sc-y", Math.max(top + gap, (top + bot) / 2 - el.offsetHeight / 2) + "px")); };
+  let until = 0, run = 0;
+  const tick = () => { place(); run = performance.now() < until ? requestAnimationFrame(tick) : 0; };
+  const kick = () => { until = performance.now() + 520; if (!run) run = requestAnimationFrame(tick); };
+  addEventListener("scroll", kick, { passive: true }); addEventListener("resize", kick); WIDE.addEventListener("change", kick);
+  addEventListener("DOMContentLoaded", kick); addEventListener("load", kick);
+  if (document.fonts) document.fonts.ready.then(kick); }
 // для снимков: ?glow=x,y — пятно света без мыши
 const gq = Q.get("glow");
 if (gq) { const [gx, gy] = gq.split(","); root.style.setProperty("--mx", gx + "px"); root.style.setProperty("--my", gy + "px"); }
@@ -338,6 +355,8 @@ const PLAY = `<svg viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 1
 const PHONE = matchMedia("(max-width: 767px)");
 // короткая метка награды на карточке: «N МЕСТО» между веточками (Figma 171:34914); на телефоне — только веточки (⚠ ждёт слова Антона, текст 6.4 px не читается)
 const awardTag = w => w.award ? `<span class="aw-tag" title="${escH(w.award.p + " · " + w.award.c + " · " + w.award.e)}">${sprig(0)}<span>${escH(w.award.p)}</span>${sprig(1)}</span>` : "";
+// 22.10 · полная метка награды в тексте: «N МЕСТО» между веточками + номинация и конвенция строками (статья блога, Figma 212:56835) — как в открытой работе; a = { p, c, e }
+const awardFull = a => a ? `<div class="aw-full" aria-label="Награда"><div class="p">${sprig(0)}<span>${escH(a.p)}</span>${sprig(1)}</div><div class="ls"><span class="l">${escH(a.c)}</span><span class="l">${escH(a.e)}</span></div></div>` : "";
 const wo = document.createElement("div"); wo.className = "wo"; wo.setAttribute("role", "dialog"); wo.setAttribute("aria-modal", "true");
 let cur = null, k = 0, pushed = false;
 const W = id => (window.WORKS || []).find(w => w.id === id);
@@ -415,7 +434,7 @@ addEventListener("keydown", e => { if (!cur) return;
 PHONE.addEventListener("change", () => { if (cur) go(k); });
 // открыт адрес #work-<id> — работа открыта сразу (страница с данными подключила works-data.js)
 addEventListener("DOMContentLoaded", () => { const id = hashId(); if (id) show(id); });
-window.WO = { open, close, go, awardTag, sprig, get id() { return cur && cur.id; }, get k() { return k; } };
+window.WO = { open, close, go, awardTag, awardFull, sprig, get id() { return cur && cur.id; }, get k() { return k; } };
 })();
 
 // 20.10 12:48 Антон про лигатуру «ОС» в Foglihten («МОСКВЕ» — О и С сливаются в один знак): «бесит», «ОС имеется в виду».

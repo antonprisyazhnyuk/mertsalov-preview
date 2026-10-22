@@ -72,7 +72,7 @@
 .s2 .prog i.done { background: var(--ink); } .s2 .prog i.on { background: var(--warm); }
 .s2 .ui { position: absolute; left: 16px; right: 16px; bottom: 20px; z-index: 3; }
 .s2 .tabs { display: flex; align-items: center; gap: 16px; margin-bottom: 0; }
-.s2 .tabs .all { margin-left: auto; color: var(--soft); }
+.s2 .tabs .all { margin-left: auto; color: var(--gold); font-size: .875rem; line-height: 1.25rem; letter-spacing: .1em; transition: color .2s; } .s2 .tabs .all:hover { color: var(--warm); }   /* 22.10 Антон «нет ли разножопицы?» — текстовые кнопки сайта: капс 14 / 10 % золотом (было 12, светлым) */
 /* 19.10 · слайд по паре Антона Figma 172:44714 (кадр 171:37961) — как открытая работа на телефоне (.wo-aw, .wo-y в shell.css).
    Награда текстом вверху слева под полосками: левый край 16, верх 42; «N МЕСТО» Jost 16 капс, разрядка 2 px, между веточками 10.7×20 (--gold), зазор 4;
    ниже через 8 — номинация и «конкурс, город», Jost 12 капс, разрядка 2 px, зазор 4; белым. Год Foglihten 24/38 (--warm) по центру, строка 668–706 из 780 (низ слайда − 48).
