@@ -47,11 +47,12 @@ cats.addEventListener("click", e => { const b = e.target.closest("button.ro-cat"
 // 20.10 Lighthouse: родное «ленивое» кружево Хрома на телефоне тянуло ~30 кадров (до 1250 px за экраном) рядом с главным; теперь кадр грузится, когда до него осталось 500 px.
 //   Пока не загружен — на месте серая подложка .r-ph с готовой пропорцией, как и у родной ленивой загрузки.
 const PH = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
-const wake = i => { i.srcset = i.dataset.ss; i.src = i.dataset.s; delete i.dataset.ss; delete i.dataset.s; };
+const wake = i => { i.srcset = i.dataset.ss; i.src = i.dataset.s; delete i.dataset.ss; delete i.dataset.s;
+  const v = i.parentNode.querySelector(".fr-cv[data-poster]"); if (v) { v.poster = v.dataset.poster; delete v.dataset.poster; } };   // 22.10 19:05 скорость: постер видео-плитки будится вместе с картинкой (69 постеров грузились сразу, LCP телефона 13 с)
 const lio = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { wake(e.target); lio.unobserve(e.target); } }), { rootMargin: "500px 0px" }) : null;
 const lazyWatch = () => { if (lio) lio.disconnect(); field.querySelectorAll("img[data-ss]").forEach(i => lio ? lio.observe(i) : wake(i)); };
 const item = i => { const w = ALL[i], n = w.f.length;   // 19.10 20:00 Антон: сегменты и точки убраны — листание без индикатора
-  const ph = img(w, "(max-width: 767px) 44vw, 21vw").replace(/ src="([^"]+)" srcset="([^"]+)"/, ` src="${PH}" data-s="$1" data-ss="$2"`).replace(/<\/span>$/, w.video ? `<video class="fr-cv" muted loop playsinline preload="none" poster="${w.src}" data-src="${w.video}" aria-hidden="true"></video></span>` : "</span>");
+  const ph = img(w, "(max-width: 767px) 44vw, 21vw").replace(/ src="([^"]+)" srcset="([^"]+)"/, ` src="${PH}" data-s="$1" data-ss="$2"`).replace(/<\/span>$/, w.video ? `<video class="fr-cv" muted loop playsinline preload="none" data-poster="${w.src}" data-src="${w.video}" aria-hidden="true"></video></span>` : "</span>");
   return `<a class="ro-it" href="#work-${w.id}" data-i="${i}" data-n="${n}">${ph}${WO.awardTag(w)}</a>`; };
 
 let cols = [], shift = [], maxY = 1, list = [];

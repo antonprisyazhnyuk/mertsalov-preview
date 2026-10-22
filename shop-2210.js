@@ -84,10 +84,11 @@ ${x.table ? '<button class="pr-tab sh-cap sh-lnk" type="button" aria-haspopup="d
     return `<li class="mo${m.plate ? " pl" : ""}${tall ? " tall" : ""}"><a href="${href(m)}"><span class="ph"><img src="${m.img800}" alt="${esc(m.t)}" width="${m.w}" height="${m.h}" loading="lazy" decoding="async"></span>
 <span class="ty sh-cap">${esc(m.type.split(" · ")[0] === "Оригинал" ? "Оригинал" : m.k === "merch" ? "Мерч" : (x.work === m.work && m.k === "print" ? "Принт этой картины" : "Принт картины"))}</span>
 <span class="nm">${esc(m.tt || m.t).replace("\n", " <br>")}</span><span class="pr">${rub(m.price)}</span></a></li>`; };
+  // 22.10 19:10 скорость: телефону — картина 800 (на экране 288 × 360), не 1600
   main.classList.add("si", x.k);
   main.innerHTML = `<div class="si-hero">
 <a class="si-back sh-cap" href="shop.html">← Магазин</a>
-<div class="si-pic"><img src="${x.img}" alt="${esc(x.t)}" width="${x.w}" height="${x.h}" fetchpriority="high" decoding="async"></div>
+<div class="si-pic"><img src="${PHONE.matches ? x.img800 : x.img}" alt="${esc(x.t)}" width="${x.w}" height="${x.h}" fetchpriority="high" decoding="async"></div>
 <p class="si-ty">${esc(x.type)}</p>
 <h1 class="si-t">${esc(x.tt || x.t)}</h1>
 <div class="si-pass">${rows.join("")}

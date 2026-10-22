@@ -1,5 +1,6 @@
 // 16.10 — свет на портрете (прототип по демо Codrops «Relighting Images», слово Антона 13:51).
 // Карта глубины (Depth Anything V2, локально) запечена в relight/ndepth.png: R,G — нормаль, B — высота.
+// 22.10 19:15 скорость: на сайт идёт relight/ndepth.webp — тот же PNG без потерь (190 → 141 КБ, пиксель в пиксель)
 // Тёплый точечный свет идёт за курсором / пальцем, без них медленно ходит сам; мягкая тень — ray-march по высоте.
 // Подключение: <script src="relight.js"></script> после .hero .portrait — канвас ложится поверх фона элемента.
 // «Уменьшить движение» или нет WebGL — остаётся обычная картинка. ?relight=0 — выключить; ?rlui — ручки;
@@ -93,7 +94,7 @@
   const RELIEF = .22, ASP = 983 / 1080;
   // 21.10 скорость: карта глубины (195 КБ) и свет — после загрузки страницы, первый экран рисуется без них (до того виден обычный портрет)
   const after = f => document.readyState === "complete" ? f() : addEventListener("load", f, { once: true });
-  after(() => Promise.all([load(base + "portrait.webp", 0, true), load(base + (Q.get("map") === "s" ? "relight/ndepth-small.png" : "relight/ndepth.png"), 1, false)]).then(() => {
+  after(() => Promise.all([load(base + "portrait.webp", 0, true), load(base + (Q.get("map") === "s" ? "relight/ndepth-small.png" : "relight/ndepth.webp"), 1, false)]).then(() => {
     gl.uniform1i(U.tC, 0); gl.uniform1i(U.tN, 1); gl.uniform1f(U.uAsp, ASP); gl.uniform1f(U.uRelief, RELIEF);
     if (getComputedStyle(host).position === "static") host.style.position = "relative";
     host.append(C);   // фон-картинку снимаем, когда холст проявился: пока он гаснет-проявляется, под ним обычный портрет
